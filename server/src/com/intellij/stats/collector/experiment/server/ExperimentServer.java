@@ -39,7 +39,7 @@ class ExperimentInfoRoute {
         userExperimentInfo.entrySet().forEach((e) -> {
             String uid = e.getKey();
             DatedExperimentInfo info = e.getValue();
-            String line = uid.split("-")[0] + " : " + info;
+            String line = uid.split("-")[0] + ": " + info;
             builder.append(line).append('\n');
         });
         return builder.toString();
@@ -79,7 +79,7 @@ class DatedExperimentInfo {
 
     @Override
     public String toString() {
-        return experimentInfo + " " + date;
+        return experimentInfo + ", " + date;
     }
 }
 
