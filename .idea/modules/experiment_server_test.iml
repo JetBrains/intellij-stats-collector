@@ -9,7 +9,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="server_main" />
+    <orderEntry type="module" module-name="experiment_server_main" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.6.1" level="project" />
     <orderEntry type="library" name="Gradle: com.sparkjava:spark-core:2.3" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.12" level="project" />
@@ -29,5 +29,5 @@
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-util:9.3.2.v20150730" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-security:9.3.2.v20150730" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="server_main" />
+  <component name="TestModuleProperties" production-module="experiment_server_main" />
 </module>
