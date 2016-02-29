@@ -1,5 +1,8 @@
 package com.intellij.stats.completion;
 
+import org.apache.commons.codec.Charsets;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import spark.Request;
 import spark.Response;
 
@@ -10,7 +13,22 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
+
+class UploadData {
+    public final String uid;
+    public final String content;
+
+    public UploadData(String uid, String content) {
+        this.uid = uid;
+        this.content = content;
+    }
+    
+    public boolean isOK() {
+        return uid != null && content != null;
+    }
+}
 
 public class UploaderResource {
     private StatisticSaver mySaver;
@@ -20,10 +38,18 @@ public class UploaderResource {
     }
 
     public String receiveContent(Request request, Response response) {
-        String uid = request.params("uid");
-        String value = request.params("content");
+        String body = request.body();
+        UploadData uploadData = getUploadData(body);
         
-        mySaver.dataReceived(uid, value.length());
+        if (!uploadData.isOK()) {
+            response.status(500);
+            return "Upload data is invalid";
+        }
+
+        String uid = uploadData.uid;
+        String content = uploadData.content;
+        
+        mySaver.dataReceived(uid, content.length());
 
         File dir = getDataDirectory();
 
@@ -40,7 +66,7 @@ public class UploaderResource {
         
         try {
             BufferedWriter writer = Files.newBufferedWriter(file.toPath(), StandardOpenOption.APPEND);
-            writer.write(value);
+            writer.write(content);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,6 +76,23 @@ public class UploaderResource {
         
         response.status(200);
         return "OK";
+    }
+
+    private UploadData getUploadData(String body) {
+        String uid = null; 
+        String content = null;
+        
+        List<NameValuePair> params = URLEncodedUtils.parse(body, Charsets.UTF_8);
+        for (NameValuePair param : params) {
+            if ("uid".equals(param.getName())) {
+                uid = param.getValue();
+            } 
+            else if ("content".equals(param.getName())) {
+                content = param.getValue();
+            }
+        }
+
+        return new UploadData(uid, content);
     }
 
     private File getDataDirectory() {
@@ -75,16 +118,20 @@ public class UploaderResource {
         builder.append('\n');
 
         Set<String> ids = mySaver.getAllUserIds();
+        builder.append("<ul>");
         for (String id : ids) {
+            builder.append("<li>");
             ContentInfo contentInfo = mySaver.getInfoFor(id);
             Date firstSentDate = new Date(contentInfo.firstSentTimestamp);
             Date lastSentDate = new Date(contentInfo.lastSentTimestamp);
-            builder.append("User: ").append(id)
-                    .append(" Total size (Kb): ").append(contentInfo.receivedDataKb)
-                    .append(" First sent: ").append(firstSentDate)
-                    .append(" Last sent: ").append(lastSentDate);
+            builder.append("<b>User:</b> ").append(id)
+                    .append(" <b>Total size (Kb):</b> ").append(contentInfo.receivedDataKb)
+                    .append(" <b>First sent:</b> ").append(firstSentDate)
+                    .append(" <b>Last sent:</b> ").append(lastSentDate);
+            builder.append("</li>");
             builder.append('\n');
         }
+        builder.append("</ul>");
         
         return builder.toString();
     }
