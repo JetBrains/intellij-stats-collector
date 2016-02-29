@@ -1,4 +1,4 @@
-package com.intellij.stats.collector.experiment.server;
+package com.intellij.stats.completion.experiment;
 
 import com.google.gson.Gson;
 import spark.Request;

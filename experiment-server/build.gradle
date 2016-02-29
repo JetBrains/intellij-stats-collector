@@ -1,0 +1,39 @@
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.sparkjava:spark-core:2.3'
+}
+
+
+sourceCompatibility = 1.8
+version = '0.01'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Experiment Server',
+                'Implementation-Version': version
+    }
+}
+
+uploadArchives {
+    repositories {
+        flatDir {
+            dirs 'repos'
+        }
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Experiment Server',
+                'Implementation-Version': version,
+                'Main-Class': 'com.intellij.stats.completion.experiment.ExperimentServer'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
