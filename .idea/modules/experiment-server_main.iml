@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id="server:test" external.linked.project.path="$MODULE_DIR$/../../experiment-server" external.root.project.path="$MODULE_DIR$/../../experiment-server" external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="0.01" type="JAVA_MODULE" version="4">
+<module external.linked.project.id="experiment-server:main" external.linked.project.path="$MODULE_DIR$/../../experiment-server" external.root.project.path="$MODULE_DIR$/../../experiment-server" external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="0.01" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
-    <output-test url="file://$MODULE_DIR$/../../experiment-server/build/classes/test" />
+    <output url="file://$MODULE_DIR$/../../experiment-server/build/classes/main" />
     <exclude-output />
-    <content url="file://$MODULE_DIR$/../../experiment-server/src/test">
-      <sourceFolder url="file://$MODULE_DIR$/../../experiment-server/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../experiment-server/src/test/resources" type="java-test-resource" />
+    <content url="file://$MODULE_DIR$/../../experiment-server/src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../experiment-server/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../experiment-server/src/main/resources" type="java-resource" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="experiment_server_main" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.6.1" level="project" />
     <orderEntry type="library" name="Gradle: com.sparkjava:spark-core:2.3" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.12" level="project" />
@@ -29,5 +28,4 @@
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-util:9.3.2.v20150730" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-security:9.3.2.v20150730" level="project" />
   </component>
-  <component name="TestModuleProperties" production-module="experiment_server_main" />
 </module>

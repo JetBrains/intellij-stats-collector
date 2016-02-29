@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="experiment-server:test" external.linked.project.path="$MODULE_DIR$/../../experiment-server" external.root.project.path="$MODULE_DIR$/../../experiment-server" external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="0.01" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+    <output-test url="file://$MODULE_DIR$/../../experiment-server/build/classes/test" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../experiment-server/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../experiment-server/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../experiment-server/src/test/resources" type="java-test-resource" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="experiment-server_main" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.6.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.sparkjava:spark-core:2.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.12" level="project" />
+    <orderEntry type="library" name="Gradle: org.slf4j:slf4j-simple:1.7.12" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-server:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-webapp:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:websocket-server:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:websocket-servlet:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: javax.servlet:javax.servlet-api:3.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-http:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-io:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-xml:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-servlet:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:websocket-common:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:websocket-client:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty.websocket:websocket-api:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-util:9.3.2.v20150730" level="project" />
+    <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-security:9.3.2.v20150730" level="project" />
+  </component>
+  <component name="TestModuleProperties" production-module="experiment-server_main" />
+</module>
