@@ -12,5 +12,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="TEST" name="org.mockito:mockito-core:2.0.31-beta" level="application" />
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
+    <orderEntry type="library" name="org.mockito:mockito-all:2.0.2-beta" level="project" />
   </component>
 </module>
