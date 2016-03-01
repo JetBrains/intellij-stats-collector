@@ -33,8 +33,8 @@ class ExperimentInfoRoute {
         userExperimentInfo.entrySet().forEach((e) -> {
             String uid = e.getKey();
             DatedExperimentInfo info = e.getValue();
-            String line = uid.split("-")[0] + ": " + info;
-            builder.append(line).append('\n');
+            String line = "<b>" + uid.split("-")[0] + ":</b> " + info;
+            builder.append(line).append("<br>");
         });
         return builder.toString();
     }
