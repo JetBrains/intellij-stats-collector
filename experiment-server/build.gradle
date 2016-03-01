@@ -1,3 +1,8 @@
+plugins {
+  id 'org.hidetake.ssh' version '1.3.0'
+}
+
+
 apply plugin: 'java'
 
 repositories {
@@ -37,3 +42,21 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
+
+remotes {
+  webServer {
+      host = 'unit-617'
+      user = 'user'
+      identity = file('/Users/yarik-laptop/.ssh/id_rsa')
+  }
+}
+
+task deploy << {
+  ssh.run {
+    session(remotes.webServer) {
+      put from: "build/libs/${project.name}-all-${version}.jar", into: 'Desktop/stats-server'
+    }
+  }
+}
+
