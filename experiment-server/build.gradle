@@ -54,7 +54,7 @@ remotes {
 task deploy << {
   ssh.run {
     session(remotes.webServer) {
-      put from: "build/libs/${project.name}-all-${version}.jar", into: 'Desktop/stats-server'
+      put from: "build/libs/${project.name}-all-${version}.jar", into: 'Desktop/experiment-server'
     }
   }
 }
