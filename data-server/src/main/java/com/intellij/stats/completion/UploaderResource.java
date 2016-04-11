@@ -37,10 +37,19 @@ public class UploaderResource {
         mySaver = saver;
     }
 
-    public String receiveContent(Request request, Response response) {
+    public String receiveFileContent(Request request, Response response) {
+        String uid = request.params(":uid");
         String body = request.body();
-        UploadData uploadData = getUploadData(body);
-        
+        UploadData uploadData = new UploadData(uid, body);
+        return processUploadData(response, uploadData);
+    }
+    
+    public String receiveContent(Request request, Response response) {
+        UploadData uploadData = getUploadData(request);
+        return processUploadData(response, uploadData);
+    }
+
+    private String processUploadData(Response response, UploadData uploadData) {
         if (!uploadData.isOK()) {
             response.status(500);
             return "Upload data is invalid";
@@ -78,11 +87,11 @@ public class UploaderResource {
         return "OK";
     }
 
-    private UploadData getUploadData(String body) {
-        String uid = null; 
+    private UploadData getUploadData(Request request) {
+        String uid = null;
         String content = null;
         
-        List<NameValuePair> params = URLEncodedUtils.parse(body, Charsets.UTF_8);
+        List<NameValuePair> params = URLEncodedUtils.parse(request.body(), Charsets.UTF_8);
         for (NameValuePair param : params) {
             if ("uid".equals(param.getName())) {
                 uid = param.getValue();

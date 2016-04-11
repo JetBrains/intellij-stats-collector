@@ -10,7 +10,10 @@ public class DataCollector {
         StatisticSaver saver = new StatisticSaver();
         UploaderResource uploader = new UploaderResource(saver);
 
+        //deprecated
         post("/stats/upload", uploader::receiveContent);
+        
+        post("/stats/upload/:uid", uploader::receiveFileContent);
         get("stats/pluginUsers", uploader::pluginUserInfos);
     }
     
