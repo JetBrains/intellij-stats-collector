@@ -41,7 +41,7 @@ public class UploaderResource {
         String uid = request.params(":uid");
         String body = request.body();
         UploadData uploadData = new UploadData(uid, body);
-        return processUploadData(response, uploadData);
+        return processUploadData(response, uploadData, "json_");
     }
     
     public String receiveContent(Request request, Response response) {
@@ -50,6 +50,10 @@ public class UploaderResource {
     }
 
     private String processUploadData(Response response, UploadData uploadData) {
+        return processUploadData(response, uploadData, "");
+    }
+    
+    private String processUploadData(Response response, UploadData uploadData, String filePrefix) {
         if (!uploadData.isOK()) {
             response.status(500);
             return "Upload data is invalid";
@@ -62,7 +66,7 @@ public class UploaderResource {
 
         File dir = getDataDirectory();
 
-        File file = new File(dir, uid);
+        File file = new File(dir, filePrefix + uid);
         if(!file.exists()) {
             try {
                 file.createNewFile();
