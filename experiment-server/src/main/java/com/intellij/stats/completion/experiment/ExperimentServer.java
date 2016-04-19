@@ -14,10 +14,18 @@ public class ExperimentServer {
         port(8090);
         
         Gson gson = new Gson();
-        ExperimentInfoRoute route = new ExperimentInfoRoute();
+
+        ConfigManager manager = new ConfigManager();
+        Config config = manager.readConfig();
+        if (config == null) {
+            config = new Config(1);
+            manager.writeConfig(config);
+        }
+        
+        ExperimentInfoRoute route = new ExperimentInfoRoute(config, manager);
         
         get("/experiment/info/:uuid", route::getExperimentInfo, gson::toJson);
-        get("/experiment/nextExperiment", route::nextExperiment);
+        get("/experiment/reloadConfig", route::reloadConfig);
         get("/experiment/users", route::getUsers);
     }
     
