@@ -7,6 +7,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/data-server_main.iml" group="data-server" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/data-server_test.iml" group="data-server" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/experiment-server.iml" filepath="$PROJECT_DIR$/.idea/modules/experiment-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/experiment-server-test.iml" filepath="$PROJECT_DIR$/.idea/modules/experiment-server-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/experiment-server-test_main.iml" filepath="$PROJECT_DIR$/.idea/modules/experiment-server-test_main.iml" group="experiment-server-test" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/experiment-server-test_test.iml" filepath="$PROJECT_DIR$/.idea/modules/experiment-server-test_test.iml" group="experiment-server-test" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/experiment-server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/experiment-server_main.iml" group="experiment-server" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/experiment-server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/experiment-server_test.iml" group="experiment-server" />
       <module fileurl="file://$PROJECT_DIR$/server/server.iml" filepath="$PROJECT_DIR$/server/server.iml" />
