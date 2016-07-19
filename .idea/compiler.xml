@@ -21,8 +21,8 @@
     <bytecodeTargetLevel>
       <module name="data-server_main" target="1.8" />
       <module name="data-server_test" target="1.8" />
-      <module name="experiment-server-test_main" target="1.5" />
-      <module name="experiment-server-test_test" target="1.5" />
+      <module name="experiment-server-test_main" target="1.8" />
+      <module name="experiment-server-test_test" target="1.8" />
       <module name="experiment-server_main" target="1.8" />
       <module name="experiment-server_test" target="1.8" />
       <module name="server_main" target="1.8" />
