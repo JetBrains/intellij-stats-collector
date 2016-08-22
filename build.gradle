@@ -1,0 +1,50 @@
+buildscript {
+    ext.kotlin_version = kotlinVersion
+
+    repositories {
+        mavenCentral()
+        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
+plugins {
+    id "org.jetbrains.intellij" version "0.1.10"
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+sourceSets {
+    main {
+        kotlin.srcDirs 'src'
+        resources.srcDirs 'resources'
+    }
+    test {
+        kotlin.srcDir 'test'
+    }
+}
+
+intellij {
+    version ideaVersion
+    pluginName "Completion Stats Collector"
+}
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-runtime:$kotlinVersion"
+
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile 'org.assertj:assertj-core:3.5.2'
+}
