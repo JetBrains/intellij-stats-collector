@@ -28,6 +28,7 @@ sourceSets {
     }
     test {
         kotlin.srcDir 'test'
+        resources.srcDirs 'testResources'
     }
 }
 
