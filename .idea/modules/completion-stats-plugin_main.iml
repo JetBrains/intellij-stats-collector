@@ -135,6 +135,7 @@
         <JAVADOC />
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/b3c50094d6cda20b1bff92fbe05acd2cdc47edf0/ideaIC-2016.1-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.ideaLibSources/guava-17.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
