@@ -22,7 +22,7 @@ sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
 
 sourceSets {
-    main {
+    main {  
         kotlin.srcDirs 'src'
         resources.srcDirs 'resources'
     }
@@ -35,6 +35,8 @@ sourceSets {
 intellij {
     version ideaVersion
     pluginName "Completion Stats Collector"
+    sameSinceUntilBuild Boolean.FALSE
+    updateSinceUntilBuild Boolean.FALSE
 }
 
 repositories {
