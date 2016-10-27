@@ -43,10 +43,6 @@ repositories {
     mavenCentral()
 }
 
-project.afterEvaluate {
-    project.tasks.runIdea.jvmArgs += '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
-}
-
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     compile "org.jetbrains.kotlin:kotlin-runtime:$kotlinVersion"
