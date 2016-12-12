@@ -6,10 +6,11 @@
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$USER_HOME$/Downloads/gradle-2.14" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleJvm" value="IDEA jdk" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/completion-ranking" />
           </set>
         </option>
       </GradleProjectSettings>

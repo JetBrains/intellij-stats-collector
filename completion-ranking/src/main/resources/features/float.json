@@ -1,0 +1,20 @@
+{
+  "explicitProximity": 0,
+  "query_length": 0,
+  "cerp_length": 0,
+  "sorter": 1,
+  "grouping": 0,
+  "nameEnd": 0,
+  "prefix": 0,
+  "priority": 0,
+  "sameWords": 0,
+  "shorter": 0,
+  "simple": 0,
+  "statics": -3,
+  "stats": 0,
+  "prox_explicitlyImported": 0.0,
+  "prox_knownElement": 0,
+  "prox_sameModule": 0,
+  "prox_samePsiMember": 0,
+  "position": 0
+}

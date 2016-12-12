@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/completion-ranking/completion-ranking.iml" filepath="$PROJECT_DIR$/.idea/modules/completion-ranking/completion-ranking.iml" group="completion-ranking" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/completion-ranking/completion-ranking_main.iml" filepath="$PROJECT_DIR$/.idea/modules/completion-ranking/completion-ranking_main.iml" group="completion-ranking" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/completion-ranking/completion-ranking_test.iml" filepath="$PROJECT_DIR$/.idea/modules/completion-ranking/completion-ranking_test.iml" group="completion-ranking" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/completion-stats-plugin.iml" filepath="$PROJECT_DIR$/.idea/modules/completion-stats-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/completion-stats-plugin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/completion-stats-plugin_main.iml" group="completion-stats-plugin" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/completion-stats-plugin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/completion-stats-plugin_test.iml" group="completion-stats-plugin" />

@@ -4,6 +4,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     }
 
     dependencies {
@@ -15,11 +16,13 @@ plugins {
     id "org.jetbrains.intellij" version "0.1.10"
 }
 
-apply plugin: 'java'
-apply plugin: 'kotlin'
-
-sourceCompatibility = javaVersion
-targetCompatibility = javaVersion
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+    
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+}
 
 sourceSets {
     main {  
@@ -39,14 +42,19 @@ intellij {
     updateSinceUntilBuild Boolean.FALSE
 }
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
+    }
 }
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile "org.jetbrains.kotlin:kotlin-runtime:$kotlinVersion"
+allprojects {
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        compile "org.jetbrains.kotlin:kotlin-runtime:$kotlinVersion"
 
-    testCompile 'org.mockito:mockito-all:2.0.2-beta'
-    testCompile 'org.assertj:assertj-core:3.5.2'
+        testCompile 'org.mockito:mockito-all:2.0.2-beta'
+        testCompile 'org.assertj:assertj-core:3.5.2'
+    }
 }
