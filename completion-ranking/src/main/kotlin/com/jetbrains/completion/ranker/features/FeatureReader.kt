@@ -11,12 +11,14 @@ typealias BinaryFeatureInfo = Map<String, Map<String, Double>>
 
 private val gson = Gson()
 
-object FeaturesConstants {
+object FeatureUtils {
     val UNDEFINED = "UNDEFINED"
     val OTHER = "OTHER"
 
     val RELEVANCE = "relevance"
     val PROXIMITY = "proximity"
+    
+    fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
 }
 
 class Features(val relevance: Set<String>, val proximity: Set<String>)
@@ -25,8 +27,8 @@ fun readFeatures(): Features {
     val text = readFile("features/all_features.json")
     val typeToken = object : TypeToken<Map<String, Set<String>>>() {}
     val map = gson.fromJson<Map<String, Set<String>>>(text, typeToken.type)
-    val relevance = map[FeaturesConstants.RELEVANCE] ?: emptySet()
-    val proximity = map[FeaturesConstants.PROXIMITY] ?: emptySet()
+    val relevance = map[FeatureUtils.RELEVANCE] ?: emptySet()
+    val proximity = map[FeatureUtils.PROXIMITY] ?: emptySet()
     return Features(relevance, proximity)
 }
 
@@ -46,6 +48,19 @@ fun readDoubleFeaturesInfo(): DoubleFeatureInfo {
     val text = readFile("features/float.json")
     val typeToken = object : TypeToken<DoubleFeatureInfo>() {}
     return gson.fromJson<DoubleFeatureInfo>(text, typeToken.type)
+}
+
+fun readFeaturesOrder(): Map<String, Int> {
+    val text = readFile("features/final_features_order.txt")
+    
+    var index = 0
+    val map = mutableMapOf<String, Int>()
+    text.split("\n").forEach { 
+        val featureName = it.trim()
+        map[featureName] = index++
+    }
+    
+    return map
 }
 
 private fun readFile(fileName: String): String {

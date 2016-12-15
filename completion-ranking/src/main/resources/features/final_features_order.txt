@@ -1,8 +1,3 @@
-user_id
-session_id
-event_id
-cerp_id
-target
 position
 position=UNDEFINED
 query_length
