@@ -56,5 +56,6 @@ allprojects {
 
         testCompile 'org.mockito:mockito-all:2.0.2-beta'
         testCompile 'org.assertj:assertj-core:3.5.2'
+        testCompile 'junit:junit:4.12'
     }
 }

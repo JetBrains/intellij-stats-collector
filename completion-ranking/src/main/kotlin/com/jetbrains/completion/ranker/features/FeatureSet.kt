@@ -10,7 +10,7 @@ class FeatureProvider(private val allFeatures: Features) {
     
     fun createFullFeaturesMap(lookupItemRelevanceObjects: Map<String, Any>): Map<String, Any> {
         val lookupItemProximity = lookupItemRelevanceObjects[FeatureUtils.PROXIMITY] as? Map<String, Any> ?: emptyMap()
-        val lookupItemRelevance = lookupItemRelevanceObjects.filter { it.key != FeatureUtils.PROXIMITY }
+        val lookupItemRelevance = lookupItemRelevanceObjects[FeatureUtils.RELEVANCE] as? Map<String, Any> ?: emptyMap()
         
         if (hasAnyUnknownFeatures(lookupItemProximity, lookupItemRelevance)) return emptyMap()
         
@@ -34,37 +34,77 @@ class FeatureProvider(private val allFeatures: Features) {
 class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo, 
                          private val doubleFeatures: DoubleFeatureInfo, 
                          private val categoricalFeatures: CategoricalFeatureInfo,
-                         private val featuresOrder: Map<String, Int>) {
+                         private val featuresOrder: Map<String, Int>,
+                         private val featuresProvider: FeatureProvider) {
 
-    private val featureArray: Array<Double> = Array(featuresOrder.size, { 0.0 })
-    private val maxDoubleValue = Math.pow(10.0, 10.0)
-
-    fun toFeatureArray(): Array<Double> {
-        return emptyArray()
+    companion object {
+        private val MAX_DOUBLE_VALUE = Math.pow(10.0, 10.0)
     }
     
+    private val featureArray: Array<Double> = Array(featuresOrder.size, { 0.0 })
+
+    fun toFeatureArray(lookupRelevance: Map<String, Any>): Array<Double> {
+        val fullFeaturesMap = featuresProvider.createFullFeaturesMap(lookupRelevance)
+        if (fullFeaturesMap.isEmpty()) return emptyArray()
+
+        resetFeatureArray()
+        
+        val relevance: Map<String, Any> = lookupRelevance[FeatureUtils.RELEVANCE] as? Map<String, Any> ?: emptyMap()
+        val proximity: Map<String, Any> = lookupRelevance[FeatureUtils.PROXIMITY] as? Map<String, Any> ?: emptyMap()
+        
+        relevance.forEach { name, value -> processFeature(name, value) }
+        proximity.forEach { name, value -> processFeature(name, value) }
+        
+        return featureArray
+    }
+
+    private fun resetFeatureArray() {
+        featureArray.fill(0.0)
+        featuresOrder
+                .filterKeys { it.endsWith(FeatureUtils.UNDEFINED) }
+                .map { it.value }
+                .forEach {
+                    featureArray[it] = 1.0
+                }
+    }
+
     fun processFeature(name: String, value: Any) {
         when {
-            binaryFeatures[name] != null -> processBinary(name, value, binaryFeatures[name]!!)
-            doubleFeatures[name] != null -> processDouble(name, value, doubleFeatures[name]!!)
+            binaryFeatures[name] != null      -> processBinary(name, value, binaryFeatures[name]!!)
+            doubleFeatures[name] != null      -> processDouble(name, value, doubleFeatures[name]!!)
             categoricalFeatures[name] != null -> processCategorical(name, value, categoricalFeatures[name]!!)
-            else -> throw UnsupportedOperationException()
+            else                              -> throw UnsupportedOperationException()
         }
     }
 
     private fun processCategorical(name: String, value: Any, knownValuesSet: Set<String>) {
+        if (value == FeatureUtils.UNDEFINED) {
+            return
+        }
+        else if (knownValuesSet.contains(value)) {
+            val index = getFeatureIndex("$name=$value")
+            featureArray[index] = 1.0
+            
+            val undefIndex = getUndefinedFeatureIndex(name)
+            featureArray[undefIndex] = 0.0
+        }
+        else {
+            val index = getFeatureIndex("$name=${FeatureUtils.OTHER}")
+            featureArray[index] = 1.0
+        }
     }
 
     private fun processDouble(name: String, value: Any, defaultValue: Double) {
         val index = getFeatureIndex(name)
         if (value == FeatureUtils.UNDEFINED) {
             featureArray[index] = defaultValue
-            
-            val undefIndex = getUndefinedFeatureIndex(name)
-            featureArray[undefIndex] = 1.0
         }
         else {
-            featureArray[index] = value as Double
+            val doubleValue = (value as String).toDouble()
+            featureArray[index] = Math.min(doubleValue, MAX_DOUBLE_VALUE)
+            
+            val undefIndex = getUndefinedFeatureIndex(name)
+            featureArray[undefIndex] = 0.0
         }
     }
 
@@ -74,12 +114,12 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
 
         if (value == "UNDEFINED" || transformedValue == null) {
             featureArray[index] == valueTransformer["default"]
-            
-            val undefIndex = getUndefinedFeatureIndex(name)
-            featureArray[undefIndex] == 1.0
         }
         else {
             featureArray[index] = transformedValue
+            
+            val undefIndex = getUndefinedFeatureIndex(name)
+            featureArray[undefIndex] == 0.0
         }
     }
 
