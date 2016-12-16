@@ -18,6 +18,8 @@ object FeatureUtils {
     val RELEVANCE = "relevance"
     val PROXIMITY = "proximity"
     
+    val DEFAULT = "default"
+    
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
 }
 

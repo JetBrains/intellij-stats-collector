@@ -11,15 +11,17 @@ private val gson = Gson()
 
 class FeatureTransformationTest {
     
+    
     private lateinit var transformer: FeatureTransformer
+    private lateinit var featuresOrder: Map<String, Int>
 
     @Before
     fun setUp() {
         val binaryFeatures = readBinaryFeaturesInfo()
         val doubleFeatures = readDoubleFeaturesInfo()
         val categoricalFeatures = readCategoricalFeaturesInfo()
-        val featuresOrder = readFeaturesOrder()
         val allFeatures = readFeatures()
+        featuresOrder = readFeaturesOrder()
         transformer = FeatureTransformer(binaryFeatures, doubleFeatures, categoricalFeatures, featuresOrder, FeatureProvider(allFeatures))
     }
 
@@ -28,7 +30,17 @@ class FeatureTransformationTest {
         val lookup: List<Any> = readCompletionLookup("features_transformation/completion_list.json")
         val array = transformer.toFeatureArray(lookup[0] as Map<String, Any>)
 
+        val features = readFile("features_transformation/result_feature_array.txt").split("\n")
+
         println()
+        
+        val diff = array.toList().zip(features.map(String::toDouble)).map { it.first - it.second }
+
+        println(diff.sum())
+
+        val error = diff.indexOfFirst { Math.abs(it) > 0.1 }
+
+        println(featuresOrder.entries.find { it.value == error })
     }
 
 

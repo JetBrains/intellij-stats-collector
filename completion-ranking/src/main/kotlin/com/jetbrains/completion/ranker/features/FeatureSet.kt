@@ -53,7 +53,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         val proximity: Map<String, Any> = lookupRelevance[FeatureUtils.PROXIMITY] as? Map<String, Any> ?: emptyMap()
         
         relevance.forEach { name, value -> processFeature(name, value) }
-        proximity.forEach { name, value -> processFeature(name, value) }
+        proximity.forEach { name, value -> processProximityFeature(name, value) }
         
         return featureArray
     }
@@ -66,6 +66,30 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                 .forEach {
                     featureArray[it] = 1.0
                 }
+        
+        doubleFeatures.entries
+                .forEach {
+                    val index = featuresOrder[it.key]
+                    if (index == null) {
+                        println("Feature order is null for ${it.key}")
+                        return@forEach
+                    }
+                    
+                    val defaultValue = it.value
+                    featureArray[index] = defaultValue
+                }
+        
+        binaryFeatures.entries
+                .forEach { 
+                    val index = featuresOrder[it.key]
+                    if (index == null) {
+                        println("Feature order is null for ${it.key}")
+                        return@forEach
+                    }
+                    
+                    val defaultValue = it.value[FeatureUtils.DEFAULT]
+                    featureArray[index] = defaultValue!!
+                }
     }
 
     fun processFeature(name: String, value: Any) {
@@ -75,6 +99,10 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
             categoricalFeatures[name] != null -> processCategorical(name, value, categoricalFeatures[name]!!)
             else                              -> throw UnsupportedOperationException()
         }
+    }
+
+    fun processProximityFeature(name: String, value: Any) {
+        processFeature("prox_$name", value)
     }
 
     private fun processCategorical(name: String, value: Any, knownValuesSet: Set<String>) {
