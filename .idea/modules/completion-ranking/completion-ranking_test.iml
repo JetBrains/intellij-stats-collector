@@ -14,6 +14,7 @@
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.1-M03" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.1-M03" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.1-M03" level="project" />
     <orderEntry type="library" name="Gradle: org.mockito:mockito-all:2.0.2-beta" level="project" />
     <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.5.2" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />

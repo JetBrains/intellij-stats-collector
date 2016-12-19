@@ -1,5 +1,7 @@
 package com.jetbrains.completion.ranker.features
 
+import kotlin.reflect.memberProperties
+
 
 class FeatureProvider(private val allFeatures: Features) {
     
@@ -30,6 +32,11 @@ class FeatureProvider(private val allFeatures: Features) {
     
 }
 
+class CompletionState(val position: Int?,
+                      val query_length: Int?,
+                      val cerp_length: Int?,
+                      val result_length: Int?)
+
 
 class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo, 
                          private val doubleFeatures: DoubleFeatureInfo, 
@@ -43,7 +50,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     
     private val featureArray: Array<Double> = Array(featuresOrder.size, { 0.0 })
 
-    fun toFeatureArray(lookupRelevance: Map<String, Any>): Array<Double> {
+    fun toFeatureArray(state: CompletionState, lookupRelevance: Map<String, Any>): Array<Double> {
         val fullFeaturesMap = featuresProvider.createFullFeaturesMap(lookupRelevance)
         if (fullFeaturesMap.isEmpty()) return emptyArray()
 
@@ -54,8 +61,26 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         
         relevance.forEach { name, value -> processFeature(name, value) }
         proximity.forEach { name, value -> processProximityFeature(name, value) }
+
+        processCompletionState(state)
         
         return featureArray
+    }
+
+    private fun processCompletionState(state: CompletionState) {
+        CompletionState::class.memberProperties.forEach {
+            val propertyValue = it.get(state)
+            if (propertyValue != null) {
+                val index = getFeatureIndex(it.name)
+                featureArray[index] = (propertyValue as Int).toDouble()
+
+                val undefIndex = getUndefinedFeatureIndex(it.name)
+                featureArray[undefIndex] = 0.0
+            } else {
+                val index = getFeatureIndex(it.name)
+                featureArray[index] = doubleFeatures[it.name]!!
+            }
+        }
     }
 
     private fun resetFeatureArray() {

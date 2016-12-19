@@ -25,7 +25,7 @@ object FeatureUtils {
 
 class Features(val relevance: Set<String>, val proximity: Set<String>)
 
-fun readFeatures(): Features {
+fun readAllFeatures(): Features {
     val text = readFile("features/all_features.json")
     val typeToken = object : TypeToken<Map<String, Set<String>>>() {}
     val map = gson.fromJson<Map<String, Set<String>>>(text, typeToken.type)

@@ -1,3 +1,11 @@
+position
+position=UNDEFINED
+query_length
+query_length=UNDEFINED
+cerp_length
+cerp_length=UNDEFINED
+result_length
+result_length=UNDEFINED
 accessible=NORMAL
 accessible=UNDEFINED
 accessible=DEPRECATED

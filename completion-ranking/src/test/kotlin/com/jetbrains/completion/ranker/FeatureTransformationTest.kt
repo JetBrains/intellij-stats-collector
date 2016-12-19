@@ -20,7 +20,7 @@ class FeatureTransformationTest {
         val binaryFeatures = readBinaryFeaturesInfo()
         val doubleFeatures = readDoubleFeaturesInfo()
         val categoricalFeatures = readCategoricalFeaturesInfo()
-        val allFeatures = readFeatures()
+        val allFeatures = readAllFeatures()
         featuresOrder = readFeaturesOrder()
         transformer = FeatureTransformer(binaryFeatures, doubleFeatures, categoricalFeatures, featuresOrder, FeatureProvider(allFeatures))
     }
@@ -28,7 +28,9 @@ class FeatureTransformationTest {
     @Test
     fun `test xxx`() {
         val lookup: List<Any> = readCompletionLookup("features_transformation/completion_list.json")
-        val array = transformer.toFeatureArray(lookup[0] as Map<String, Any>)
+        
+        val state = CompletionState(0, 1, 4, 5)
+        val array = transformer.toFeatureArray(state, lookup[0] as Map<String, Any>)
 
         val features = readFile("features_transformation/result_feature_array.txt").split("\n")
 
