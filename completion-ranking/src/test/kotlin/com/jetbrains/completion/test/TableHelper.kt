@@ -41,7 +41,7 @@ class DataTable(labels: List<String>) {
 
     fun addRow(data: List<String>) {
         assert(data.size == columnNameToIndex.size)
-        val row = Row(data)
+        val row = Row(data, rows.size)
         rows.add(row)
     }
 
@@ -54,7 +54,7 @@ class DataTable(labels: List<String>) {
 
     private fun getColumnIndex(columnName: String) = columnNameToIndex[columnName]!!
 
-    inner class Row(private val values: List<String>) {
+    inner class Row(private val values: List<String>, val index: Int) {
         fun getValueOf(columnName: String): String {
             val index = getColumnIndex(columnName)
             return values[index]

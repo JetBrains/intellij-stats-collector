@@ -1,5 +1,6 @@
 package com.jetbrains.completion.ranker.features
 
+import com.google.gson.reflect.TypeToken
 import kotlin.reflect.memberProperties
 
 
@@ -57,9 +58,9 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         resetFeatureArray()
         
         val relevance: Map<String, Any> = lookupRelevance[FeatureUtils.RELEVANCE] as? Map<String, Any> ?: emptyMap()
-        val proximity: Map<String, Any> = lookupRelevance[FeatureUtils.PROXIMITY] as? Map<String, Any> ?: emptyMap()
+        val proximity: Map<String, Any> = (relevance[FeatureUtils.PROXIMITY] as? String)?.toRelevanceMap() ?: emptyMap()
         
-        relevance.forEach { name, value -> processFeature(name, value) }
+        relevance.filter { it.key != FeatureUtils.PROXIMITY } .forEach { name, value -> processFeature(name, value) }
         proximity.forEach { name, value -> processProximityFeature(name, value) }
 
         processCompletionState(state)
@@ -94,11 +95,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         
         doubleFeatures.entries
                 .forEach {
-                    val index = featuresOrder[it.key]
-                    if (index == null) {
-                        println("Feature order is null for ${it.key}")
-                        return@forEach
-                    }
+                    val index = featuresOrder[it.key]!!
                     
                     val defaultValue = it.value
                     featureArray[index] = defaultValue
@@ -106,11 +103,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         
         binaryFeatures.entries
                 .forEach { 
-                    val index = featuresOrder[it.key]
-                    if (index == null) {
-                        println("Feature order is null for ${it.key}")
-                        return@forEach
-                    }
+                    val index = featuresOrder[it.key]!!
                     
                     val defaultValue = it.value[FeatureUtils.DEFAULT]
                     featureArray[index] = defaultValue!!
@@ -122,7 +115,10 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
             binaryFeatures[name] != null      -> processBinary(name, value, binaryFeatures[name]!!)
             doubleFeatures[name] != null      -> processDouble(name, value, doubleFeatures[name]!!)
             categoricalFeatures[name] != null -> processCategorical(name, value, categoricalFeatures[name]!!)
-            else                              -> throw UnsupportedOperationException()
+            else -> {
+                println("Unknown feature $name")
+                throw UnsupportedOperationException()
+            }
         }
     }
 
@@ -172,7 +168,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
             featureArray[index] = transformedValue
             
             val undefIndex = getUndefinedFeatureIndex(name)
-            featureArray[undefIndex] == 0.0
+            featureArray[undefIndex] = 0.0
         }
     }
 
@@ -186,6 +182,3 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     }
 
 }
-
-
-

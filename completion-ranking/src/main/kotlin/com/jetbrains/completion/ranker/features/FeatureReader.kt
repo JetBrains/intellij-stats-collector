@@ -9,7 +9,7 @@ typealias DoubleFeatureInfo = Map<String, Double>
 typealias CategoricalFeatureInfo = Map<String, Set<String>>
 typealias BinaryFeatureInfo = Map<String, Map<String, Double>>
 
-private val gson = Gson()
+val gson = Gson()
 
 object FeatureUtils {
     val UNDEFINED = "UNDEFINED"
@@ -69,4 +69,26 @@ private fun readFile(fileName: String): String {
     val file = gson.javaClass.classLoader.getResource(fileName).file
     val text = File(file).readText()
     return text
+}
+
+fun String.toRelevanceMap(): Map<String, Any> {
+    val items = replace("[", "").replace("]", "").split(",")
+
+    return items.map { 
+        val (key, value) = it.trim().split("=")
+        key to value
+    }.toMap()
+    
+}
+
+typealias CompletionData = List<Map<String, Any>>
+
+typealias CompletionItem = Map<String, Any>
+
+fun CompletionData.findWithSessionUid(sessionUid: String): List<CompletionItem> = filter { it["sessionUid"] == sessionUid }
+
+fun readJsonMap(fileName: String): CompletionData {
+    val text = readFile(fileName)
+    val typeToken = object : TypeToken<CompletionData>() {}
+    return gson.fromJson<CompletionData>(text, typeToken.type)
 }
