@@ -1,9 +1,11 @@
 package com.jetbrains.completion.ranker
 
-interface CompletionRanker {
+import com.completion.ranker.models.gbt_8.MLWhiteBox
+
+class CompletionRanker {
+    private val box = MLWhiteBox()
     
     fun rank(vararg features: Double): Double {
-        return 0.0
+        return box.makePredict(*features)
     }
-    
 }
