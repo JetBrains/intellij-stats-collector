@@ -1,6 +1,5 @@
 package com.jetbrains.completion.ranker.features
 
-import com.google.gson.reflect.TypeToken
 import kotlin.reflect.memberProperties
 
 

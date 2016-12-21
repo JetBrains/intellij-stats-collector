@@ -42,28 +42,19 @@ class FeatureTransformationTest {
         featuresOrder = readFeaturesOrder()
         transformer = FeatureTransformer(binaryFeatures, doubleFeatures, categoricalFeatures, featuresOrder, FeatureProvider(allFeatures))
     }
-
-
+    
     @Test
-    fun `test session`() {
-        processSession(cleanTable, rawCompletionData, "88cdc0301a2b")
-    }
-
-    @Test
-    fun `test yyy`() {
+    fun `test check all sessions valid`() {
         val sessions = cleanTable.getValuesOfColumn("session_id")
         sessions.forEach {
-            processSession(cleanTable, rawCompletionData, it)
+            checkSession(cleanTable, rawCompletionData, it)
         }
     }
 
-    private fun processSession(cleanTable: DataTable,
-                               rawCompletionData: CompletionData,
-                               session_id: String, 
-                               row: Int = -1) {
-
-        println("Processing session: $session_id")
-
+    private fun checkSession(cleanTable: DataTable,
+                             rawCompletionData: CompletionData,
+                             session_id: String) {
+        
         val rawData: List<CompletionItem> = rawCompletionData.findWithSessionUid(session_id)
         val cleanRaws = cleanTable.getRows("session_id", session_id)
 
@@ -81,28 +72,18 @@ class FeatureTransformationTest {
 
         val fullLookupSent: MutableList<CompletionItem> = map.fold(mutableListOf<CompletionItem>(), { a, b -> a.merge(b) })
 
-        if (cleanRaws.size != fullLookupSent.size) {
-            val text = {
-                "For session id: $session_id; " +
-                        "Clean raws size: ${cleanRaws.size}; " +
-                        "Completion lookup items: ${completionItems.size}"
-            }()
-            println(text)
-            throw UnsupportedOperationException()
-        }
-
-        if (row > 0) {
-            checkRow(fullLookupSent[row], cleanRaws[row])
-            return
-        }
+        assert(cleanRaws.size == fullLookupSent.size, { "For session id: $session_id;" +
+                " Clean raws size: ${cleanRaws.size};" +
+                " Completion lookup items: ${completionItems.size}"
+        })
         
         cleanRaws.zip(fullLookupSent)
                 .forEach { 
-                    checkRow(it.second, it.first) 
+                    assertFeaturesEqual(it.second, it.first) 
                 }
     }
 
-    private fun checkRow(relevance: CompletionItem, cleanRow: DataTable.Row) {
+    private fun assertFeaturesEqual(relevance: CompletionItem, cleanRow: DataTable.Row) {
         val position = cleanRow.getValueOf("position").toDouble().toInt()
         val resultLength = cleanRow.getValueOf("result_length").toDouble().toInt()
         val cerpLength = cleanRow.getValueOf("cerp_length").toDouble().toInt()
