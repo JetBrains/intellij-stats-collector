@@ -13,6 +13,12 @@ fun <T> MutableList<T>.merge(another: List<T>): MutableList<T> {
     return this
 }
 
+fun readScores(): List<Double>  {
+    val file = getFile("features_transformation/0997_score.txt")
+    return file.readLines()
+            .map { it.split("\t")[6].trim().toDouble() }
+}
+
 
 class FeatureTransformationTest {
     
@@ -21,6 +27,10 @@ class FeatureTransformationTest {
 
     private lateinit var rawCompletionData: CompletionData
     private lateinit var cleanTable: DataTable
+    
+    private lateinit var scores: List<Double>
+    
+    private val ranker = CompletionRanker()
     
     @Before
     fun setUp() {
@@ -33,6 +43,8 @@ class FeatureTransformationTest {
         cleanTable = readTable("sample_data/0997_clean.txt")
         
         featuresOrder = readFeaturesOrder()
+        scores = readScores()
+        
         transformer = FeatureTransformer(binaryFeatures, doubleFeatures, categoricalFeatures, featuresOrder, FeatureProvider(allFeatures))
     }
     
@@ -42,6 +54,10 @@ class FeatureTransformationTest {
         sessions.forEach {
             checkSession(cleanTable, rawCompletionData, it)
         }
+
+        println("Avg time ms: ${total / count}")
+
+        println("Total rows: ${cleanTable.getRowsCount()}")
     }
 
     private fun checkSession(cleanTable: DataTable,
@@ -71,9 +87,13 @@ class FeatureTransformationTest {
         
         cleanRaws.zip(fullLookupSent)
                 .forEach { 
-                    assertFeaturesEqual(it.second, it.first) 
+                    assertFeaturesEqual(it.second, it.first)
                 }
     }
+    
+    
+    var count = 0
+    var total = 0L
 
     private fun assertFeaturesEqual(relevance: CompletionItem, cleanRow: DataTable.Row) {
         val position = cleanRow.getValueOf("position").toDouble().toInt()
@@ -82,8 +102,24 @@ class FeatureTransformationTest {
         val queryLength = cleanRow.getValueOf("query_length").toDouble().toInt()
         val state = CompletionState(position, queryLength, cerpLength, resultLength)
         
+        val startTime = System.currentTimeMillis()
         val features = transformer.toFeatureArray(state, relevance)
+        
+        total += (System.currentTimeMillis() - startTime)
+        count++
+        
+        
         checkArraysEqual(cleanRow, features)
+
+        val rowIndex = cleanRow.index
+        val expectedRank = scores[rowIndex]
+        val realRank = ranker.rank(features)
+        
+        val distance = Math.abs(expectedRank - realRank)
+
+        if (distance > 0.01) {
+            println("Raw: ${cleanRow.index} Distance: $distance Expected: $expectedRank Real: $realRank")
+        }
     }
 
     fun checkArraysEqual(cleanRow: DataTable.Row, features: Array<Double>) {
@@ -100,8 +136,6 @@ class FeatureTransformationTest {
                 ok++
             }
         }
-
-        println("Total OK: $ok ERROR: $error")
 
         if (error > 0) {
             println("On row: ${cleanRow.index}")

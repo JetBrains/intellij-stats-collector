@@ -62,4 +62,8 @@ class DataTable(labels: List<String>) {
 
         fun getValueAt(index: Int) = values[index]
     }
+
+    fun getRowsCount(): Int {
+        return rows.size
+    }
 }
