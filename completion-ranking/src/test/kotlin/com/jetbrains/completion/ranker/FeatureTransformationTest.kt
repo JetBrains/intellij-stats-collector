@@ -14,7 +14,7 @@ fun <T> MutableList<T>.merge(another: List<T>): MutableList<T> {
 }
 
 fun readScores(): List<Double>  {
-    val file = getFile("features_transformation/0997_score.txt")
+    val file = getFile("features_transformation/0997_score_true.txt")
     return file.readLines()
             .map { it.split("\t")[6].trim().toDouble() }
 }
@@ -117,7 +117,7 @@ class FeatureTransformationTest {
         
         val distance = Math.abs(expectedRank - realRank)
 
-        if (distance > 0.01) {
+        if (distance > 0.0000000000001) {
             println("Raw: ${cleanRow.index} Distance: $distance Expected: $expectedRank Real: $realRank")
         }
     }
@@ -129,7 +129,7 @@ class FeatureTransformationTest {
         featuresOrder.entries.forEach { (name, index) ->
             val cleanValue = cleanRow.getValueOf(name).toDouble()
             val oursValue = features[index]
-            if (Math.abs(oursValue - cleanValue) > 0.01) {
+            if (Math.abs(oursValue - cleanValue) > 0.00000001) {
                 println("Feature $name mistmatch; clean: $cleanValue ours: $oursValue")
                 error++
             } else {
