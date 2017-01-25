@@ -54,9 +54,6 @@ class FeatureTransformationTest {
         sessions.forEach {
             checkSession(cleanTable, rawCompletionData, it)
         }
-
-        println("Avg time ms: ${total / count}")
-
         println("Total rows: ${cleanTable.getRowsCount()}")
     }
 
@@ -92,9 +89,6 @@ class FeatureTransformationTest {
     }
     
     
-    var count = 0
-    var total = 0L
-
     private fun assertFeaturesEqual(relevance: CompletionItem, cleanRow: DataTable.Row) {
         val position = cleanRow.getValueOf("position").toDouble().toInt()
         val resultLength = cleanRow.getValueOf("result_length").toDouble().toInt()
@@ -102,12 +96,7 @@ class FeatureTransformationTest {
         val queryLength = cleanRow.getValueOf("query_length").toDouble().toInt()
         val state = CompletionState(position, queryLength, cerpLength, resultLength)
         
-        val startTime = System.currentTimeMillis()
         val features = transformer.toFeatureArray(state, relevance)
-        
-        total += (System.currentTimeMillis() - startTime)
-        count++
-        
         
         checkArraysEqual(cleanRow, features)
 
