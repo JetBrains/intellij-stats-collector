@@ -50,9 +50,9 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     
     private val featureArray: Array<Double> = Array(featuresOrder.size, { 0.0 })
 
-    fun toFeatureArray(state: CompletionState, lookupRelevance: Map<String, Any>): Array<Double> {
+    fun toFeatureArray(state: CompletionState, lookupRelevance: Map<String, Any>): Array<Double>? {
         val fullFeaturesMap = featuresProvider.createFullFeaturesMap(lookupRelevance)
-        if (fullFeaturesMap.isEmpty()) return emptyArray()
+        if (fullFeaturesMap.isEmpty()) return null
 
         resetFeatureArray()
         

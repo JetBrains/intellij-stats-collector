@@ -96,7 +96,7 @@ class FeatureTransformationTest {
         val queryLength = cleanRow.getValueOf("query_length").toDouble().toInt()
         val state = CompletionState(position, queryLength, cerpLength, resultLength)
         
-        val features = transformer.toFeatureArray(state, relevance)
+        val features = transformer.toFeatureArray(state, relevance)!!
         
         checkArraysEqual(cleanRow, features)
 

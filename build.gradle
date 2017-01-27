@@ -49,6 +49,10 @@ allprojects {
     }
 }
 
+dependencies {
+    compile project(":completion-ranking")
+}
+
 allprojects {
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
