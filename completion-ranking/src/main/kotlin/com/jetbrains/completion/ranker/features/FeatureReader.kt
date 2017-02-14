@@ -3,6 +3,7 @@ package com.jetbrains.completion.ranker.features
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
+import java.net.URL
 
 
 typealias DoubleFeatureInfo = Map<String, Double>
@@ -66,9 +67,8 @@ fun readFeaturesOrder(): Map<String, Int> {
 }
 
 private fun readFile(fileName: String): String {
-    val file = gson.javaClass.classLoader.getResource(fileName).file
-    val text = File(file).readText()
-    return text
+    val fileStream = gson.javaClass.classLoader.getResourceAsStream(fileName)
+    return fileStream.reader().readText()
 }
 
 fun String.toRelevanceMap(): Map<String, Any> {
