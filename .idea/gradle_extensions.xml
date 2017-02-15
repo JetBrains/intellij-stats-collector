@@ -10,10 +10,10 @@
             <ext name="reporting" type="org.gradle.api.reporting.ReportingExtension" />
             <ext name="intellij" type="org.jetbrains.intellij.IntelliJPluginExtension" />
             <ext name="kapt" type="org.jetbrains.kotlin.gradle.plugin.KaptExtension" />
-            <prop name="kotlinVersion">1.1-M03</prop>
-            <prop name="kotlin_version">1.1-M03</prop>
-            <prop name="javaVersion">1.8</prop>
-            <prop name="ideaVersion">2016.1</prop>
+            <prop name="kotlinVersion" />
+            <prop name="kotlin_version" />
+            <prop name="javaVersion" />
+            <prop name="ideaVersion" />
             <task name="components" type="org.gradle.api.reporting.components.ComponentReport">Displays the components produced by root project 'completion-stats-plugin'. [incubating]&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="buildDependents">Assembles and tests this project and all projects that depend on it.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="projects" type="org.gradle.api.tasks.diagnostics.ProjectReportTask">Displays the sub-projects of root project 'completion-stats-plugin'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
@@ -52,6 +52,7 @@
             <task name="processTestResources" type="org.gradle.language.jvm.tasks.ProcessResources">Processes test resources.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
             <task name="help" type="org.gradle.configuration.Help">Displays a help message.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="compileKotlin" type="org.jetbrains.kotlin.gradle.tasks.KotlinCompile">Compiles the source set 'main'.kotlin.&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
+            <task name="runIde" type="org.jetbrains.intellij.tasks.RunIdeaTask">Runs Intellij IDEA with installed plugin.&lt;p&gt;&lt;i&gt;Task group: intellij&lt;i&gt;</task>
             <task name="build">Assembles and tests this project.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="buildNeeded">Assembles and tests this project and all projects it depends on.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="ideaProject" type="org.gradle.plugins.ide.idea.GenerateIdeaProject">Generates IDEA project file (IPR)&lt;p&gt;&lt;i&gt;Task group: other&lt;i&gt;</task>
@@ -79,9 +80,9 @@
             <ext name="defaultArtifacts" type="org.gradle.api.internal.plugins.DefaultArtifactPublicationSet" />
             <ext name="reporting" type="org.gradle.api.reporting.ReportingExtension" />
             <ext name="kapt" type="org.jetbrains.kotlin.gradle.plugin.KaptExtension" />
-            <prop name="kotlinVersion">1.1-M03</prop>
-            <prop name="javaVersion">1.8</prop>
-            <prop name="ideaVersion">2016.1</prop>
+            <prop name="kotlinVersion" />
+            <prop name="javaVersion" />
+            <prop name="ideaVersion" />
             <task name="components" type="org.gradle.api.reporting.components.ComponentReport">Displays the components produced by project ':completion-ranking'. [incubating]&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>
             <task name="buildDependents">Assembles and tests this project and all projects that depend on it.&lt;p&gt;&lt;i&gt;Task group: build&lt;i&gt;</task>
             <task name="projects" type="org.gradle.api.tasks.diagnostics.ProjectReportTask">Displays the sub-projects of project ':completion-ranking'.&lt;p&gt;&lt;i&gt;Task group: help&lt;i&gt;</task>

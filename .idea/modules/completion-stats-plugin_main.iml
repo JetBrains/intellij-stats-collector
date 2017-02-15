@@ -60,8 +60,9 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.1-M03" level="project" />
     <orderEntry type="module-library">
-      <library name="Gradle: com.jetbrains:idea:2016.1">
+      <library name="Gradle: com.jetbrains:ideaIC:2016.1">
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/178543287d6c905a8d64d474cf5a6958c11179f1/ideaIC-2016.1/lib/annotations.jar!/" />
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/178543287d6c905a8d64d474cf5a6958c11179f1/ideaIC-2016.1/lib/asm-all.jar!/" />
@@ -168,12 +169,9 @@
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/178543287d6c905a8d64d474cf5a6958c11179f1/ideaIC-2016.1/lib/xstream-1.4.8.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/b3c50094d6cda20b1bff92fbe05acd2cdc47edf0/ideaIC-2016.1-sources.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.1-M03" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.0" level="project" />
   </component>
 </module>

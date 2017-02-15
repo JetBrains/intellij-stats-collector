@@ -53,6 +53,7 @@
     <orderEntry type="module" module-name="completion-stats-plugin_main" />
     <orderEntry type="module" module-name="completion-ranking_main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.1-M03" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.1-M03" level="project" />
     <orderEntry type="module-library" scope="RUNTIME">
       <library>
         <CLASSES>
@@ -62,9 +63,9 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.1-M03" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.1-M03" level="project" />
     <orderEntry type="module-library">
-      <library name="Gradle: com.jetbrains:idea:2016.1">
+      <library name="Gradle: com.jetbrains:ideaIC:2016.1">
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/178543287d6c905a8d64d474cf5a6958c11179f1/ideaIC-2016.1/lib/annotations.jar!/" />
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/178543287d6c905a8d64d474cf5a6958c11179f1/ideaIC-2016.1/lib/asm-all.jar!/" />
@@ -171,17 +172,18 @@
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/178543287d6c905a8d64d474cf5a6958c11179f1/ideaIC-2016.1/lib/xstream-1.4.8.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2016.1/b3c50094d6cda20b1bff92fbe05acd2cdc47edf0/ideaIC-2016.1-sources.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Gradle: org.objenesis:objenesis:2.5" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy-agent:1.6.5" level="project" />
+    <orderEntry type="library" name="Gradle: net.bytebuddy:byte-buddy:1.6.5" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.1-M03" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.0" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
     <orderEntry type="library" name="Gradle: org.assertj:assertj-core:3.5.2" level="project" />
-    <orderEntry type="library" name="Gradle: org.mockito:mockito-all:2.0.2-beta" level="project" />
+    <orderEntry type="library" name="Gradle: org.mockito:mockito-core:2.7.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.nhaarman:mockito-kotlin:1.3.0" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="completion-stats-plugin_main" />
 </module>
