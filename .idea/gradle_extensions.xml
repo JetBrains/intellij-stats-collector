@@ -9,6 +9,7 @@
             <ext name="defaultArtifacts" type="org.gradle.api.internal.plugins.DefaultArtifactPublicationSet" />
             <ext name="reporting" type="org.gradle.api.reporting.ReportingExtension" />
             <ext name="intellij" type="org.jetbrains.intellij.IntelliJPluginExtension" />
+            <ext name="kotlin" type="org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension" />
             <ext name="kapt" type="org.jetbrains.kotlin.gradle.plugin.KaptExtension" />
             <prop name="kotlinVersion" />
             <prop name="kotlin_version" />
@@ -79,6 +80,7 @@
             <ext name="ext" type="org.gradle.api.internal.plugins.DefaultExtraPropertiesExtension" />
             <ext name="defaultArtifacts" type="org.gradle.api.internal.plugins.DefaultArtifactPublicationSet" />
             <ext name="reporting" type="org.gradle.api.reporting.ReportingExtension" />
+            <ext name="kotlin" type="org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension" />
             <ext name="kapt" type="org.jetbrains.kotlin.gradle.plugin.KaptExtension" />
             <prop name="kotlinVersion" />
             <prop name="javaVersion" />
