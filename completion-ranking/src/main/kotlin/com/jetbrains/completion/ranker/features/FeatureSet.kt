@@ -1,6 +1,6 @@
 package com.jetbrains.completion.ranker.features
 
-import kotlin.reflect.memberProperties
+import kotlin.reflect.full.memberProperties
 
 
 class FeatureProvider(private val allFeatures: Features) {
