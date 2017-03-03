@@ -36,12 +36,12 @@ class FeatureProvider(private val allFeatures: Features) {
  * position - position inside lookup
  * query_length - length of completion prefix filter
  * result_length - length of lookup element string
- * result_length - total lookup elements number
+ * result_length - total lookup elements number - ignored for now since elements are added all the time
  */
-class CompletionState(val position: Int?,
-                      val query_length: Int?,
-                      val cerp_length: Int?,
-                      val result_length: Int?)
+data class CompletionState(val position: Int?,
+                           val query_length: Int?,
+                           val cerp_length: Int?,
+                           val result_length: Int?)
 
 
 class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo, 
