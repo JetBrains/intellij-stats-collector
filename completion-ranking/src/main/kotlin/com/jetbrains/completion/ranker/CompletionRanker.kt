@@ -9,4 +9,7 @@ class CompletionRanker {
         return box.makePredict(*features.toDoubleArray())
     }
     
+    companion object {
+        val rankerVersion = "gbt_8" 
+    }
 }
