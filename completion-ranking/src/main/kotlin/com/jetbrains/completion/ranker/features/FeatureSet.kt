@@ -74,17 +74,23 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     }
 
     private fun processCompletionState(state: CompletionState) {
-        CompletionState::class.memberProperties.forEach {
-            val propertyValue = it.get(state)
-            if (propertyValue != null) {
-                val index = getFeatureIndex(it.name)
-                featureArray[index] = (propertyValue as Int).toDouble()
+        val features = listOf(
+                "position" to state.position, 
+                "query_length" to state.query_length, 
+                "cerp_length" to state.cerp_length, 
+                "result_length" to state.result_length)
+        
+        features.forEach {
+            val value = it.second
+            if (value != null) {
+                val index = getFeatureIndex(it.first)
+                featureArray[index] = value.toDouble()
 
-                val undefIndex = getUndefinedFeatureIndex(it.name)
+                val undefIndex = getUndefinedFeatureIndex(it.first)
                 featureArray[undefIndex] = 0.0
             } else {
-                val index = getFeatureIndex(it.name)
-                featureArray[index] = doubleFeatures[it.name]!!
+                val index = getFeatureIndex(it.first)
+                featureArray[index] = doubleFeatures[it.first]!!
             }
         }
     }
