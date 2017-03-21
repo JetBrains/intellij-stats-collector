@@ -36,7 +36,6 @@ sourceSets {
 }
 
 intellij {
-    localPath "/Users/yarik-laptop/Library/Application Support/JetBrains/Toolbox/apps/IDEA-U/ch-0/172.536/IntelliJ IDEA 2017.2 EAP.app/Contents"
     version ideaVersion
     pluginName "Completion Stats Collector"
     sameSinceUntilBuild Boolean.FALSE
