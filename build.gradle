@@ -49,9 +49,9 @@ allprojects {
     }
 }
 
-dependencies {
-    compile project(":completion-ranking")
-}
+//dependencies {
+//    compile project(":completion-ranking")
+//}
 
 allprojects {
     dependencies {
