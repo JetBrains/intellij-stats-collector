@@ -3,27 +3,32 @@ package com.jetbrains.completion.ranker.features
 
 class FeatureProvider(private val allFeatures: Features) {
     
-    private fun hasAnyUnknownFeatures(lookupItemProximity: Map<String, Any>, lookupItemRelevance: Map<String, Any>): Boolean {
-        return lookupItemProximity.keys.subtract(allFeatures.proximity).isNotEmpty() 
-                || lookupItemRelevance.keys.subtract(allFeatures.relevance).isNotEmpty()
+    private fun hasAnyUnknownFeatures(proximity: Map<String, Any>, relevance: Map<String, Any>): Boolean {
+        val proximityUnknown = proximity.keys.subtract(allFeatures.proximity)
+        val relevanceUnknown = relevance.keys.subtract(allFeatures.relevance)
+        return proximityUnknown.isNotEmpty() || relevanceUnknown.isNotEmpty()
     }
     
-    fun createFullFeaturesMap(lookupItemRelevanceObjects: Map<String, Any>): Map<String, Any> {
-        val lookupItemProximity = lookupItemRelevanceObjects[FeatureUtils.PROXIMITY] as? Map<String, Any> ?: emptyMap()
-        val lookupItemRelevance = lookupItemRelevanceObjects[FeatureUtils.RELEVANCE] as? Map<String, Any> ?: emptyMap()
+    fun createFullFeaturesMap(relevanceObjects: Map<String, Any>): Map<String, Any> {
+        val proximity = relevanceObjects[FeatureUtils.PROXIMITY] as? Map<String, Any> ?: emptyMap()
+        val relevance = relevanceObjects.filter { 
+            it.key != FeatureUtils.PROXIMITY && it.key != FeatureUtils.ML_RANK && it.key != FeatureUtils.BEFORE_ORDER
+        }
+
+        if (hasAnyUnknownFeatures(proximity, relevance)) {
+            return emptyMap()
+        }
         
-        if (hasAnyUnknownFeatures(lookupItemProximity, lookupItemRelevance)) return emptyMap()
+        val undefinedProximityFeatures: Map<String, String> = allFeatures.proximity
+                .subtract(proximity.keys)
+                .associate { it to FeatureUtils.UNDEFINED }
         
-        val undefinedProximityFeatures = allFeatures.proximity
-                .subtract(lookupItemProximity.keys)
-                .associateBy { FeatureUtils.UNDEFINED }
+        val undefinedRelevanceFeatures: Map<String, String> = allFeatures.relevance
+                .subtract(relevance.keys)
+                .associate { it to FeatureUtils.UNDEFINED }
         
-        val undefinedRelevanceFeatures = allFeatures.relevance
-                .subtract(lookupItemRelevance.keys)
-                .associateBy { FeatureUtils.UNDEFINED }
-        
-        val totalProximity = lookupItemProximity + undefinedProximityFeatures
-        val totalRelevance = lookupItemRelevance + undefinedRelevanceFeatures
+        val totalProximity = proximity + undefinedProximityFeatures
+        val totalRelevance = relevance + undefinedRelevanceFeatures
         
         return totalProximity + totalRelevance
     }

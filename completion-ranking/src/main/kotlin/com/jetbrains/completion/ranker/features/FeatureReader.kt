@@ -19,6 +19,9 @@ object FeatureUtils {
     val RELEVANCE = "relevance"
     val PROXIMITY = "proximity"
     
+    val ML_RANK = "ml_rank"
+    val BEFORE_ORDER = "before_rerank_order"
+    
     val DEFAULT = "default"
     
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
