@@ -2,8 +2,6 @@ package com.jetbrains.completion.ranker.features
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.io.File
-import java.net.URL
 
 
 typealias DoubleFeatureInfo = Map<String, Double>
@@ -27,15 +25,15 @@ object FeatureUtils {
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
 }
 
-class Features(val relevance: Set<String>, val proximity: Set<String>)
+class CompletionFeatureSet(val relevance: Set<String>, val proximity: Set<String>)
 
-fun readAllFeatures(): Features {
+fun readAllFeatures(): CompletionFeatureSet {
     val text = readFile("features/all_features.json")
     val typeToken = object : TypeToken<Map<String, Set<String>>>() {}
     val map = gson.fromJson<Map<String, Set<String>>>(text, typeToken.type)
     val relevance = map[FeatureUtils.RELEVANCE] ?: emptySet()
     val proximity = map[FeatureUtils.PROXIMITY] ?: emptySet()
-    return Features(relevance, proximity)
+    return CompletionFeatureSet(relevance, proximity)
 }
 
 fun readBinaryFeaturesInfo(): BinaryFeatureInfo {

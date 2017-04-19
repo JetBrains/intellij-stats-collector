@@ -1,11 +1,11 @@
 package com.jetbrains.completion.ranker.features
 
 
-class FeatureProvider(private val allFeatures: Features) {
+class FeatureProvider(private val features: CompletionFeatureSet) {
     
     private fun hasAnyUnknownFeatures(proximity: Map<String, Any>, relevance: Map<String, Any>): Boolean {
-        val proximityUnknown = proximity.keys.subtract(allFeatures.proximity)
-        val relevanceUnknown = relevance.keys.subtract(allFeatures.relevance)
+        val proximityUnknown = proximity.keys.subtract(features.proximity)
+        val relevanceUnknown = relevance.keys.subtract(features.relevance)
         return proximityUnknown.isNotEmpty() || relevanceUnknown.isNotEmpty()
     }
     
@@ -19,11 +19,11 @@ class FeatureProvider(private val allFeatures: Features) {
             return emptyMap()
         }
         
-        val undefinedProximityFeatures: Map<String, String> = allFeatures.proximity
+        val undefinedProximityFeatures: Map<String, String> = features.proximity
                 .subtract(proximity.keys)
                 .associate { it to FeatureUtils.UNDEFINED }
         
-        val undefinedRelevanceFeatures: Map<String, String> = allFeatures.relevance
+        val undefinedRelevanceFeatures: Map<String, String> = features.relevance
                 .subtract(relevance.keys)
                 .associate { it to FeatureUtils.UNDEFINED }
         
