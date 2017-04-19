@@ -13,6 +13,7 @@ val gson = Gson()
 object FeatureUtils {
     val UNDEFINED = "UNDEFINED"
     val OTHER = "OTHER"
+    val NONE = "NONE"
 
     val RELEVANCE = "relevance"
     val PROXIMITY = "proximity"
