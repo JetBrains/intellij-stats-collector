@@ -1,49 +1,14 @@
 package com.jetbrains.completion.ranker.features
 
 
-class FeatureProvider(private val features: CompletionFeatureSet) {
-    
-    private fun hasAnyUnknownFeatures(proximity: Map<String, Any>, relevance: Map<String, Any>): Boolean {
-        val proximityUnknown = proximity.keys.subtract(features.proximity)
-        val relevanceUnknown = relevance.keys.subtract(features.relevance)
-        return proximityUnknown.isNotEmpty() || relevanceUnknown.isNotEmpty()
-    }
-    
-    fun createFullFeaturesMap(relevanceObjects: Map<String, Any>): Map<String, Any> {
-        val proximity = relevanceObjects[FeatureUtils.PROXIMITY] as? Map<String, Any> ?: emptyMap()
-        val relevance = relevanceObjects.filter { 
-            it.key != FeatureUtils.PROXIMITY && it.key != FeatureUtils.ML_RANK && it.key != FeatureUtils.BEFORE_ORDER
-        }
-
-        if (hasAnyUnknownFeatures(proximity, relevance)) {
-            return emptyMap()
-        }
-        
-        val undefinedProximityFeatures: Map<String, String> = features.proximity
-                .subtract(proximity.keys)
-                .associate { it to FeatureUtils.UNDEFINED }
-        
-        val undefinedRelevanceFeatures: Map<String, String> = features.relevance
-                .subtract(relevance.keys)
-                .associate { it to FeatureUtils.UNDEFINED }
-        
-        val totalProximity = proximity + undefinedProximityFeatures
-        val totalRelevance = relevance + undefinedRelevanceFeatures
-        
-        return totalProximity + totalRelevance
-    }
-    
-}
 
 /**
  * position - position inside lookup
  * query_length - length of completion prefix filter
  * result_length - length of lookup element string
- * result_length - total lookup elements number - ignored for now since elements are added all the time
  */
 data class CompletionState(val position: Int?,
                            val query_length: Int?,
-                           val cerp_length: Int?,
                            val result_length: Int?)
 
 
@@ -51,7 +16,8 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                          private val doubleFeatures: DoubleFeatureInfo, 
                          private val categoricalFeatures: CategoricalFeatureInfo,
                          private val featuresOrder: Map<String, Int>,
-                         private val featuresProvider: FeatureProvider) {
+                         private val factors: CompletionFactors,
+                         private val ignoredFactorsMatcher: IgnoredFactorsMatcher) {
 
     companion object {
         private val MAX_DOUBLE_VALUE = Math.pow(10.0, 10.0)
@@ -59,28 +25,32 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     
     private val featureArray: Array<Double> = Array(featuresOrder.size, { 0.0 })
 
-    fun toFeatureArray(state: CompletionState, lookupRelevance: Map<String, Any>): Array<Double>? {
-        val fullFeaturesMap = featuresProvider.createFullFeaturesMap(lookupRelevance)
-        if (fullFeaturesMap.isEmpty()) return null
-
-        resetFeatureArray()
+    /**
+     * @param preparedRelevanceMap prepared relevance map, where proximity factors names are transformed to prox_${old_name}
+     * to prevent from clashing with relevance keys 
+     */
+    fun featureArray(state: CompletionState, preparedRelevanceMap: Map<String, Any>): Array<Double>? {
+        val unknownFactors: Set<String> = factors.unknownFactors(preparedRelevanceMap.keys)
+        val ignoredFactorsSize = unknownFactors.count { ignoredFactorsMatcher.ignore(it) }
         
-        val relevance: Map<String, Any> = lookupRelevance[FeatureUtils.RELEVANCE] as? Map<String, Any> ?: emptyMap()
-        val proximity: Map<String, Any> = (relevance[FeatureUtils.PROXIMITY] as? String)?.toRelevanceMap() ?: emptyMap()
+        if (unknownFactors.size != ignoredFactorsSize) return null
         
-        relevance.filter { it.key != FeatureUtils.PROXIMITY } .forEach { name, value -> processFeature(name, value) }
-        proximity.forEach { name, value -> processProximityFeature(name, value) }
-
+        resetArray()
+        
+        preparedRelevanceMap.asSequence()
+                .select { it.key !in unknownFactors }
+                .forEach { processFeature(it.key, it.value) }
+        
         processCompletionState(state)
         
         return featureArray
     }
 
+    
     private fun processCompletionState(state: CompletionState) {
         val features = listOf(
                 "position" to state.position, 
                 "query_length" to state.query_length, 
-                "cerp_length" to state.cerp_length, 
                 "result_length" to state.result_length)
         
         features.forEach {
@@ -98,48 +68,58 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         }
     }
 
-    private fun resetFeatureArray() {
+    
+    
+    private fun resetArray() {
         featureArray.fill(0.0)
+        setFactortsUndefined()
+        setDoubleFeaturesDefaultValues()
+        setBinaryFeaturesDefaultValue()
+    }
+    
+
+    private fun setBinaryFeaturesDefaultValue() {
+        binaryFeatures.entries
+                .forEach {
+                    val index = featuresOrder[it.key]!!
+                    val defaultValue = it.value[FeatureUtils.DEFAULT]
+                    featureArray[index] = defaultValue!!
+                }
+    }
+
+    
+    private fun setDoubleFeaturesDefaultValues() {
+        doubleFeatures.entries
+                .forEach {
+                    val index = featuresOrder[it.key]!!
+                    val defaultValue = it.value
+                    featureArray[index] = defaultValue
+                }
+    }
+
+    
+    private fun setFactortsUndefined() {
         featuresOrder
                 .filterKeys { it.endsWith(FeatureUtils.UNDEFINED) }
                 .map { it.value }
                 .forEach {
                     featureArray[it] = 1.0
                 }
-        
-        doubleFeatures.entries
-                .forEach {
-                    val index = featuresOrder[it.key]!!
-                    
-                    val defaultValue = it.value
-                    featureArray[index] = defaultValue
-                }
-        
-        binaryFeatures.entries
-                .forEach { 
-                    val index = featuresOrder[it.key]!!
-                    
-                    val defaultValue = it.value[FeatureUtils.DEFAULT]
-                    featureArray[index] = defaultValue!!
-                }
     }
 
+    
     fun processFeature(name: String, value: Any) {
         when {
             binaryFeatures[name] != null      -> processBinary(name, value, binaryFeatures[name]!!)
             doubleFeatures[name] != null      -> processDouble(name, value, doubleFeatures[name]!!)
             categoricalFeatures[name] != null -> processCategorical(name, value, categoricalFeatures[name]!!)
             else -> {
-                println("Unknown feature $name")
                 throw UnsupportedOperationException()
             }
         }
     }
-
-    fun processProximityFeature(name: String, value: Any) {
-        processFeature("prox_$name", value)
-    }
-
+    
+    
     private fun processCategorical(name: String, value: Any, knownValuesSet: Set<String>) {
         if (value == FeatureUtils.UNDEFINED) {
             return
@@ -157,6 +137,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         }
     }
 
+    
     private fun processDouble(name: String, value: Any, defaultValue: Double) {
         val index = getFeatureIndex(name)
         if (value == FeatureUtils.UNDEFINED) {
@@ -171,28 +152,35 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         }
     }
 
+    
     private fun processBinary(name: String, value: Any, valueTransformer: Map<String, Double>) {
         val index = getFeatureIndex(name)
         val transformedValue = valueTransformer[value]
 
         if (value == "UNDEFINED" || transformedValue == null) {
-            featureArray[index] == valueTransformer["default"]
+            featureArray[index] = valueTransformer["default"]!!
         }
         else {
             featureArray[index] = transformedValue
-            
             val undefIndex = getUndefinedFeatureIndex(name)
             featureArray[undefIndex] = 0.0
         }
     }
 
+    
     private fun getFeatureIndex(name: String): Int {
         return featuresOrder[name]!!
     }
 
+    
     private fun getUndefinedFeatureIndex(name: String): Int {
         val undefinedName = FeatureUtils.getUndefinedFeatureName(name)
         return featuresOrder[undefinedName]!!
     }
 
+}
+
+
+fun <T> Sequence<T>.select(predicate: (T) -> Boolean): Sequence<T> {
+    return filter(predicate)
 }

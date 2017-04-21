@@ -1,5 +1,6 @@
 package com.jetbrains.completion.ranker.features
 
+
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -7,16 +8,16 @@ import com.google.gson.reflect.TypeToken
 typealias DoubleFeatureInfo = Map<String, Double>
 typealias CategoricalFeatureInfo = Map<String, Set<String>>
 typealias BinaryFeatureInfo = Map<String, Map<String, Double>>
+typealias IgnoredFeatureInfo = Set<String>
+
 
 val gson = Gson()
+
 
 object FeatureUtils {
     val UNDEFINED = "UNDEFINED"
     val OTHER = "OTHER"
     val NONE = "NONE"
-
-    val RELEVANCE = "relevance"
-    val PROXIMITY = "proximity"
     
     val ML_RANK = "ml_rank"
     val BEFORE_ORDER = "before_rerank_order"
@@ -26,37 +27,46 @@ object FeatureUtils {
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
 }
 
-class CompletionFeatureSet(val relevance: Set<String>, val proximity: Set<String>)
 
-fun readAllFeatures(): CompletionFeatureSet {
-    val text = readFile("features/all_features.json")
+fun completionFactors(): CompletionFactors {
+    val text = fileContent("features/all_features.json")
     val typeToken = object : TypeToken<Map<String, Set<String>>>() {}
     val map = gson.fromJson<Map<String, Set<String>>>(text, typeToken.type)
-    val relevance = map[FeatureUtils.RELEVANCE] ?: emptySet()
-    val proximity = map[FeatureUtils.PROXIMITY] ?: emptySet()
-    return CompletionFeatureSet(relevance, proximity)
+ 
+    val relevance: Set<String> = map["javaRelevance"] ?: emptySet()
+    val proximity: Set<String> = map["javaProximity"] ?: emptySet()
+    
+    return CompletionFactors(relevance, proximity)
 }
 
-fun readBinaryFeaturesInfo(): BinaryFeatureInfo {
-    val text = readFile("features/binary.json")
+
+fun binaryFactors(): BinaryFeatureInfo {
+    val text = fileContent("features/binary.json")
     val typeToken = object : TypeToken<BinaryFeatureInfo>() {}
     return gson.fromJson<BinaryFeatureInfo>(text, typeToken.type)
 }
 
-fun readCategoricalFeaturesInfo(): CategoricalFeatureInfo {
-    val text = readFile("features/categorical.json")
+fun categoricalFactors(): CategoricalFeatureInfo {
+    val text = fileContent("features/categorical.json")
     val typeToken = object : TypeToken<CategoricalFeatureInfo>() {}
     return gson.fromJson<CategoricalFeatureInfo>(text, typeToken.type)
 }
 
-fun readDoubleFeaturesInfo(): DoubleFeatureInfo {
-    val text = readFile("features/float.json")
+
+fun ignoredFactors(): IgnoredFeatureInfo {
+    val text = fileContent("features/ignored.json")
+    val typeToken = object : TypeToken<IgnoredFeatureInfo>() {}
+    return gson.fromJson<IgnoredFeatureInfo>(text, typeToken.type)
+}
+
+fun doubleFactors(): DoubleFeatureInfo {
+    val text = fileContent("features/float.json")
     val typeToken = object : TypeToken<DoubleFeatureInfo>() {}
     return gson.fromJson<DoubleFeatureInfo>(text, typeToken.type)
 }
 
-fun readFeaturesOrder(): Map<String, Int> {
-    val text = readFile("features/final_features_order.txt")
+fun featuresOrder(): Map<String, Int> {
+    val text = fileContent("features/final_features_order.txt")
     
     var index = 0
     val map = mutableMapOf<String, Int>()
@@ -68,20 +78,11 @@ fun readFeaturesOrder(): Map<String, Int> {
     return map
 }
 
-private fun readFile(fileName: String): String {
+private fun fileContent(fileName: String): String {
     val fileStream = gson.javaClass.classLoader.getResourceAsStream(fileName)
     return fileStream.reader().readText()
 }
 
-fun String.toRelevanceMap(): Map<String, Any> {
-    val items = replace("[", "").replace("]", "").split(",")
-
-    return items.map { 
-        val (key, value) = it.trim().split("=")
-        key to value
-    }.toMap()
-    
-}
 
 typealias CompletionData = List<Map<String, Any>>
 
@@ -90,7 +91,7 @@ typealias CompletionItem = Map<String, Any>
 fun CompletionData.findWithSessionUid(sessionUid: String): List<CompletionItem> = filter { it["sessionUid"] == sessionUid }
 
 fun readJsonMap(fileName: String): CompletionData {
-    val text = readFile(fileName)
+    val text = fileContent(fileName)
     val typeToken = object : TypeToken<CompletionData>() {}
     return gson.fromJson<CompletionData>(text, typeToken.type)
 }

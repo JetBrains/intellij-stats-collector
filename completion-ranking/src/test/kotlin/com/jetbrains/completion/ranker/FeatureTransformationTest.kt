@@ -34,18 +34,29 @@ class FeatureTransformationTest {
     
     @Before
     fun setUp() {
-        val binaryFeatures = readBinaryFeaturesInfo()
-        val doubleFeatures = readDoubleFeaturesInfo()
-        val categoricalFeatures = readCategoricalFeaturesInfo()
-        val allFeatures = readAllFeatures()
+        val binaryFactors = binaryFactors()
+        val doubleFactors = doubleFactors()
+        val categoricalFactors = categoricalFactors()
+        val ignoredFactors = ignoredFactors()
+        
+        val factors = completionFactors()
 
         rawCompletionData = readJsonMap("sample_data/data.json")
         cleanTable = readTable("sample_data/0997_clean.txt")
         
-        featuresOrder = readFeaturesOrder()
+        featuresOrder = featuresOrder()
         scores = readScores()
+
+//        val featureProvider = FeatureProvider(factors)
+//        transformer = FeatureTransformer(
+//                binaryFactors, 
+//                doubleFactors, 
+//                categoricalFactors, 
+//                ignoredFactors, 
+//                featuresOrder, 
+//                featureProvider
+//        )
         
-        transformer = FeatureTransformer(binaryFeatures, doubleFeatures, categoricalFeatures, featuresOrder, FeatureProvider(allFeatures))
     }
     
     @Test
@@ -96,7 +107,7 @@ class FeatureTransformationTest {
         val queryLength = cleanRow.getValueOf("query_length").toDouble().toInt()
         val state = CompletionState(position, queryLength, cerpLength, resultLength)
         
-        val features = transformer.toFeatureArray(state, relevance)!!
+        val features = transformer.featureArray(state, relevance)!!
         
         checkArraysEqual(cleanRow, features)
 
