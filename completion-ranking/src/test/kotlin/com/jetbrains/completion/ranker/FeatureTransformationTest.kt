@@ -47,15 +47,14 @@ class FeatureTransformationTest {
         featuresOrder = featuresOrder()
         scores = readScores()
 
-//        val featureProvider = FeatureProvider(factors)
-//        transformer = FeatureTransformer(
-//                binaryFactors, 
-//                doubleFactors, 
-//                categoricalFactors, 
-//                ignoredFactors, 
-//                featuresOrder, 
-//                featureProvider
-//        )
+        transformer = FeatureTransformer(
+                binaryFactors,
+                doubleFactors,
+                categoricalFactors,
+                featuresOrder,
+                factors,
+                IgnoredFactorsMatcher(ignoredFactors)
+        )
         
     }
     
@@ -72,22 +71,22 @@ class FeatureTransformationTest {
                              rawCompletionData: CompletionData,
                              session_id: String) {
         
-        val rawData: List<CompletionItem> = rawCompletionData.findWithSessionUid(session_id)
+        val rawData: List<Map<String, Any>> = rawCompletionData.findWithSessionUid(session_id)
         val cleanRaws = cleanTable.getRows("session_id", session_id)
 
-        val completionItems: Map<Int, CompletionItem> = rawData
+        val completionItems: Map<Int, Map<String, Any>> = rawData
                 .mapNotNull { it["newCompletionListItems"] as? List<Any> }
                 .fold<List<Any>, List<Any>>(mutableListOf<Any>(), { a, b -> a.plus(b) })
                 .map { ((it as Map<String, Any>)["id"] as Double).toInt() to it }
                 .toMap()
 
-        val map: List<List<CompletionItem>> = rawData
+        val map: List<List<Map<String, Any>>> = rawData
                 .mapNotNull { it["completionListIds"] as? List<Int> }
                 .filter { it.isNotEmpty() }
                 .map { it.map { completionItems[it]!! } }
 
 
-        val fullLookupSent: MutableList<CompletionItem> = map.fold(mutableListOf<CompletionItem>(), { a, b -> a.merge(b) })
+        val fullLookupSent: MutableList<Map<String, Any>> = map.fold(mutableListOf<Map<String, Any>>(), { a, b -> a.merge(b) })
 
         assert(cleanRaws.size == fullLookupSent.size, { "For session id: $session_id;" +
                 " Clean raws size: ${cleanRaws.size};" +
@@ -100,12 +99,11 @@ class FeatureTransformationTest {
     }
     
     
-    private fun assertFeaturesEqual(relevance: CompletionItem, cleanRow: DataTable.Row) {
+    private fun assertFeaturesEqual(relevance: Map<String, Any>, cleanRow: DataTable.Row) {
         val position = cleanRow.getValueOf("position").toDouble().toInt()
         val resultLength = cleanRow.getValueOf("result_length").toDouble().toInt()
-        val cerpLength = cleanRow.getValueOf("cerp_length").toDouble().toInt()
         val queryLength = cleanRow.getValueOf("query_length").toDouble().toInt()
-        val state = CompletionState(position, queryLength, cerpLength, resultLength)
+        val state = CompletionState(position, queryLength, resultLength)
         
         val features = transformer.featureArray(state, relevance)!!
         
