@@ -1,6 +1,12 @@
 package com.jetbrains.completion.ranker
 
 import com.jetbrains.completion.ranker.features.*
+import com.jetbrains.completion.ranker.features.FeatureReader.binaryFactors
+import com.jetbrains.completion.ranker.features.FeatureReader.categoricalFactors
+import com.jetbrains.completion.ranker.features.FeatureReader.completionFactors
+import com.jetbrains.completion.ranker.features.FeatureReader.doubleFactors
+import com.jetbrains.completion.ranker.features.FeatureReader.ignoredFactors
+import com.jetbrains.completion.ranker.features.FeatureReader.readJsonMap
 import com.jetbrains.completion.test.DataTable
 import com.jetbrains.completion.test.readTable
 import org.junit.Before
@@ -23,7 +29,7 @@ fun readScores(): List<Double>  {
 class FeatureTransformationTest {
     
     private lateinit var transformer: FeatureTransformer
-    private lateinit var featuresOrder: Map<String, Int>
+    private lateinit var order: Map<String, Int>
 
     private lateinit var rawCompletionData: CompletionData
     private lateinit var cleanTable: DataTable
@@ -44,14 +50,14 @@ class FeatureTransformationTest {
         rawCompletionData = readJsonMap("sample_data/data.json")
         cleanTable = readTable("sample_data/0997_clean.txt")
         
-        featuresOrder = featuresOrder()
+        order = FeatureReader.featuresOrder()
         scores = readScores()
 
         transformer = FeatureTransformer(
                 binaryFactors,
                 doubleFactors,
                 categoricalFactors,
-                featuresOrder,
+                order,
                 factors,
                 IgnoredFactorsMatcher(ignoredFactors)
         )
@@ -124,7 +130,7 @@ class FeatureTransformationTest {
         var ok = 0
         var error = 0
 
-        featuresOrder.entries.forEach { (name, index) ->
+        order.entries.forEach { (name, index) ->
             val cleanValue = cleanRow.getValueOf(name).toDouble()
             val oursValue = features[index]
             if (Math.abs(oursValue - cleanValue) > 0.00000001) {
