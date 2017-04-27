@@ -5,14 +5,6 @@
     "DEPRECATED",
     "INACCESSIBLE"
   ],
-  "expectedType": [
-    "normal",
-    "expected",
-    "UNDEFINED",
-    "ofDefaultType",
-    "maybeExpected",
-    "unexpected"
-  ],
   "kind": [
     "UNDEFINED",
     "annoMethod",
@@ -32,22 +24,18 @@
     "suitableClass",
     "superMethodParameters"
   ],
-  "liftShorter": [
-    "False",
-    "True",
+  "expectedType": [
+    "normal",
+    "expected",
     "UNDEFINED",
-    "false",
-    "true"
+    "ofDefaultType",
+    "maybeExpected",
+    "unexpected"
   ],
-  "methodsChains": [
-    "00_0_2147483647",
-    "UNDEFINED"
-  ],
-  "middleMatching": [
-    "False",
-    "True",
-    "true",
-    "false",
+  "prox_referenceList": [
+    "unknown",
+    "inapplicable",
+    "applicableByKind",
     "UNDEFINED"
   ],
   "recursion": [
@@ -56,27 +44,14 @@
     "UNDEFINED",
     "normal"
   ],
-  "templates": [
-    "False",
-    "True",
-    "true",
-    "false",
-    "UNDEFINED"
-  ],
-  "prox_groovyReferenceListWeigher": [
-    "unknown",
+  "methodsChains": [
+    "00_0_2147483647",
     "UNDEFINED"
   ],
   "prox_javaInheritance": [
     "true",
     "null",
     "false",
-    "UNDEFINED"
-  ],
-  "prox_referenceList": [
-    "unknown",
-    "inapplicable",
-    "applicableByKind",
     "UNDEFINED"
   ]
 }
