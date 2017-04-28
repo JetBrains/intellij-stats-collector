@@ -34,6 +34,8 @@ class FeatureTransformationTest {
     
     private val ranker = CompletionRanker()
 
+    private val errorBuffer = mutableListOf<String>()
+
 
     private fun featureTransformer(order: Map<String, Int>): FeatureTransformer {
         val binaryFactors = binaryFactors()
@@ -61,17 +63,23 @@ class FeatureTransformationTest {
         table = table("features_transformation/00c0af2c789d_clean.tsv", "features_transformation/clean_header.txt")
 
         scores = scores()
+
+        assert(table.rowsCount() == scores.size)
     }
     
     @Test
     fun `test check all sessions valid`() {
         val sessions = table.distinctSessions("session_id")
+
         sessions.forEach { session_id ->
             val sessionRows: List<DataTable.Row> = table.rows("session_id", session_id)
             val rawSession: List<CompletionLookupState> = rawCompletionLog.filter { it.sessionUid == session_id }
             checkSession(sessionRows, rawSession)
         }
-        println("Total rows: ${table.getRowsCount()}")
+
+        errorBuffer.forEach(::println)
+        println("Lines with errors: ${errorBuffer.size} / ${table.rowsCount()}")
+
     }
 
 
@@ -127,31 +135,34 @@ class FeatureTransformationTest {
 
         val relevanceObjects = item.relevance
 
-        val features = transformer.featureArray(state, relevanceObjects.toMutableMap())
+        val features = transformer.featureArray(state, relevanceObjects.toMutableMap())!!
 
-        features!!
 
-        checkArraysEqual(cleanRow, features)
+        assertArrayEquals(cleanRow, features)
+
 
         val rowIndex = cleanRow.index
+
         val expectedRank = scores[rowIndex]
         val realRank = ranker.rank(features)
         
         val distance = Math.abs(expectedRank - realRank)
 
-        if (distance > 0.0000000000001) {
-            println("Raw: ${cleanRow.index} Distance: $distance Expected: $expectedRank Real: $realRank")
+        if (distance > 0.000001) {
+            errorBuffer.add("ERROR ::: Raw: ${cleanRow.index} Delta: $distance Expected: $expectedRank Real: $realRank")
         }
     }
 
-    fun checkArraysEqual(row: DataTable.Row, features: Array<Double>) {
+
+    fun assertArrayEquals(row: DataTable.Row, features: Array<Double>) {
         var ok = 0
         var error = 0
 
         factorsOrder.entries.forEach { (factorName, arrayIndex) ->
             val cleanValue = row[factorName].toDouble()
             val oursValue = features[arrayIndex]
-            if (Math.abs(oursValue - cleanValue) > 0.00000001) {
+            val abs = Math.abs(oursValue - cleanValue)
+            if (abs > 0.00000001) {
                 println("Feature $factorName mistmatch; clean: $cleanValue ours: $oursValue")
                 error++
             } else {
@@ -162,6 +173,9 @@ class FeatureTransformationTest {
         if (error > 0) {
             println("On row: ${row.index}")
             throw UnsupportedOperationException()
+        }
+        else {
+            println("Matched $ok / ${factorsOrder.size} values in array")
         }
     }
 }

@@ -27,45 +27,39 @@ fun table(dataPath: String, headerPath: String): DataTable {
 
 
 class DataTable(headers: List<String>) {
-    private val columnNameToIndex = mutableMapOf<String, Int>()
-
-    init {
-        for (i in 0..headers.size - 1) {
-            val name = headers[i]
-            columnNameToIndex[name] = i
-        }
-    }
+    private val columnNameIndex = headers.mapIndexed { index, name -> name to index }.toMap()
 
     fun distinctSessions(name: String): Set<String> {
-        val index = getColumnIndex(name)
+        val index = columnIndex(name)
         return rows.asSequence().map { it[index] }.toSet()
     }
 
     private val rows = mutableListOf<Row>()
 
     fun addRow(data: List<String>) {
-        assert(data.size == columnNameToIndex.size)
+        assert(data.size == columnNameIndex.size)
+
         val row = Row(data, rows.size)
         rows.add(row)
     }
 
     fun rows(columnName: String, columnValue: String): List<Row> {
-        val index = getColumnIndex(columnName)
+        val index = columnIndex(columnName)
         return rows.filter { it[index] == columnValue }
     }
 
-    private fun getColumnIndex(columnName: String): Int = columnNameToIndex[columnName]!!
+    private fun columnIndex(columnName: String): Int = columnNameIndex[columnName]!!
 
     inner class Row(private val values: List<String>, val index: Int) {
         operator fun get(columnName: String): String {
-            val index = getColumnIndex(columnName)
+            val index = columnIndex(columnName)
             return values[index]
         }
 
         operator fun get(index: Int) = values[index]
     }
 
-    fun getRowsCount(): Int {
+    fun rowsCount(): Int {
         return rows.size
     }
 }
