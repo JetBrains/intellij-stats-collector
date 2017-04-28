@@ -127,6 +127,8 @@ class FeatureTransformationTest {
 
 
     private fun assertFeaturesEqual(item: PositionedItem, cleanRow: DataTable.Row) {
+        //todo use real values, after validation
+
         val position = cleanRow["position"].toDouble().toInt()
         val resultLength = cleanRow["result_length"].toDouble().toInt()
         val queryLength = cleanRow["query_length"].toDouble().toInt()
