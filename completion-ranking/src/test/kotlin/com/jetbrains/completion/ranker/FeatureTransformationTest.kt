@@ -23,10 +23,10 @@ fun scores(): List<Double>  {
 class FeatureTransformationTest {
     
     private lateinit var transformer: FeatureTransformer
-    private lateinit var order: Map<String, Int>
+    private lateinit var factorsOrder: Map<String, Int>
 
-    private lateinit var rawCompletionData: List<CompletionLookupState>
-    private lateinit var cleanTable: DataTable
+    private lateinit var rawCompletionLog: List<CompletionLookupState>
+    private lateinit var table: DataTable
     
     private lateinit var scores: List<Double>
     
@@ -52,22 +52,24 @@ class FeatureTransformationTest {
 
     @Before
     fun setUp() {
-        order = featuresOrder()
-        transformer = featureTransformer(order)
+        factorsOrder = featuresOrder()
+        transformer = featureTransformer(factorsOrder)
 
-        rawCompletionData = jsonMap("features_transformation/00c0af2c789d.json").map { CompletionLookupState(it) }
-        cleanTable = table("features_transformation/00c0af2c789d_clean.tsv", "features_transformation/clean_header.txt")
+        rawCompletionLog = jsonMap("features_transformation/00c0af2c789d.json").map { CompletionLookupState(it) }
+        table = table("features_transformation/00c0af2c789d_clean.tsv", "features_transformation/clean_header.txt")
 
         scores = scores()
     }
     
     @Test
     fun `test check all sessions valid`() {
-        val sessions = cleanTable.distinctSessions("session_id")
-        sessions.forEach {
-            checkSession(cleanTable, rawCompletionData, it)
+        val sessions = table.distinctSessions("session_id")
+        sessions.forEach { session_id ->
+            val sessionRows: List<DataTable.Row> = table.rows("session_id", session_id)
+            val rawSession: List<CompletionLookupState> = rawCompletionLog.filter { it.sessionUid == session_id }
+            checkSession(sessionRows, rawSession)
         }
-        println("Total rows: ${cleanTable.getRowsCount()}")
+        println("Total rows: ${table.getRowsCount()}")
     }
 
 
@@ -76,10 +78,7 @@ class FeatureTransformationTest {
         val shownElements = items.size
     }
 
-    private fun checkSession(cleanTable: DataTable, log: List<CompletionLookupState>, session_id: String) {
-        val session: List<CompletionLookupState> = log.filter { it.sessionUid == session_id }
-        val cleanRaws = cleanTable.rows("session_id", session_id)
-
+    private fun checkSession(sessionRows: List<DataTable.Row>, session: List<CompletionLookupState>) {
         val relevances: Map<Int, LookupItemRelevance> = session
                 .mapNotNull { it.newCompletionListItems }
                 .concat()
@@ -95,15 +94,15 @@ class FeatureTransformationTest {
                 }
 
 
-        assert(cleanRaws.size == lookupStates.sumBy { it.shownElements })
+        assert(sessionRows.size == lookupStates.sumBy { it.shownElements })
 
 
-//        val mergedSessionsElements: List<PositionedItem> = lookupStates.map { it.items }.concat()
-//        cleanRaws
-//                .zip(mergedSessionsElements)
-//                .forEach {
-//                    assertFeaturesEqual(it.second, it.first)
-//                }
+        val mergedSessionsElements: List<PositionedItem> = lookupStates.map { it.items }.concat()
+        sessionRows
+                .zip(mergedSessionsElements)
+                .forEach {
+                    //assertFeaturesEqual(it.second, it.first)
+                }
     }
 
 
@@ -114,10 +113,11 @@ class FeatureTransformationTest {
         val resultLength = relevance.itemRelevance.intLength
         //val prefixLength = relevance.itemRelevance
 
-        val queryLength = cleanRow.valueOf("query_length").toDouble().toInt()
+        val queryLength = cleanRow["query_length"].toDouble().toInt()
         val state = CompletionState(position, queryLength, resultLength)
 
         val preparedRelevanceMap = emptyMap<String, Any>()
+
         TODO("repair")
 
         val features = transformer.featureArray(state, preparedRelevanceMap)!!
@@ -135,15 +135,15 @@ class FeatureTransformationTest {
         }
     }
 
-    fun checkArraysEqual(cleanRow: DataTable.Row, features: Array<Double>) {
+    fun checkArraysEqual(row: DataTable.Row, features: Array<Double>) {
         var ok = 0
         var error = 0
 
-        order.entries.forEach { (name, index) ->
-            val cleanValue = cleanRow.valueOf(name).toDouble()
-            val oursValue = features[index]
+        factorsOrder.entries.forEach { (factorName, arrayIndex) ->
+            val cleanValue = row[factorName].toDouble()
+            val oursValue = features[arrayIndex]
             if (Math.abs(oursValue - cleanValue) > 0.00000001) {
-                println("Feature $name mistmatch; clean: $cleanValue ours: $oursValue")
+                println("Feature $factorName mistmatch; clean: $cleanValue ours: $oursValue")
                 error++
             } else {
                 ok++
@@ -151,7 +151,7 @@ class FeatureTransformationTest {
         }
 
         if (error > 0) {
-            println("On row: ${cleanRow.index}")
+            println("On row: ${row.index}")
             throw UnsupportedOperationException()
         }
     }
