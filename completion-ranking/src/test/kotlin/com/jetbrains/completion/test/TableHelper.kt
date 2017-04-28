@@ -4,18 +4,32 @@ import com.jetbrains.completion.ranker.file
 
 
 fun table(dataPath: String, headerPath: String): DataTable {
-    val headers = file(headerPath).readLines()
-            .map { it.trim() }
+    val headers = file(headerPath).readText().split("\t")
+            .map(String::trim)
             .filter { it.isNotEmpty() }
 
     val file = file(dataPath)
-    val lines = file.readLines()
+    val lines = file.readLines().map(String::trim).filter { it.isNotEmpty() }
+
+    val set = lines.asSequence().map {
+        it.split("\t").map(String::trim).filter { it.isNotEmpty() }.count()
+    }.toSet()
+
+    println(set)
 
     val table = DataTable(headers)
 
+    var index = 0
+
+
+
     lines.forEach {
-        val values = it.split("\t").map(String::trim)
-        assert(values.size == headers.size)
+        index++
+
+        val values = it.split("\t").map(String::trim).filter { it.isNotEmpty() }
+        assert(values.size == headers.size, {
+            "${values.size} ${headers.size}"
+        })
         table.addRow(values)
     }
 

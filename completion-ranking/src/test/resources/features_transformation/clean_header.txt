@@ -62,7 +62,8 @@ priority
 priority=UNDEFINED
 recursion=delegation
 recursion=recursive
-recursion=UNDEFINEDrecursion=normal
+recursion=UNDEFINED
+recursion=normal
 recursion=OTHER
 sameWords
 sameWords=UNDEFINED
