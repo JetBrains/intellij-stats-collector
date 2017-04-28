@@ -12,6 +12,27 @@ data class CompletionState(val position: Int?,
                            val result_length: Int?)
 
 
+@Deprecated("Just don't")
+fun fillWithProximityFeatures(lookupRelevance: MutableMap<String, Any>) {
+    val proximity = lookupRelevance.remove("proximity")
+    if (proximity != null) {
+        val proximityMap = proximity.toString().toProximityMap()
+        lookupRelevance.putAll(proximityMap)
+    }
+}
+
+/**
+ * Proximity features now came like [samePsiFile=true, openedInEditor=false], need to convert to proper map
+ */
+fun String.toProximityMap(): Map<String, Any> {
+    val items = replace("[", "").replace("]", "").split(",")
+
+    return items.map {
+        val (key, value) = it.trim().split("=")
+        "prox_$key" to value
+    }.toMap()
+}
+
 class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo, 
                          private val doubleFeatures: DoubleFeatureInfo, 
                          private val categoricalFeatures: CategoricalFeatureInfo,
@@ -25,20 +46,20 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     
     private val featureArray: Array<Double> = Array(featuresOrder.size, { 0.0 })
 
-    /**
-     * @param preparedRelevanceMap prepared relevance map, where proximity factors names are transformed to prox_${old_name}
-     * to prevent from clashing with relevance keys 
-     */
-    fun featureArray(state: CompletionState, preparedRelevanceMap: Map<String, Any>): Array<Double>? {
-        val unknownFactors: Set<String> = factors.unknownFactors(preparedRelevanceMap.keys)
-        val ignoredFactorsSize = unknownFactors.count { ignoredFactorsMatcher.ignore(it) }
-        
-        if (unknownFactors.size != ignoredFactorsSize) return null
-        
+
+    fun featureArray(state: CompletionState, relavanceObjects: MutableMap<String, Any>): Array<Double>? {
+        fillWithProximityFeatures(relavanceObjects)
+
+        val unknownFactors: List<String> = factors.unknownFactors(relavanceObjects.keys)
+        if (unknownFactors.isNotEmpty()) {
+            println(unknownFactors)
+            return null
+        }
+
         resetArray()
         
-        preparedRelevanceMap.asSequence()
-                .select { it.key !in unknownFactors }
+        relavanceObjects.asSequence()
+                .select { !ignoredFactorsMatcher.ignore(it.key) }
                 .forEach { processFeature(it.key, it.value) }
         
         processCompletionState(state)
@@ -114,7 +135,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
             doubleFeatures[name] != null      -> processDouble(name, value, doubleFeatures[name]!!)
             categoricalFeatures[name] != null -> processCategorical(name, value, categoricalFeatures[name]!!)
             else -> {
-                throw UnsupportedOperationException()
+                throw UnsupportedOperationException("Unknown feature name: $name")
             }
         }
     }

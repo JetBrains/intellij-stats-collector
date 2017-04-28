@@ -1,6 +1,6 @@
 package com.jetbrains.completion.ranker
 
-import com.jetbrains.completion.ranker.features.*
+import com.jetbrains.completion.ranker.features.CompletionState
 import com.jetbrains.completion.ranker.features.FeatureReader.binaryFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.categoricalFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.completionFactors
@@ -8,6 +8,8 @@ import com.jetbrains.completion.ranker.features.FeatureReader.doubleFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.featuresOrder
 import com.jetbrains.completion.ranker.features.FeatureReader.ignoredFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.jsonMap
+import com.jetbrains.completion.ranker.features.FeatureTransformer
+import com.jetbrains.completion.ranker.features.IgnoredFactorsMatcher
 import com.jetbrains.completion.test.DataTable
 import com.jetbrains.completion.test.table
 import org.junit.Before
@@ -73,7 +75,17 @@ class FeatureTransformationTest {
     }
 
 
-    class PositionedItem(val position: Int, val itemRelevance: LookupItemRelevance)
+    class PositionedItem(val position: Int, val item: LookupItemRelevance) {
+        val relevance: Map<String, Any>
+            get() = item.relevance
+
+        val length: Int
+            get() = item.intLength
+
+        val id: Int
+            get() = item.intId
+    }
+
     class LookupState(val items: List<PositionedItem>) {
         val shownElements = items.size
     }
@@ -101,27 +113,24 @@ class FeatureTransformationTest {
         sessionRows
                 .zip(mergedSessionsElements)
                 .forEach {
-                    //assertFeaturesEqual(it.second, it.first)
+                    assertFeaturesEqual(it.second, it.first)
                 }
     }
 
 
-    private fun assertFeaturesEqual(relevance: PositionedItem, cleanRow: DataTable.Row) {
-        //val position = cleanRow.valueOf("position").toDouble().toInt()
-        //val resultLength = cleanRow.valueOf("result_length").toDouble().toInt()
-        val position = relevance.position
-        val resultLength = relevance.itemRelevance.intLength
-        //val prefixLength = relevance.itemRelevance
-
+    private fun assertFeaturesEqual(item: PositionedItem, cleanRow: DataTable.Row) {
+        val position = cleanRow["position"].toDouble().toInt()
+        val resultLength = cleanRow["result_length"].toDouble().toInt()
         val queryLength = cleanRow["query_length"].toDouble().toInt()
+
         val state = CompletionState(position, queryLength, resultLength)
 
-        val preparedRelevanceMap = emptyMap<String, Any>()
+        val relevanceObjects = item.relevance
 
-        TODO("repair")
+        val features = transformer.featureArray(state, relevanceObjects.toMutableMap())
 
-        val features = transformer.featureArray(state, preparedRelevanceMap)!!
-        
+        features!!
+
         checkArraysEqual(cleanRow, features)
 
         val rowIndex = cleanRow.index

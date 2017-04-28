@@ -1,6 +1,6 @@
 package com.jetbrains.completion.ranker
 
-import com.completion.ranker.models.gbt_8.MLWhiteBox
+import com.completion.ranker.models.gbt_19_25_04.MLWhiteBox
 
 class CompletionRanker {
     private val box = MLWhiteBox()
@@ -10,6 +10,6 @@ class CompletionRanker {
     }
     
     companion object {
-        val rankerVersion = "gbt_8" 
+        val rankerVersion = "gbt_19_25_04"
     }
 }

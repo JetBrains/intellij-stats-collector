@@ -36,7 +36,7 @@ object FeatureReader {
         val relevance: Set<String> = map["javaRelevance"] ?: emptySet()
         val proximity: Set<String> = map["javaProximity"] ?: emptySet()
 
-        return CompletionFactors(relevance, proximity)
+        return CompletionFactors(proximity, relevance)
     }
 
     fun binaryFactors(): BinaryFeatureInfo {

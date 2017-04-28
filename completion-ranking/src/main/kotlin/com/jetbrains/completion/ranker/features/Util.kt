@@ -8,8 +8,9 @@ class CompletionFactors(proximity: Set<String>, relevance: Set<String>) {
         addAll(relevance)
     }
 
-    fun unknownFactors(factore: Set<String>): Set<String> {
-        return factore.subtract(knownFactors) 
+    fun unknownFactors(factors: Set<String>): List<String> {
+        val normalized = factors.asSequence().map { it.substringBefore('@') }
+        return normalized.filter { !knownFactors.contains(it) }.toList()
     }
     
 }
