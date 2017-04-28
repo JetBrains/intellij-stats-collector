@@ -82,16 +82,10 @@ object FeatureReader {
         return fileStream.reader().readText()
     }
 
-    fun readJsonMap(fileName: String): CompletionData {
+    fun jsonMap(fileName: String): List<MutableMap<String, Any>> {
         val text = fileContent(fileName)
-        val typeToken = object : TypeToken<CompletionData>() {}
-        return gson.fromJson<CompletionData>(text, typeToken.type)
+        val typeToken = object : TypeToken<List<Map<String, Any>>>() {}
+        return gson.fromJson<List<MutableMap<String, Any>>>(text, typeToken.type)
     }
 
 }
-
-
-typealias CompletionData = List<Map<String, Any>>
-
-
-fun CompletionData.findWithSessionUid(sessionUid: String): List<Map<String, Any>> = filter { it["sessionUid"] == sessionUid }

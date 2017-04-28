@@ -1,10 +1,10 @@
 package com.jetbrains.completion.test
 
-import com.jetbrains.completion.ranker.getFile
+import com.jetbrains.completion.ranker.file
 
 
-fun readTable(fileName: String): DataTable {
-    val file = getFile(fileName)
+fun table(fileName: String): DataTable {
+    val file = file(fileName)
     val lines = file.readLines()
 
     val labels = lines.first()
@@ -32,9 +32,9 @@ class DataTable(labels: List<String>) {
         }
     }
 
-    fun getValuesOfColumn(name: String): Set<String> {
+    fun distinctSessions(name: String): Set<String> {
         val index = getColumnIndex(name)
-        return rows.asSequence().map { it.getValueAt(index) }.toSet()
+        return rows.asSequence().map { it.valueAt(index) }.toSet()
     }
 
     private val rows = mutableListOf<Row>()
@@ -45,22 +45,20 @@ class DataTable(labels: List<String>) {
         rows.add(row)
     }
 
-    fun getRows(columnName: String, columnValue: String): List<Row> {
+    fun rows(columnName: String, columnValue: String): List<Row> {
         val index = getColumnIndex(columnName)
-        return rows.filter { it.getValueAt(index) == columnValue }
+        return rows.filter { it.valueAt(index) == columnValue }
     }
-
-    fun getRow(index: Int) = rows[index]
 
     private fun getColumnIndex(columnName: String) = columnNameToIndex[columnName]!!
 
     inner class Row(private val values: List<String>, val index: Int) {
-        fun getValueOf(columnName: String): String {
+        fun valueOf(columnName: String): String {
             val index = getColumnIndex(columnName)
             return values[index]
         }
 
-        fun getValueAt(index: Int) = values[index]
+        fun valueAt(index: Int) = values[index]
     }
 
     fun getRowsCount(): Int {
