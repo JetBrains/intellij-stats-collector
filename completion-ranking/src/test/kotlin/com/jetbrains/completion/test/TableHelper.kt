@@ -3,18 +3,19 @@ package com.jetbrains.completion.test
 import com.jetbrains.completion.ranker.file
 
 
-fun table(fileName: String): DataTable {
-    val file = file(fileName)
+fun table(dataPath: String, headerPath: String): DataTable {
+    val headers = file(headerPath).readLines()
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+    val file = file(dataPath)
     val lines = file.readLines()
 
-    val labels = lines.first()
-            .split("\t")
-            .map(String::trim)
+    val table = DataTable(headers)
 
-    val table = DataTable(labels)
-
-    lines.drop(1).forEach {
+    lines.forEach {
         val values = it.split("\t").map(String::trim)
+        assert(values.size == headers.size)
         table.addRow(values)
     }
 
@@ -22,12 +23,12 @@ fun table(fileName: String): DataTable {
 }
 
 
-class DataTable(labels: List<String>) {
+class DataTable(headers: List<String>) {
     private val columnNameToIndex = mutableMapOf<String, Int>()
 
     init {
-        for (i in 0..labels.size - 1) {
-            val name = labels[i]
+        for (i in 0..headers.size - 1) {
+            val name = headers[i]
             columnNameToIndex[name] = i
         }
     }

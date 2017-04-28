@@ -56,7 +56,7 @@ class FeatureTransformationTest {
         transformer = featureTransformer(order)
 
         rawCompletionData = jsonMap("features_transformation/00c0af2c789d.json").map { CompletionLookupState(it) }
-        cleanTable = table("features_transformation/00c0af2c789d_clean.tsv")
+        cleanTable = table("features_transformation/00c0af2c789d_clean.tsv", "features_transformation/clean_header.txt")
 
         scores = scores()
     }
