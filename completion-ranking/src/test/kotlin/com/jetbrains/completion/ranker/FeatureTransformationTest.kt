@@ -13,6 +13,7 @@ import com.jetbrains.completion.ranker.features.IgnoredFactorsMatcher
 import org.junit.Before
 import org.junit.Test
 import java.io.File
+import org.assertj.core.api.Assertions.assertThat
 
 
 fun scoresTable(): DataTable  {
@@ -20,12 +21,17 @@ fun scoresTable(): DataTable  {
     return table("features_transformation/00c0af2c789d_score.tsv", headers)
 }
 
+fun completionLog(path: String): CompletionLog {
+    val events = jsonMap(path).map { CompletionLogEvent(it) }
+    return CompletionLog(events)
+}
+
 class FeatureTransformationTest {
     
     private lateinit var transformer: FeatureTransformer
     private lateinit var factorsOrder: Map<String, Int>
 
-    private lateinit var rawCompletionLog: List<CompletionLookupState>
+    private lateinit var completionLog: CompletionLog
     private lateinit var table: DataTable
     
     private lateinit var scores: DataTable
@@ -33,7 +39,6 @@ class FeatureTransformationTest {
     private val ranker = CompletionRanker()
 
     private val errorBuffer = mutableListOf<String>()
-
 
     private fun featureTransformer(order: Map<String, Int>): FeatureTransformer {
         val binaryFactors = binaryFactors()
@@ -57,79 +62,79 @@ class FeatureTransformationTest {
         factorsOrder = featuresOrder()
         transformer = featureTransformer(factorsOrder)
 
-        rawCompletionLog = jsonMap("features_transformation/00c0af2c789d.json").map { CompletionLookupState(it) }
+        completionLog = completionLog("features_transformation/00c0af2c789d.json")
         table = table("features_transformation/00c0af2c789d_clean.tsv", "features_transformation/clean_header.txt")
 
         scores = scoresTable()
 
         assert(table.rowsCount() == scores.rowsCount())
     }
-    
+
+    @Test
+    fun `test incorrect length`() {
+        val session = table.rows("session_id", "c5124fb9b519")
+        //val event = table.rows("event_id", "d68512374aa1")
+
+        val logSession: CompletionSession = completionLog.session("c5124fb9b519")
+        val polotno = logSession.lookupPages.map { it.lookupItems }.concat()
+
+        val session_lengths = session.map { it["result_length"] }
+        val polotno_lengths = polotno.map { it.length }
+
+
+        println()
+    }
+
     @Test
     fun `test check all sessions valid`() {
-        val sessions = table.distinctColumns("session_id")
+        val sessions = table.distinctColumnValues("session_id")
 
         sessions.forEach { session_id ->
             val sessionRows: List<DataTable.Row> = table.rows("session_id", session_id)
-            val rawSession: List<CompletionLookupState> = rawCompletionLog.filter { it.sessionUid == session_id }
-            checkSession(sessionRows, rawSession)
+            val logSession: CompletionSession = completionLog.session(session_id)
+            checkSession(sessionRows, logSession)
         }
 
-        errorBuffer.forEach(::println)
         println("Lines with errors: ${errorBuffer.size} / ${table.rowsCount()}")
-
+        errorBuffer.forEach(::println)
+        if (errorBuffer.size > 0) {
+            throw IllegalStateException()
+        }
     }
 
+    private fun checkSession(sessionRows: List<DataTable.Row>, session: CompletionSession) {
+        val lookupPages: List<LookupPage> = session.lookupPages
 
-    class PositionedItem(val position: Int, val item: LookupItemRelevance) {
-        val relevance: Map<String, Any>
-            get() = item.relevance
+        assert(sessionRows.size == lookupPages.sumBy { it.size })
 
-        val length: Int
-            get() = item.intLength
-
-        val id: Int
-            get() = item.intId
-    }
-
-    class LookupState(val items: List<PositionedItem>) {
-        val shownElements = items.size
-    }
-
-    private fun checkSession(sessionRows: List<DataTable.Row>, session: List<CompletionLookupState>) {
-        val relevances: Map<Int, LookupItemRelevance> = session
-                .mapNotNull { it.newCompletionListItems }
-                .concat()
-                .map { LookupItemRelevance(it) }
-                .associate { it.intId to it }
-
-        val lookupStates: List<LookupState> = session
-                .mapNotNull { it.intCompletionListIds }
-                .filter { it.isNotEmpty() }
-                .map { ids ->
-                    val items = ids.mapIndexed { index, id -> PositionedItem(index, relevances[id]!!) }
-                    LookupState(items)
-                }
-
-
-        assert(sessionRows.size == lookupStates.sumBy { it.shownElements })
-
-
-        val mergedSessionsElements: List<PositionedItem> = lookupStates.map { it.items }.concat()
+        val mergedSessionsElements: List<PositionedItem> = lookupPages.map { it.lookupItems }.concat()
         sessionRows
                 .zip(mergedSessionsElements)
                 .forEach {
-                    assertFeaturesEqual(it.second, it.first)
+                    assertFeaturesEqual(it.first, it.second)
                 }
     }
 
 
-    private fun assertFeaturesEqual(item: PositionedItem, cleanRow: DataTable.Row) {
+    private fun assertFeaturesEqual(cleanRow: DataTable.Row, item: PositionedItem) {
         //todo use real values, after validation
 
         val position = cleanRow["position"].toDouble().toInt()
+        assertThat(position).isEqualTo(item.position)
+
         val result_length = cleanRow["result_length"].toDouble().toInt()
+
+        //assertThat(result_length).isEqualTo(item.length)
+
+        if (result_length != item.length) {
+            println("$result_length : ${item.length}")
+            println("event_id " + cleanRow["event_id"])
+            println("session_id " + cleanRow["session_id"])
+        }
+
+
         val query_length = cleanRow["query_length"].toDouble().toInt()
+
 
         val state = CompletionState(position, query_length, result_length)
 
@@ -140,14 +145,9 @@ class FeatureTransformationTest {
 
         assertArrayEquals(cleanRow, features)
 
-
-        val rowIndex = cleanRow.index
-
-
         val user_id = cleanRow["user_id"]
         val event_id = cleanRow["event_id"]
         val session_id = cleanRow["session_id"]
-        val old_position = cleanRow["position"]
 
         val eventRows = scores
                 .rows()
@@ -164,7 +164,7 @@ class FeatureTransformationTest {
         
         val distance = Math.abs(expectedRank - realRank)
 
-        if (distance > 0.000001) {
+        if (distance > 0.0000001) {
             errorBuffer.add("ERROR ::: Raw: ${cleanRow.index} Delta: $distance Expected: $expectedRank Real: $realRank")
         }
     }
@@ -190,11 +190,9 @@ class FeatureTransformationTest {
             println("On row: ${row.index}")
             throw UnsupportedOperationException()
         }
-        else {
-            println("Matched $ok / ${factorsOrder.size} values in array")
-        }
     }
 }
+
 
 fun file(fileName: String): File {
     val file = FeatureTransformationTest::class.java
@@ -208,33 +206,4 @@ fun file(fileName: String): File {
 
 fun <T> Iterable<Iterable<T>>.concat(): List<T> {
     return fold(mutableListOf<T>(), { acc, iterable -> acc.apply { addAll(iterable) } })
-}
-
-
-class CompletionLookupState(event: MutableMap<String, Any>) {
-    init {
-        //delegation will fail without key
-        event.putIfAbsent("newCompletionListItems", emptyList<Map<String, Any>>())
-        event.putIfAbsent("completionListIds", emptyList<Double>())
-    }
-
-    val newCompletionListItems: List<Map<String, Any>> by event
-    val sessionUid: String by event
-    val completionListIds: List<Double> by event
-
-    val intCompletionListIds: List<Int>
-        get() = completionListIds.map { it.toInt() }
-}
-
-
-class LookupItemRelevance(relevanceLog: Map<String, Any>) {
-    val relevance: Map<String, Any> by relevanceLog
-    val length: Double by relevanceLog
-    val id: Double by relevanceLog
-
-    val intId: Int
-        get() = id.toInt()
-
-    val intLength: Int
-        get() = length.toInt()
 }

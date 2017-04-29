@@ -31,13 +31,13 @@ fun table(dataPath: String, headers: List<String>): DataTable {
 
 class DataTable(headers: List<String>) {
     private val columnNameIndex = headers.mapIndexed { index, name -> name to index }.toMap()
+    private val rows = mutableListOf<Row>()
 
-    fun distinctColumns(columnName: String): Set<String> {
+    fun distinctColumnValues(columnName: String): Set<String> {
         val index = columnIndex(columnName)
         return rows.asSequence().map { it[index] }.toSet()
     }
 
-    private val rows = mutableListOf<Row>()
 
     fun addRow(data: List<String>) {
         assert(data.size == columnNameIndex.size)
