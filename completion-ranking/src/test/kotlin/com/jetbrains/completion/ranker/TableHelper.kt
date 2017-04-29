@@ -7,6 +7,11 @@ fun table(dataPath: String, headerPath: String): DataTable {
             .map(String::trim)
             .filter { it.isNotEmpty() }
 
+    return table(dataPath, headers)
+}
+
+
+fun table(dataPath: String, headers: List<String>): DataTable {
     val file = file(dataPath)
     val lines = file.readLines().map(String::trim).filter { it.isNotEmpty() }
 
@@ -27,8 +32,8 @@ fun table(dataPath: String, headerPath: String): DataTable {
 class DataTable(headers: List<String>) {
     private val columnNameIndex = headers.mapIndexed { index, name -> name to index }.toMap()
 
-    fun distinctSessions(name: String): Set<String> {
-        val index = columnIndex(name)
+    fun distinctColumns(columnName: String): Set<String> {
+        val index = columnIndex(columnName)
         return rows.asSequence().map { it[index] }.toSet()
     }
 
@@ -40,6 +45,8 @@ class DataTable(headers: List<String>) {
         val row = Row(data, rows.size)
         rows.add(row)
     }
+
+    fun rows(): List<Row> = rows
 
     fun rows(columnName: String, columnValue: String): List<Row> {
         val index = columnIndex(columnName)

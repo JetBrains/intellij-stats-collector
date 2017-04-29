@@ -15,9 +15,9 @@ import org.junit.Test
 import java.io.File
 
 
-fun scores(): List<Double>  {
-    val file = file("features_transformation/00c0af2c789d_score.tsv")
-    return file.readLines().map { it.split("\t")[6].trim().toDouble() }
+fun scoresTable(): DataTable  {
+    val headers = listOf("uid", "session_id", "event_id", "u1", "u2", "u3", "rank", "old_position")
+    return table("features_transformation/00c0af2c789d_score.tsv", headers)
 }
 
 class FeatureTransformationTest {
@@ -28,7 +28,7 @@ class FeatureTransformationTest {
     private lateinit var rawCompletionLog: List<CompletionLookupState>
     private lateinit var table: DataTable
     
-    private lateinit var scores: List<Double>
+    private lateinit var scores: DataTable
     
     private val ranker = CompletionRanker()
 
@@ -60,14 +60,14 @@ class FeatureTransformationTest {
         rawCompletionLog = jsonMap("features_transformation/00c0af2c789d.json").map { CompletionLookupState(it) }
         table = table("features_transformation/00c0af2c789d_clean.tsv", "features_transformation/clean_header.txt")
 
-        scores = scores()
+        scores = scoresTable()
 
-        assert(table.rowsCount() == scores.size)
+        assert(table.rowsCount() == scores.rowsCount())
     }
     
     @Test
     fun `test check all sessions valid`() {
-        val sessions = table.distinctSessions("session_id")
+        val sessions = table.distinctColumns("session_id")
 
         sessions.forEach { session_id ->
             val sessionRows: List<DataTable.Row> = table.rows("session_id", session_id)
@@ -128,10 +128,10 @@ class FeatureTransformationTest {
         //todo use real values, after validation
 
         val position = cleanRow["position"].toDouble().toInt()
-        val resultLength = cleanRow["result_length"].toDouble().toInt()
-        val queryLength = cleanRow["query_length"].toDouble().toInt()
+        val result_length = cleanRow["result_length"].toDouble().toInt()
+        val query_length = cleanRow["query_length"].toDouble().toInt()
 
-        val state = CompletionState(position, queryLength, resultLength)
+        val state = CompletionState(position, query_length, result_length)
 
         val relevanceObjects = item.relevance
 
@@ -143,7 +143,23 @@ class FeatureTransformationTest {
 
         val rowIndex = cleanRow.index
 
-        val expectedRank = scores[rowIndex]
+
+        val user_id = cleanRow["user_id"]
+        val event_id = cleanRow["event_id"]
+        val session_id = cleanRow["session_id"]
+        val old_position = cleanRow["position"]
+
+        val eventRows = scores
+                .rows()
+                .filter {
+                    it["event_id"] == event_id && it["uid"] == user_id && it["session_id"] == session_id && it["old_position"] == position.toString()
+                }
+
+        assert(eventRows.size == 1)
+
+        val expectedRank = eventRows.first()["rank"].toDouble()
+
+
         val realRank = ranker.rank(features)
         
         val distance = Math.abs(expectedRank - realRank)
