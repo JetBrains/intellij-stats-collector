@@ -154,24 +154,21 @@ class FeatureTransformationTest {
 
 
     private fun assertFeaturesEqual(cleanRow: EventRow, item: PositionedItem) {
-        //todo use real values, after validation
-
         val position = cleanRow["position"].toDouble().toInt()
         assertThat(position).isEqualTo(item.position)
 
         val result_length = cleanRow["result_length"].toDouble().toInt()
 
         //assertThat(result_length).isEqualTo(item.length)
-
         if (result_length != item.length) {
-            println("$result_length : ${item.length}")
+            println("Length mistmatch: $result_length : ${item.length}")
             println("event_id " + cleanRow["event_id"])
             println("session_id " + cleanRow["session_id"])
         }
 
 
+        //todo how to tack query length
         val query_length = cleanRow["query_length"].toDouble().toInt()
-
 
         val state = CompletionState(position, query_length, result_length)
 
