@@ -1,27 +1,16 @@
 package com.jetbrains.completion.ranker
 
 
-fun table(dataPath: String, headerPath: String): DataTable {
-    val headers = file(headerPath)
-            .readLines()
-            .map(String::trim)
-            .filter { it.isNotEmpty() }
-
-    return table(dataPath, headers)
-}
 
 
-fun table(dataPath: String, headers: List<String>): DataTable {
+fun <T : Row> table(dataPath: String, rowFactory: RowFactory<T>): DataTable<T> {
     val file = file(dataPath)
     val lines = file.readLines().map(String::trim).filter { it.isNotEmpty() }
 
-    val table = DataTable(headers)
+    val table = DataTable(rowFactory)
 
     lines.forEach {
         val values = it.split("\t").map(String::trim).filter { it.isNotEmpty() }
-        assert(values.size == headers.size, {
-            "${values.size} ${headers.size}"
-        })
         table.addRow(values)
     }
 
@@ -29,42 +18,61 @@ fun table(dataPath: String, headers: List<String>): DataTable {
 }
 
 
-class DataTable(headers: List<String>) {
-    private val columnNameIndex = headers.mapIndexed { index, name -> name to index }.toMap()
-    private val rows = mutableListOf<Row>()
 
-    fun distinctColumnValues(columnName: String): Set<String> {
-        val index = columnIndex(columnName)
-        return rows.asSequence().map { it[index] }.toSet()
+interface RowFactory<out T: Row> {
+    fun row(index: Int, columns: List<String>): T
+}
+
+interface Row {
+    operator fun get(columnName: String): String
+    operator fun get(index: Int): String
+}
+
+open class EventRow(val index: Int,
+                    private val values: List<String>,
+                    private val columnNameIndex: Map<String, Int>): Row {
+
+    val session_id: String
+        get() = get("session_id")
+
+    val user_id: String
+        get() = get("user_id")
+
+    val event_id: String
+        get() = get("event_id")
+
+    override fun get(columnName: String): String {
+        val index = columnNameIndex[columnName]!!
+        return get(index)
     }
 
+    override fun get(index: Int): String {
+        return values[index]
+    }
 
-    fun addRow(data: List<String>) {
-        assert(data.size == columnNameIndex.size)
+}
 
-        val row = Row(data, rows.size)
+class CleanDataRowFactory(private val columnNameIndex: Map<String, Int>): RowFactory<EventRow> {
+    override fun row(index: Int, columns: List<String>) = EventRow(index, columns, columnNameIndex)
+}
+
+
+class DataTable<out T : Row>(private val factory: RowFactory<T>) {
+    private val rows = mutableListOf<T>()
+
+    fun addRow(columns: List<String>) {
+        val row = factory.row(rows.size, columns)
         rows.add(row)
     }
 
-    fun rows(): List<Row> = rows
+    fun rows(): List<T> = rows
 
-    fun rows(columnName: String, columnValue: String): List<Row> {
-        val index = columnIndex(columnName)
-        return rows.filter { it[index] == columnValue }
-    }
-
-    private fun columnIndex(columnName: String): Int = columnNameIndex[columnName]!!
-
-    inner class Row(private val values: List<String>, val index: Int) {
-        operator fun get(columnName: String): String {
-            val index = columnIndex(columnName)
-            return values[index]
-        }
-
-        operator fun get(index: Int) = values[index]
+    fun rows(columnName: String, columnValue: String): List<T> {
+        return rows.filter { it[columnName] == columnValue }
     }
 
     fun rowsCount(): Int {
         return rows.size
     }
+
 }

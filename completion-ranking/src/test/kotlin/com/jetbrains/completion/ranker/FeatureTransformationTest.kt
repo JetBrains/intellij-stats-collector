@@ -16,9 +16,32 @@ import java.io.File
 import org.assertj.core.api.Assertions.assertThat
 
 
-fun scoresTable(): DataTable  {
-    val headers = listOf("uid", "session_id", "event_id", "u1", "u2", "u3", "rank", "old_position")
-    return table("features_transformation/00c0af2c789d_score.tsv", headers)
+class ScoreRow(index: Int,
+               values: List<String>,
+               columnNameIndex: Map<String, Int>): EventRow(index, values, columnNameIndex) {
+
+    val position: Int
+        get() = get("old_position").toInt()
+
+    val rank: Double
+        get() = get("rank").toDouble()
+
+}
+
+class ScoresRowFactory(private val columnNameIndex: Map<String, Int>): RowFactory<ScoreRow> {
+    override fun row(index: Int, columns: List<String>) = ScoreRow(index, columns, columnNameIndex)
+}
+
+
+fun scoresTable(): DataTable<ScoreRow>  {
+    val header = mapOf(
+            "user_id" to 0,
+            "session_id" to 1,
+            "event_id" to 2,
+            "rank" to 6,
+            "old_position" to 7
+    )
+    return table("features_transformation/00c0af2c789d_score.tsv", ScoresRowFactory(header))
 }
 
 fun completionLog(path: String): CompletionLog {
@@ -32,9 +55,9 @@ class FeatureTransformationTest {
     private lateinit var factorsOrder: Map<String, Int>
 
     private lateinit var completionLog: CompletionLog
-    private lateinit var table: DataTable
+    private lateinit var table: DataTable<EventRow>
     
-    private lateinit var scores: DataTable
+    private lateinit var scores: DataTable<ScoreRow>
     
     private val ranker = CompletionRanker()
 
@@ -63,11 +86,23 @@ class FeatureTransformationTest {
         transformer = featureTransformer(factorsOrder)
 
         completionLog = completionLog("features_transformation/00c0af2c789d.json")
-        table = table("features_transformation/00c0af2c789d_clean.tsv", "features_transformation/clean_header.txt")
+
+        val content = readTableHeader("features_transformation/clean_header.txt")
+
+        table = table("features_transformation/00c0af2c789d_clean.tsv", CleanDataRowFactory(content))
 
         scores = scoresTable()
 
         assert(table.rowsCount() == scores.rowsCount())
+    }
+
+    private fun readTableHeader(path: String): Map<String, Int> {
+        return file(path).readText()
+                .split("\n")
+                .map(String::trim)
+                .filter { it.isNotEmpty() }
+                .mapIndexed { index, columnName -> columnName to index }
+                .toMap()
     }
 
     @Test
@@ -87,13 +122,15 @@ class FeatureTransformationTest {
 
     @Test
     fun `test check all sessions valid`() {
-        val sessions = table.distinctColumnValues("session_id")
+        val sessions = table.rows().asSequence().map { it.session_id }.toCollection(hashSetOf())
 
+        val start = System.currentTimeMillis()
         sessions.forEach { session_id ->
-            val sessionRows: List<DataTable.Row> = table.rows("session_id", session_id)
+            val sessionRows: List<EventRow> = table.rows("session_id", session_id)
             val logSession: CompletionSession = completionLog.session(session_id)
             checkSession(sessionRows, logSession)
         }
+        println("Validation time: " + (System.currentTimeMillis() - start))
 
         println("Lines with errors: ${errorBuffer.size} / ${table.rowsCount()}")
         errorBuffer.forEach(::println)
@@ -102,7 +139,7 @@ class FeatureTransformationTest {
         }
     }
 
-    private fun checkSession(sessionRows: List<DataTable.Row>, session: CompletionSession) {
+    private fun checkSession(sessionRows: List<EventRow>, session: CompletionSession) {
         val lookupPages: List<LookupPage> = session.lookupPages
 
         assert(sessionRows.size == lookupPages.sumBy { it.size })
@@ -116,7 +153,7 @@ class FeatureTransformationTest {
     }
 
 
-    private fun assertFeaturesEqual(cleanRow: DataTable.Row, item: PositionedItem) {
+    private fun assertFeaturesEqual(cleanRow: EventRow, item: PositionedItem) {
         //todo use real values, after validation
 
         val position = cleanRow["position"].toDouble().toInt()
@@ -145,20 +182,17 @@ class FeatureTransformationTest {
 
         assertArrayEquals(cleanRow, features)
 
-        val user_id = cleanRow["user_id"]
-        val event_id = cleanRow["event_id"]
-        val session_id = cleanRow["session_id"]
+        val user_id = cleanRow.user_id
+        val event_id = cleanRow.event_id
+        val session_id = cleanRow.session_id
 
-        val eventRows = scores
-                .rows()
-                .filter {
-                    it["event_id"] == event_id && it["uid"] == user_id && it["session_id"] == session_id && it["old_position"] == position.toString()
-                }
+        val eventRows = scores.rows().filter {
+            it.event_id == event_id && it.user_id == user_id && it.session_id == session_id && it.position == position
+        }
 
         assert(eventRows.size == 1)
 
-        val expectedRank = eventRows.first()["rank"].toDouble()
-
+        val expectedRank = eventRows.first().rank
 
         val realRank = ranker.rank(features)
         
@@ -170,7 +204,7 @@ class FeatureTransformationTest {
     }
 
 
-    fun assertArrayEquals(row: DataTable.Row, features: Array<Double>) {
+    fun assertArrayEquals(row: EventRow, features: Array<Double>) {
         var ok = 0
         var error = 0
 
