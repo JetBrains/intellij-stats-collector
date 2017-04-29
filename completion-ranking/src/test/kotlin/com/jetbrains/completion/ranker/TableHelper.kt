@@ -1,6 +1,4 @@
-package com.jetbrains.completion.test
-
-import com.jetbrains.completion.ranker.file
+package com.jetbrains.completion.ranker
 
 
 fun table(dataPath: String, headerPath: String): DataTable {

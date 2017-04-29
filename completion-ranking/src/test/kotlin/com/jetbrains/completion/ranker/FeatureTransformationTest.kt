@@ -10,8 +10,6 @@ import com.jetbrains.completion.ranker.features.FeatureReader.ignoredFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.jsonMap
 import com.jetbrains.completion.ranker.features.FeatureTransformer
 import com.jetbrains.completion.ranker.features.IgnoredFactorsMatcher
-import com.jetbrains.completion.test.DataTable
-import com.jetbrains.completion.test.table
 import org.junit.Before
 import org.junit.Test
 import java.io.File
