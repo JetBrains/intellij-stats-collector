@@ -52,7 +52,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
 
         val unknownFactors: List<String> = factors.unknownFactors(relavanceObjects.keys)
         if (unknownFactors.isNotEmpty()) {
-            println(unknownFactors)
+            println("Unknown factors: $unknownFactors")
             return null
         }
 

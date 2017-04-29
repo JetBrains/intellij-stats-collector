@@ -106,21 +106,6 @@ class FeatureTransformationTest {
     }
 
     @Test
-    fun `test incorrect length`() {
-        val session = table.rows("session_id", "c5124fb9b519")
-        //val event = table.rows("event_id", "d68512374aa1")
-
-        val logSession: CompletionSession = completionLog.session("c5124fb9b519")
-        val polotno = logSession.lookupPages.map { it.lookupItems }.concat()
-
-        val session_lengths = session.map { it["result_length"] }
-        val polotno_lengths = polotno.map { it.length }
-
-
-        println()
-    }
-
-    @Test
     fun `test check all sessions valid`() {
         val sessions = table.rows().asSequence().map { it.session_id }.toCollection(hashSetOf())
 

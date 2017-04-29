@@ -10,5 +10,7 @@
   "scalaSbtDefinitionWeigher",
   "scalaContainingClassWeigher",
   "prox_groovyReferenceListWeigher",
-  "prox_rubyOwnCode"
+  "prox_rubyOwnCode",
+
+  "ml_rank"
 ]

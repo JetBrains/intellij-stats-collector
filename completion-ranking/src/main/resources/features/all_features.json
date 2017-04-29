@@ -1,5 +1,7 @@
 {
   "javaRelevance": [
+    "ml_rank",
+
     "sorter",
     "frozen",
     "prefix",
