@@ -165,7 +165,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
             featureArray[index] = defaultValue
         }
         else {
-            val doubleValue = (value as String).toDouble()
+            val doubleValue = double(value)
             featureArray[index] = Math.min(doubleValue, MAX_DOUBLE_VALUE)
             
             val undefIndex = getUndefinedFeatureIndex(name)
@@ -204,4 +204,14 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
 
 fun <T> Sequence<T>.select(predicate: (T) -> Boolean): Sequence<T> {
     return filter(predicate)
+}
+
+
+private fun double(value: Any): Double {
+    return when (value) {
+        is Double -> value
+        is Int -> value.toDouble()
+        is String -> value.toDouble()
+        else -> value.toString().toDouble()
+    }
 }
