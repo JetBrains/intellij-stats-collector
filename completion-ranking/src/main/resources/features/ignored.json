@@ -12,5 +12,6 @@
   "prox_groovyReferenceListWeigher",
   "prox_rubyOwnCode",
 
-  "ml_rank"
+  "ml_rank",
+  "before_rerank_order"
 ]

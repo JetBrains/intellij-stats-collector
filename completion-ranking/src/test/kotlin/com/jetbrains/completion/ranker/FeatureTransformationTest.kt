@@ -1,6 +1,6 @@
 package com.jetbrains.completion.ranker
 
-import com.jetbrains.completion.ranker.features.CompletionState
+import com.jetbrains.completion.ranker.features.LookupElementInfo
 import com.jetbrains.completion.ranker.features.FeatureReader.binaryFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.categoricalFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.completionFactors
@@ -155,7 +155,7 @@ class FeatureTransformationTest {
         //todo how to tack query length
         val query_length = cleanRow["query_length"].toDouble().toInt()
 
-        val state = CompletionState(position, query_length, result_length)
+        val state = LookupElementInfo(position, query_length, result_length)
 
         val relevanceObjects = item.relevance
 

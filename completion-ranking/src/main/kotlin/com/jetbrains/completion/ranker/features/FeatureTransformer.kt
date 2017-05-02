@@ -3,35 +3,16 @@ package com.jetbrains.completion.ranker.features
 
 
 /**
- * position - position inside lookup
- * query_length - length of completion prefix filter
- * result_length - length of lookup element string
+ * @param position lookup element position inside lookup
+ * @param query_length length of completion prefix filter(how much symbols is typed)
+ * @param result_length length of lookup element string
  */
-data class CompletionState(val position: Int?,
-                           val query_length: Int?,
-                           val result_length: Int?)
+data class LookupElementInfo(val position: Int?,
+                             val query_length: Int?,
+                             val result_length: Int?)
 
 
-@Deprecated("Just don't")
-fun fillWithProximityFeatures(lookupRelevance: MutableMap<String, Any>) {
-    val proximity = lookupRelevance.remove("proximity")
-    if (proximity != null) {
-        val proximityMap = proximity.toString().toProximityMap()
-        lookupRelevance.putAll(proximityMap)
-    }
-}
 
-/**
- * Proximity features now came like [samePsiFile=true, openedInEditor=false], need to convert to proper map
- */
-fun String.toProximityMap(): Map<String, Any> {
-    val items = replace("[", "").replace("]", "").split(",")
-
-    return items.map {
-        val (key, value) = it.trim().split("=")
-        "prox_$key" to value
-    }.toMap()
-}
 
 class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo, 
                          private val doubleFeatures: DoubleFeatureInfo, 
@@ -42,33 +23,35 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
 
     companion object {
         private val MAX_DOUBLE_VALUE = Math.pow(10.0, 10.0)
+
     }
-    
+
+
     private val featureArray: Array<Double> = Array(featuresOrder.size, { 0.0 })
 
 
-    fun featureArray(state: CompletionState, relavanceObjects: MutableMap<String, Any>): Array<Double>? {
-        fillWithProximityFeatures(relavanceObjects)
+    fun featureArray(info: LookupElementInfo, relevanceObjects: Map<String, Any?>): Array<Double>? {
+        val preparedMap = preparedMap(relevanceObjects)
 
-        val unknownFactors: List<String> = factors.unknownFactors(relavanceObjects.keys)
+        val unknownFactors: List<String> = factors.unknownFactors(preparedMap.keys)
         if (unknownFactors.isNotEmpty()) {
-            println("Unknown factors: $unknownFactors")
+            println("No sorting: unknown factors $unknownFactors")
             return null
         }
 
         resetArray()
         
-        relavanceObjects.asSequence()
+        preparedMap.asSequence()
                 .select { !ignoredFactorsMatcher.ignore(it.key) }
                 .forEach { processFeature(it.key, it.value) }
         
-        processCompletionState(state)
+        processElementInfo(info)
         
         return featureArray
     }
 
     
-    private fun processCompletionState(state: CompletionState) {
+    private fun processElementInfo(state: LookupElementInfo) {
         val features = listOf(
                 "position" to state.position, 
                 "query_length" to state.query_length, 
@@ -214,4 +197,33 @@ private fun double(value: Any): Double {
         is String -> value.toDouble()
         else -> value.toString().toDouble()
     }
+}
+
+
+/**
+ * Proximity features now came like [samePsiFile=true, openedInEditor=false], need to convert to proper map
+ */
+private fun String.toProximityMap(): Map<String, Any> {
+    val items = replace("[", "").replace("]", "").split(",")
+
+    return items.map {
+        val (key, value) = it.trim().split("=")
+        "prox_$key" to value
+    }.toMap()
+}
+
+
+private fun preparedMap(relevance: Map<String, Any?>): Map<String, Any> {
+    val proximity = "proximity"
+    val proximityMap = relevance[proximity]?.toString()?.toProximityMap() ?: emptyMap()
+
+    val resultMap = relevance.toMutableMap()
+    resultMap.remove(proximity)
+    resultMap.putAll(proximityMap)
+
+    resultMap.filter { it.value == null }
+            .map { it.key }
+            .forEach { nullValueKey -> resultMap.remove(nullValueKey) }
+
+    return resultMap as Map<String, Any>
 }
