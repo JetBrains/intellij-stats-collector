@@ -34,8 +34,6 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
 
         val unknownFactors: List<String> = factors.unknownFactors(preparedMap.keys)
         if (unknownFactors.isNotEmpty()) {
-            //todo remove
-            println("No sorting: unknown factors $unknownFactors")
             return null
         }
 
