@@ -55,7 +55,8 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         val features = listOf(
                 "position" to state.position, 
                 "query_length" to state.query_length, 
-                "result_length" to state.result_length)
+                "result_length" to state.result_length
+        )
         
         features.forEach {
             val value = it.second
