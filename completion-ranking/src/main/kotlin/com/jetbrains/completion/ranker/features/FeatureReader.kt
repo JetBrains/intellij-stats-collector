@@ -13,6 +13,8 @@ typealias IgnoredFeatureInfo = Set<String>
 
 object FeatureUtils {
     val UNDEFINED = "UNDEFINED"
+    val INVALID_CACHE = "INVALID_CACHE"
+    
     val OTHER = "OTHER"
     val NONE = "NONE"
     
