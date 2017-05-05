@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/completion-ranking" />
+            <option value="$PROJECT_DIR$/ml-whitebox" />
           </set>
         </option>
       </GradleProjectSettings>

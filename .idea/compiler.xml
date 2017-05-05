@@ -6,6 +6,8 @@
       <module name="completion-ranking_test" target="1.8" />
       <module name="completion-stats-plugin_main" target="1.8" />
       <module name="completion-stats-plugin_test" target="1.8" />
+      <module name="ml-whitebox_main" target="1.8" />
+      <module name="ml-whitebox_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
