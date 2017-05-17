@@ -9,10 +9,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/intellij-stats-collector_main.iml" filepath="$PROJECT_DIR$/.idea/modules/intellij-stats-collector_main.iml" group="intellij-stats-collector" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/intellij-stats-collector_test.iml" filepath="$PROJECT_DIR$/.idea/modules/intellij-stats-collector_test.iml" group="intellij-stats-collector" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox.iml" filepath="$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox.iml" group="ml-whitebox" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox.iml" filepath="$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox.iml" group="ml-whitebox" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_main.iml" group="ml-whitebox" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_main.iml" group="ml-whitebox" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_test.iml" group="ml-whitebox" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ml-whitebox/ml-whitebox_test.iml" group="ml-whitebox" />
     </modules>
   </component>
