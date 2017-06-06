@@ -4,7 +4,6 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     }
 
     dependencies {
@@ -36,6 +35,7 @@ sourceSets {
 }
 
 intellij {
+    intellij.version ideaVersion
     pluginName "Completion Stats Collector"
     sameSinceUntilBuild Boolean.FALSE
     updateSinceUntilBuild Boolean.FALSE
@@ -44,7 +44,6 @@ intellij {
 allprojects {
     repositories {
         mavenCentral()
-        maven { url 'http://dl.bintray.com/kotlin/kotlin-eap-1.1' }
     }
 }
 
