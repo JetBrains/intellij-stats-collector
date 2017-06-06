@@ -24,7 +24,7 @@ allprojects {
 }
 
 sourceSets {
-    main {  
+    main {
         kotlin.srcDirs 'src'
         resources.srcDirs 'resources'
     }
