@@ -1,2 +1,3 @@
 include 'completion-ranking'
 include 'ml-whitebox'
+include 'log-events'

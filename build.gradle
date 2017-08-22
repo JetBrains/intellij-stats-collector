@@ -35,7 +35,7 @@ sourceSets {
 }
 
 intellij {
-    intellij.version ideaVersion
+    intellij.version "2017.2.1"
     pluginName "Completion Stats Collector"
     sameSinceUntilBuild Boolean.FALSE
     updateSinceUntilBuild Boolean.FALSE
@@ -48,6 +48,7 @@ allprojects {
 }
 
 dependencies {
+    compile project(":log-events")
     compile project(":completion-ranking")
 }
 
