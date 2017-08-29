@@ -111,7 +111,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     }
 
     
-    fun processFeature(name: String, value: Any) {
+    private fun processFeature(name: String, value: Any) {
         when {
             binaryFeatures[name] != null      -> processBinary(name, value, binaryFeatures[name]!!)
             doubleFeatures[name] != null      -> processDouble(name, value, doubleFeatures[name]!!)
@@ -124,19 +124,19 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     
     
     private fun processCategorical(name: String, value: Any, knownValuesSet: Set<String>) {
-        if (value == FeatureUtils.UNDEFINED) {
-            return
-        }
-        else if (knownValuesSet.contains(value)) {
-            val index = getFeatureIndex("$name=$value")
-            featureArray[index] = 1.0
-            
-            val undefIndex = getUndefinedFeatureIndex(name)
-            featureArray[undefIndex] = 0.0
-        }
-        else {
-            val index = getFeatureIndex("$name=${FeatureUtils.OTHER}")
-            featureArray[index] = 1.0
+        when {
+            value == FeatureUtils.UNDEFINED -> return
+            knownValuesSet.contains(value) -> {
+                val index = getFeatureIndex("$name=$value")
+                featureArray[index] = 1.0
+
+                val undefIndex = getUndefinedFeatureIndex(name)
+                featureArray[undefIndex] = 0.0
+            }
+            else -> {
+                val index = getFeatureIndex("$name=${FeatureUtils.OTHER}")
+                featureArray[index] = 1.0
+            }
         }
     }
 
