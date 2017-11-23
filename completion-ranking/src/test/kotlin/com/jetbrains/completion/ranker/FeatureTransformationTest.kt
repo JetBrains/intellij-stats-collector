@@ -123,7 +123,7 @@ class FeatureTransformationTest {
 
         assert(sessionRows.size == lookupPages.sumBy { it.size })
 
-        val mergedSessionsElements: List<PositionedItem> = lookupPages.map { it.lookupItems }.concat()
+        val mergedSessionsElements: List<PositionedItem> = lookupPages.map { it.lookupItems }.flatMap { it }
         sessionRows
                 .zip(mergedSessionsElements)
                 .forEach {
@@ -212,9 +212,4 @@ fun file(fileName: String): File {
             .file
 
     return File(file)
-}
-
-
-fun <T> Iterable<Iterable<T>>.concat(): List<T> {
-    return fold(mutableListOf<T>(), { acc, iterable -> acc.apply { addAll(iterable) } })
 }
