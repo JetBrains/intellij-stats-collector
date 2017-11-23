@@ -174,7 +174,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     
     private fun processBinary(name: String, value: Any, valueTransformer: Map<String, Double>) {
         val index = getFeatureIndex(name)
-        val transformedValue = valueTransformer[value]
+        val transformedValue = valueTransformer[value.toString()]
 
         if (value == "UNDEFINED" || transformedValue == null) {
             featureArray[index] = valueTransformer["default"]!!
