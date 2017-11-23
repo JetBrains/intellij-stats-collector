@@ -28,7 +28,7 @@ class CompletionFactors(proximity: Set<String>, relevance: Set<String>) {
         val normalized = factors.asSequence().map { it.substringBefore('@') }
         return normalized.filter { !knownFactors.contains(it) }.toList()
     }
-    
+
 }
 
 
