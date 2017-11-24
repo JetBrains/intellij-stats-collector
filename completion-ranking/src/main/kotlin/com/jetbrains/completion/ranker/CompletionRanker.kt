@@ -20,9 +20,9 @@ import com.completion.ranker.models.gbt_19_25_04.MLWhiteBox
 
 class CompletionRanker {
     private val box = MLWhiteBox()
-    
-    fun rank(features: Array<Double>): Double {
-        return box.makePredict(*features.toDoubleArray())
+
+    fun rank(features: DoubleArray): Double {
+        return box.makePredict(*features)
     }
     
     companion object {

@@ -202,7 +202,7 @@ class FeatureTransformationTest {
     }
 
 
-    fun assertArrayEquals(row: EventRow, features: Array<Double>) {
+    fun assertArrayEquals(row: EventRow, features: DoubleArray) {
         var ok = 0
         var error = 0
 
