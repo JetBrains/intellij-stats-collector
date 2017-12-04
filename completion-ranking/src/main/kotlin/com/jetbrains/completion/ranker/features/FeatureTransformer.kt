@@ -45,7 +45,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     private val featureArray: DoubleArray = DoubleArray(featuresOrder.size)
 
 
-    fun featureArray(info: LookupElementInfo, relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any>): DoubleArray? {
+    fun featureArray(info: LookupElementInfo, relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any?>): DoubleArray? {
         val preparedMap = preparedMap(relevanceObjects)
 
         val unknownFactors: List<String> = factors.unknownFactors(preparedMap.keys)
