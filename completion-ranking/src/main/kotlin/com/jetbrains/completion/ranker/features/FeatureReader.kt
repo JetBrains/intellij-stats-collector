@@ -30,15 +30,16 @@ typealias IgnoredFeatureInfo = Set<String>
 object FeatureUtils {
     val UNDEFINED = "UNDEFINED"
     val INVALID_CACHE = "INVALID_CACHE"
-    
+
     val OTHER = "OTHER"
     val NONE = "NONE"
-    
+
     val ML_RANK = "ml_rank"
     val BEFORE_ORDER = "before_rerank_order"
-    
+
     val DEFAULT = "default"
-    
+
+    fun getOtherCategoryFeatureName(name: String) = "$name=$OTHER"
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
 }
 

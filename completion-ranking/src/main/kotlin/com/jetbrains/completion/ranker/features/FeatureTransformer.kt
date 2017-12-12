@@ -17,7 +17,6 @@
 package com.jetbrains.completion.ranker.features
 
 
-
 /**
  * @param position lookup element position inside lookup
  * @param query_length length of completion prefix filter(how much symbols is typed)
@@ -28,14 +27,12 @@ data class LookupElementInfo(val position: Int?,
                              val result_length: Int?)
 
 
-
-
-class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo, 
-                         private val doubleFeatures: DoubleFeatureInfo, 
+class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
+                         private val doubleFeatures: DoubleFeatureInfo,
                          private val categoricalFeatures: CategoricalFeatureInfo,
                          private val featuresOrder: Map<String, Int>,
                          private val factors: CompletionFactors,
-                         private val ignoredFactorsMatcher: IgnoredFactorsMatcher) {
+                         private val ignoredFactorsMatcher: IgnoredFactorsMatcher) : Transformer {
 
     companion object {
         private val MAX_DOUBLE_VALUE = Math.pow(10.0, 10.0)
@@ -45,7 +42,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     private val featureArray: DoubleArray = DoubleArray(featuresOrder.size)
 
 
-    fun featureArray(info: LookupElementInfo, relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any?>): DoubleArray? {
+    override fun featureArray(info: LookupElementInfo, relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any?>): DoubleArray? {
         val preparedMap = preparedMap(relevanceObjects)
 
         val unknownFactors: List<String> = factors.unknownFactors(preparedMap.keys)
@@ -54,24 +51,24 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         }
 
         resetArray()
-        
+
         preparedMap.asSequence()
                 .select { !ignoredFactorsMatcher.ignore(it.key) }
                 .forEach { processFeature(it.key, it.value) }
-        
+
         processElementInfo(info)
-        
+
         return featureArray
     }
 
-    
+
     private fun processElementInfo(state: LookupElementInfo) {
         val features = listOf(
-                "position" to state.position, 
-                "query_length" to state.query_length, 
+                "position" to state.position,
+                "query_length" to state.query_length,
                 "result_length" to state.result_length
         )
-        
+
         features.forEach {
             val value = it.second
             if (value != null) {
@@ -87,15 +84,15 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         }
     }
 
-    
-    
+
+
     private fun resetArray() {
         featureArray.fill(0.0)
         setFactortsUndefined()
         setDoubleFeaturesDefaultValues()
         setBinaryFeaturesDefaultValue()
     }
-    
+
 
     private fun setBinaryFeaturesDefaultValue() {
         binaryFeatures.entries
@@ -106,7 +103,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                 }
     }
 
-    
+
     private fun setDoubleFeaturesDefaultValues() {
         doubleFeatures.entries
                 .forEach {
@@ -116,7 +113,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                 }
     }
 
-    
+
     private fun setFactortsUndefined() {
         featuresOrder
                 .filterKeys { it.endsWith(FeatureUtils.UNDEFINED) }
@@ -126,7 +123,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                 }
     }
 
-    
+
     private fun processFeature(name: String, value: Any) {
         when {
             binaryFeatures[name] != null      -> processBinary(name, value, binaryFeatures[name]!!)
@@ -137,8 +134,8 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
             }
         }
     }
-    
-    
+
+
     private fun processCategorical(name: String, value: Any, knownValuesSet: Set<String>) {
         when {
             value == FeatureUtils.UNDEFINED -> return
@@ -150,13 +147,13 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                 featureArray[undefIndex] = 0.0
             }
             else -> {
-                val index = getFeatureIndex("$name=${FeatureUtils.OTHER}")
+                val index = getFeatureIndex(FeatureUtils.getOtherCategoryFeatureName(name))
                 featureArray[index] = 1.0
             }
         }
     }
 
-    
+
     private fun processDouble(name: String, value: Any, defaultValue: Double) {
         val index = getFeatureIndex(name)
         if (value == FeatureUtils.UNDEFINED) {
@@ -165,13 +162,13 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         else {
             val doubleValue = double(value)
             featureArray[index] = Math.min(doubleValue, MAX_DOUBLE_VALUE)
-            
+
             val undefIndex = getUndefinedFeatureIndex(name)
             featureArray[undefIndex] = 0.0
         }
     }
 
-    
+
     private fun processBinary(name: String, value: Any, valueTransformer: Map<String, Double>) {
         val index = getFeatureIndex(name)
         val transformedValue = valueTransformer[value.toString()]
@@ -186,12 +183,12 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         }
     }
 
-    
+
     private fun getFeatureIndex(name: String): Int {
         return featuresOrder[name]!!
     }
 
-    
+
     private fun getUndefinedFeatureIndex(name: String): Int {
         val undefinedName = FeatureUtils.getUndefinedFeatureName(name)
         return featuresOrder[undefinedName]!!
