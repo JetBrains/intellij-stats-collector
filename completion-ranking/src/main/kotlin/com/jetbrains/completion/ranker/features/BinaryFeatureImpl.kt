@@ -21,11 +21,15 @@ class BinaryFeatureImpl(override val name: String,
 
     override fun process(value: Any?, featureArray: DoubleArray) {
         if (value == null) {
-            featureArray[undefinedIndex] = 1.0
-            featureArray[index] = defaultValue
+            setDefaults(featureArray)
         } else {
             featureArray[undefinedIndex] = 0.0
             featureArray[index] = transform(value.toString())
         }
+    }
+
+    override fun setDefaults(featureArray: DoubleArray) {
+        featureArray[undefinedIndex] = 1.0
+        featureArray[index] = defaultValue
     }
 }

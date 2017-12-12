@@ -6,8 +6,7 @@ class DoubleFeatureImpl(override val name: String,
                         override val defaultValue: Double) : DoubleFeature {
     override fun process(value: Any?, featureArray: DoubleArray) {
         if (value == null) {
-            featureArray[undefinedIndex] = 1.0
-            featureArray[index] = defaultValue
+            setDefaults(featureArray)
         } else {
             featureArray[undefinedIndex] = 0.0
             featureArray[index] = value.asDouble()
@@ -15,7 +14,12 @@ class DoubleFeatureImpl(override val name: String,
     }
 
     private fun Any.asDouble(): Double {
-        if (this is Double) return this
+        if (this is Number) return this.toDouble()
         return this.toString().toDouble()
+    }
+
+    override fun setDefaults(featureArray: DoubleArray) {
+        featureArray[undefinedIndex] = 1.0
+        featureArray[index] = defaultValue
     }
 }
