@@ -1,5 +1,7 @@
 package com.jetbrains.completion.ranker.features
 
+import com.jetbrains.completion.ranker.features.ex.UnexpectedBinaryValueException
+
 /**
  * @author Vitaliy.Bibaev
  */
