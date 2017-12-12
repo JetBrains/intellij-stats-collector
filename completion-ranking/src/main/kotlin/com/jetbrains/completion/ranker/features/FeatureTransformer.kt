@@ -85,7 +85,6 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     }
 
 
-
     private fun resetArray() {
         featureArray.fill(0.0)
         setFactortsUndefined()
@@ -126,8 +125,8 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
 
     private fun processFeature(name: String, value: Any) {
         when {
-            binaryFeatures[name] != null      -> processBinary(name, value, binaryFeatures[name]!!)
-            doubleFeatures[name] != null      -> processDouble(name, value, doubleFeatures[name]!!)
+            binaryFeatures[name] != null -> processBinary(name, value, binaryFeatures[name]!!)
+            doubleFeatures[name] != null -> processDouble(name, value, doubleFeatures[name]!!)
             categoricalFeatures[name] != null -> processCategorical(name, value, categoricalFeatures[name]!!)
             else -> {
                 throw UnsupportedOperationException("Unknown feature name: $name")
@@ -158,8 +157,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
         val index = getFeatureIndex(name)
         if (value == FeatureUtils.UNDEFINED) {
             featureArray[index] = defaultValue
-        }
-        else {
+        } else {
             val doubleValue = double(value)
             featureArray[index] = Math.min(doubleValue, MAX_DOUBLE_VALUE)
 
@@ -175,8 +173,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
 
         if (value == "UNDEFINED" || transformedValue == null) {
             featureArray[index] = valueTransformer["default"]!!
-        }
-        else {
+        } else {
             featureArray[index] = transformedValue
             val undefIndex = getUndefinedFeatureIndex(name)
             featureArray[undefIndex] = 0.0
