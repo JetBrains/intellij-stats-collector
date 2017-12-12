@@ -4,9 +4,13 @@ class DoubleFeatureImpl(override val name: String,
                         override val index: Int,
                         override val undefinedIndex: Int,
                         override val defaultValue: Double) : DoubleFeature {
+    private companion object {
+        private val MAX_VALUE = Math.pow(10.0, 10.0)
+    }
+
     override fun process(value: Any, featureArray: DoubleArray) {
         featureArray[undefinedIndex] = 0.0
-        featureArray[index] = value.asDouble()
+        featureArray[index] = Math.max(value.asDouble(), MAX_VALUE)
     }
 
     private fun Any.asDouble(): Double {
