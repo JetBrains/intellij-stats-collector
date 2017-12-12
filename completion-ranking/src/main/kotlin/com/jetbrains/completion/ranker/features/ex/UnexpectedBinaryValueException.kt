@@ -1,4 +1,4 @@
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.ranker.features.ex
 
 /**
  * @author Vitaliy.Bibaev
