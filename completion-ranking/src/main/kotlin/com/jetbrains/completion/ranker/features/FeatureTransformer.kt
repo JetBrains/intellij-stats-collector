@@ -223,16 +223,11 @@ private fun String.toProximityMap(): Map<String, Any> {
 
 
 private fun preparedMap(relevance: Map<String, Any?>): Map<String, Any> {
-    val proximity = "proximity"
-    val proximityMap = relevance[proximity]?.toString()?.toProximityMap() ?: emptyMap()
+    val result = mutableMapOf<String, Any>()
+    relevance.forEach { name, value -> if (name != "proximity" && value != null) result.put(name, value) }
+    val proximityMap = relevance["proximity"]?.toString()?.toProximityMap() ?: emptyMap()
 
-    val resultMap = relevance.toMutableMap()
-    resultMap.remove(proximity)
-    resultMap.putAll(proximityMap)
+    result.putAll(proximityMap)
 
-    resultMap.filter { it.value == null }
-            .map { it.key }
-            .forEach { nullValueKey -> resultMap.remove(nullValueKey) }
-
-    return resultMap as Map<String, Any>
+    return result
 }
