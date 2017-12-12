@@ -18,17 +18,23 @@ package com.jetbrains.completion.ranker.features
 
 
 class CompletionFactors(proximity: Set<String>, relevance: Set<String>) {
-    
+
     private val knownFactors: Set<String> = HashSet<String>().apply {
         addAll(proximity.map { "prox_$it" })
         addAll(relevance)
     }
 
     fun unknownFactors(factors: Set<String>): List<String> {
-        val normalized = factors.asSequence().map { it.substringBefore('@') }
-        return normalized.filter { !knownFactors.contains(it) }.toList()
-    }
+        var result: MutableList<String>? = null
+        for (factor in factors) {
+            val normalized = factor.substringBefore('@')
+            if (normalized !in knownFactors) {
+                result = (result ?: mutableListOf()).apply { add(normalized) }
+            }
+        }
 
+        return if (result != null) result else emptyList()
+    }
 }
 
 
