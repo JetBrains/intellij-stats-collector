@@ -8,7 +8,7 @@ interface Feature {
 
     val undefinedIndex: Int
 
-    fun process(value: Any?, featureArray: DoubleArray)
+    fun process(value: Any, featureArray: DoubleArray)
 
     fun setDefaults(featureArray: DoubleArray)
 }

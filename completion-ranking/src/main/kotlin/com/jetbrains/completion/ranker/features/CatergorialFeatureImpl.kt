@@ -9,11 +9,9 @@ class CatergorialFeatureImpl(override val name: String,
 
     override val categories: Set<String> = categoryToIndex.keys
 
-    override fun process(value: Any?, featureArray: DoubleArray) {
+    override fun process(value: Any, featureArray: DoubleArray) {
         setDefaults(featureArray)
-        if (value != null) {
-            featureArray[indexByCategory(value.toString())] = 1.0
-        }
+        featureArray[indexByCategory(value.toString())] = 1.0
     }
 
     override fun setDefaults(featureArray: DoubleArray) {

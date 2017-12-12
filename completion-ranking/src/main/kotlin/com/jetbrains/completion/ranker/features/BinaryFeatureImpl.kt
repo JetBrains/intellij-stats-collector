@@ -19,13 +19,9 @@ class BinaryFeatureImpl(override val name: String,
 
     override val availableValues: Pair<String, String> = firstValue.key to secondValue.key
 
-    override fun process(value: Any?, featureArray: DoubleArray) {
-        if (value == null) {
-            setDefaults(featureArray)
-        } else {
-            featureArray[undefinedIndex] = 0.0
-            featureArray[index] = transform(value.toString())
-        }
+    override fun process(value: Any, featureArray: DoubleArray) {
+        featureArray[undefinedIndex] = 0.0
+        featureArray[index] = transform(value.toString())
     }
 
     override fun setDefaults(featureArray: DoubleArray) {
