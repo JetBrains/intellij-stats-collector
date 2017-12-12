@@ -3,6 +3,9 @@
     "ml_rank",
     "before_rerank_order",
 
+    "position",
+    "query_length",
+    "result_length",
     "sorter",
     "frozen",
     "prefix",

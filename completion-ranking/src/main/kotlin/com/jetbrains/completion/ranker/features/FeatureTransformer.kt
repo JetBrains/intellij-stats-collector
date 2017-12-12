@@ -17,16 +17,6 @@
 package com.jetbrains.completion.ranker.features
 
 
-/**
- * @param position lookup element position inside lookup
- * @param query_length length of completion prefix filter(how much symbols is typed)
- * @param result_length length of lookup element string
- */
-data class LookupElementInfo(val position: Int?,
-                             val query_length: Int?,
-                             val result_length: Int?)
-
-
 class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                          private val doubleFeatures: DoubleFeatureInfo,
                          private val categoricalFeatures: CategoricalFeatureInfo,
@@ -42,7 +32,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
     private val featureArray: DoubleArray = DoubleArray(featuresOrder.size)
 
 
-    override fun featureArray(info: LookupElementInfo, relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any?>): DoubleArray? {
+    override fun featureArray(relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any?>): DoubleArray? {
         val preparedMap = preparedMap(relevanceObjects)
 
         val unknownFactors: List<String> = factors.unknownFactors(preparedMap.keys)
@@ -56,32 +46,7 @@ class FeatureTransformer(private val binaryFeatures: BinaryFeatureInfo,
                 .select { !ignoredFactorsMatcher.ignore(it.key) }
                 .forEach { processFeature(it.key, it.value) }
 
-        processElementInfo(info)
-
         return featureArray
-    }
-
-
-    private fun processElementInfo(state: LookupElementInfo) {
-        val features = listOf(
-                "position" to state.position,
-                "query_length" to state.query_length,
-                "result_length" to state.result_length
-        )
-
-        features.forEach {
-            val value = it.second
-            if (value != null) {
-                val index = getFeatureIndex(it.first)
-                featureArray[index] = value.toDouble()
-
-                val undefIndex = getUndefinedFeatureIndex(it.first)
-                featureArray[undefIndex] = 0.0
-            } else {
-                val index = getFeatureIndex(it.first)
-                featureArray[index] = doubleFeatures[it.first]!!
-            }
-        }
     }
 
 

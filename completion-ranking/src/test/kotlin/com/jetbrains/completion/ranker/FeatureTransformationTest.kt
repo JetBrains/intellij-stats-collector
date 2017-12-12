@@ -25,7 +25,6 @@ import com.jetbrains.completion.ranker.features.FeatureReader.ignoredFactors
 import com.jetbrains.completion.ranker.features.FeatureReader.jsonMap
 import com.jetbrains.completion.ranker.features.FeatureTransformer
 import com.jetbrains.completion.ranker.features.IgnoredFactorsMatcher
-import com.jetbrains.completion.ranker.features.LookupElementInfo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -66,15 +65,15 @@ fun completionLog(path: String): CompletionLog {
 }
 
 class FeatureTransformationTest {
-    
+
     private lateinit var transformer: FeatureTransformer
     private lateinit var factorsOrder: Map<String, Int>
 
     private lateinit var completionLog: CompletionLog
     private lateinit var table: DataTable<EventRow>
-    
+
     private lateinit var scores: DataTable<ScoreRow>
-    
+
     private val ranker = CompletionRanker()
 
     private val errorBuffer = mutableListOf<String>()
@@ -171,11 +170,12 @@ class FeatureTransformationTest {
         //todo how to tack query length
         val query_length = cleanRow["query_length"].toDouble().toInt()
 
-        val state = LookupElementInfo(position, query_length, result_length)
+        val relevanceObjects = item.relevance.toMutableMap()
+        relevanceObjects.put("position", position)
+        relevanceObjects.put("query_length", query_length)
+        relevanceObjects.put("result_length", result_length)
 
-        val relevanceObjects = item.relevance
-
-        val features = transformer.featureArray(state, relevanceObjects.toMutableMap(), emptyMap())!!
+        val features = transformer.featureArray(relevanceObjects, emptyMap())!!
 
 
         assertArrayEquals(cleanRow, features)
@@ -193,7 +193,7 @@ class FeatureTransformationTest {
         val expectedRank = eventRows.first().rank
 
         val realRank = ranker.rank(features)
-        
+
         val distance = Math.abs(expectedRank - realRank)
 
         if (distance > 0.0000001) {
