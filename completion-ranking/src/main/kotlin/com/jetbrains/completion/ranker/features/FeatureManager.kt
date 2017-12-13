@@ -8,10 +8,16 @@ interface FeatureManager {
     val doubleFactors: List<DoubleFeature>
     val categorialFactors: List<CatergorialFeature>
     val ignoredFactors: Set<String>
+    val featureOrder: Map<String, Int>
 
     val completionFactors: CompletionFactors
-    val featureArrayLength: Int
 
     fun isUserFeature(name: String): Boolean
     fun allFeatures(): List<Feature>
+
+    fun createTransformer(): Transformer
+
+    interface Factory {
+        fun createFeatureManager(reader: FeatureReader, interpreter: FeatureInterpreter): FeatureManager
+    }
 }
