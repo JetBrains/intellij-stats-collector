@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.ranker.features.impl
 
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.jetbrains.completion.ranker.features.CompletionFactors
 
 
 typealias DoubleFeatureInfo = Map<String, Double>
@@ -39,8 +40,8 @@ object FeatureUtils {
 
     val DEFAULT = "default"
 
-    fun getOtherCategoryFeatureName(name: String) = "$name=$OTHER"
-    fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
+    fun getOtherCategoryFeatureName(name: String) = "$name=${OTHER}"
+    fun getUndefinedFeatureName(name: String) = "$name=${UNDEFINED}"
 }
 
 

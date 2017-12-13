@@ -1,5 +1,6 @@
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.ranker.features.impl
 
+import com.jetbrains.completion.ranker.features.BinaryFeature
 import com.jetbrains.completion.ranker.features.ex.UnexpectedBinaryValueException
 
 /**

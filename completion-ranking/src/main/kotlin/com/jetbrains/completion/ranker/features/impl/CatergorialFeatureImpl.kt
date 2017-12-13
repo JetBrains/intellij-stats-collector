@@ -1,4 +1,6 @@
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.ranker.features.impl
+
+import com.jetbrains.completion.ranker.features.CatergorialFeature
 
 class CatergorialFeatureImpl(override val name: String,
                              override val undefinedIndex: Int,

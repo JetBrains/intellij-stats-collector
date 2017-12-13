@@ -17,7 +17,10 @@
 package com.jetbrains.completion.ranker
 
 import com.jetbrains.completion.ranker.features.*
-import com.jetbrains.completion.ranker.features.FeatureReader.jsonMap
+import com.jetbrains.completion.ranker.features.impl.FeatureInterpreterImpl
+import com.jetbrains.completion.ranker.features.impl.FeatureManagerFactory
+import com.jetbrains.completion.ranker.features.impl.FeatureReader
+import com.jetbrains.completion.ranker.features.impl.FeatureReader.jsonMap
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test

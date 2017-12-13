@@ -1,4 +1,8 @@
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.ranker.features.impl
+
+import com.jetbrains.completion.ranker.features.CompletionFactors
+import com.jetbrains.completion.ranker.features.Feature
+import com.jetbrains.completion.ranker.features.Transformer
 
 
 /**

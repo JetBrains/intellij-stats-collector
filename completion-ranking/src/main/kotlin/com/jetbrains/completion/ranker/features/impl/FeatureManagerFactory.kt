@@ -1,19 +1,21 @@
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.ranker.features.impl
+
+import com.jetbrains.completion.ranker.features.*
 
 class FeatureManagerFactory: FeatureManager.Factory {
     override fun createFeatureManager(reader: FeatureReader, interpreter: FeatureInterpreter): FeatureManager {
-        val order = reader.featuresOrder()
+        val order = FeatureReader.featuresOrder()
 
-        val binaryFactors = reader.binaryFactors()
+        val binaryFactors = FeatureReader.binaryFactors()
                 .map { (name, description) -> interpreter.binary(name, description, order) }
-        val doubleFactors = reader.doubleFactors()
+        val doubleFactors = FeatureReader.doubleFactors()
                 .map { (name, defaultValue) -> interpreter.double(name, defaultValue, order) }
-        val categorialFactors = reader.categoricalFactors()
+        val categorialFactors = FeatureReader.categoricalFactors()
                 .map { (name, categories) -> interpreter.categorial(name, categories, order) }
 
-        val completionFactors = reader.completionFactors()
+        val completionFactors = FeatureReader.completionFactors()
 
-        val ignoredFactors = reader.ignoredFactors()
+        val ignoredFactors = FeatureReader.ignoredFactors()
 
         return MyFeatureManager(binaryFactors, doubleFactors, categorialFactors, ignoredFactors, completionFactors, order)
     }

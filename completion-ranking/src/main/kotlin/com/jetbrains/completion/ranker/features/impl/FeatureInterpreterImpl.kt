@@ -1,5 +1,6 @@
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.ranker.features.impl
 
+import com.jetbrains.completion.ranker.features.*
 import com.jetbrains.completion.ranker.features.BinaryFeature.BinaryValueDescriptor
 import com.jetbrains.completion.ranker.features.ex.FeatureDefaultValueNotFound
 import com.jetbrains.completion.ranker.features.ex.FutureOrderNotFound
