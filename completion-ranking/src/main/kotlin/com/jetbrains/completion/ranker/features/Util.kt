@@ -36,11 +36,3 @@ class CompletionFactors(proximity: Set<String>, relevance: Set<String>) {
         return if (result != null) result else emptyList()
     }
 }
-
-
-class IgnoredFactorsMatcher(private val ignoredFactors: Set<String>) {
-    fun ignore(factor: String): Boolean {
-        val normalized = factor.substringBefore('@')
-        return ignoredFactors.contains(normalized)
-    }
-}
