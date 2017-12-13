@@ -1,7 +1,4 @@
-package com.intellij.completion
-
-import com.intellij.openapi.application.ApplicationManager
-import com.jetbrains.completion.ranker.features.*
+package com.jetbrains.completion.ranker.features
 
 /**
  * @author Vitaliy.Bibaev
@@ -17,8 +14,4 @@ interface FeatureManager {
 
     fun isUserFeature(name: String): Boolean
     fun allFeatures(): List<Feature>
-
-    companion object {
-        fun getInstance(): FeatureManager = ApplicationManager.getApplication().getComponent(FeatureManager::class.java)
-    }
 }
