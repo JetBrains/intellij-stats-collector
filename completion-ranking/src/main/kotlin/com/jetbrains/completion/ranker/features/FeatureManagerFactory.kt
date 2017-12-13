@@ -34,7 +34,7 @@ class FeatureManagerFactory: FeatureManager.Factory {
 
         override fun createTransformer(): Transformer {
             val features = allFeatures().associate { it.name to it }
-            return NewFeatureTransformer(features, ignoredFactors, completionFactors, featureOrder.size)
+            return FeatureTransformer(features, ignoredFactors, completionFactors, featureOrder.size)
         }
     }
 }
