@@ -12,6 +12,7 @@ class CatergorialFeatureImpl(override val name: String,
     override fun process(value: Any, featureArray: DoubleArray) {
         setDefaults(featureArray)
         featureArray[indexByCategory(value.toString())] = 1.0
+        featureArray[undefinedIndex] = 0.0
     }
 
     override fun setDefaults(featureArray: DoubleArray) {

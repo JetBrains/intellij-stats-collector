@@ -10,7 +10,7 @@ class DoubleFeatureImpl(override val name: String,
 
     override fun process(value: Any, featureArray: DoubleArray) {
         featureArray[undefinedIndex] = 0.0
-        featureArray[index] = Math.max(value.asDouble(), MAX_VALUE)
+        featureArray[index] = Math.min(value.asDouble(), MAX_VALUE)
     }
 
     private fun Any.asDouble(): Double {
