@@ -39,17 +39,24 @@ class ModelMetadataTest {
                         assertEquals(order, feature.undefinedIndex)
                     }
                     is CatergorialFeature -> {
-                        if (value == FeatureUtils.UNDEFINED) {
-                            assertEquals(order, feature.undefinedIndex)
-                        } else if (value == FeatureUtils.OTHER) {
-                            assertEquals(order, feature.otherCatergoryIndex)
-                        } else {
-                            assertEquals(order, feature.indexByCategory(value))
+                        when (value) {
+                            FeatureUtils.UNDEFINED -> assertEquals(order, feature.undefinedIndex)
+                            FeatureUtils.OTHER -> assertEquals(order, feature.otherCatergoryIndex)
+                            else -> assertEquals(order, feature.indexByCategory(value))
                         }
                     }
+                    else -> fail("unknown feature type found: ${feature.javaClass.canonicalName}")
                 }
             } else {
-
+                val featureName = split.single()
+                val feature = featureIndex[featureName]
+                        ?: throw AssertionError("feature declared in the featureOrder not found: $featureName")
+                when (feature) {
+                    is BinaryFeature -> assertEquals(order, feature.index)
+                    is DoubleFeature -> assertEquals(order, feature.index)
+                    is CatergorialFeature -> fail("categorial feature claims 'name=category' in feature order list")
+                    else -> fail("unknown feature type found: ${feature.javaClass.canonicalName}")
+                }
             }
         }
     }
@@ -106,7 +113,7 @@ class ModelMetadataTest {
 
     private fun assertFeaturesNotStoreValueBySameIndex(index: Int, old: Feature?, new: Feature) {
         if (old != null) {
-            fail("features store values to the same array element [index = $index, names = {${old.name}, ${old.name}}]")
+            fail("features store values to the same array element [index = $index, names = {${old.name}, ${new.name}}]")
         }
     }
 
