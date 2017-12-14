@@ -16,20 +16,15 @@
 
 package com.jetbrains.completion.ranker
 
-import com.jetbrains.completion.ranker.features.LookupElementInfo
-import com.jetbrains.completion.ranker.features.FeatureReader.binaryFactors
-import com.jetbrains.completion.ranker.features.FeatureReader.categoricalFactors
-import com.jetbrains.completion.ranker.features.FeatureReader.completionFactors
-import com.jetbrains.completion.ranker.features.FeatureReader.doubleFactors
-import com.jetbrains.completion.ranker.features.FeatureReader.featuresOrder
-import com.jetbrains.completion.ranker.features.FeatureReader.ignoredFactors
-import com.jetbrains.completion.ranker.features.FeatureReader.jsonMap
-import com.jetbrains.completion.ranker.features.FeatureTransformer
-import com.jetbrains.completion.ranker.features.IgnoredFactorsMatcher
+import com.jetbrains.completion.ranker.features.*
+import com.jetbrains.completion.ranker.features.impl.FeatureInterpreterImpl
+import com.jetbrains.completion.ranker.features.impl.FeatureManagerFactory
+import com.jetbrains.completion.ranker.features.impl.FeatureReader
+import com.jetbrains.completion.ranker.features.impl.FeatureReader.jsonMap
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.io.File
-import org.assertj.core.api.Assertions.assertThat
 
 
 class ScoreRow(index: Int,
@@ -66,40 +61,23 @@ fun completionLog(path: String): CompletionLog {
 }
 
 class FeatureTransformationTest {
-    
-    private lateinit var transformer: FeatureTransformer
-    private lateinit var factorsOrder: Map<String, Int>
+
+    private lateinit var featureManager: FeatureManager
+    private lateinit var transformer: Transformer
 
     private lateinit var completionLog: CompletionLog
     private lateinit var table: DataTable<EventRow>
-    
+
     private lateinit var scores: DataTable<ScoreRow>
-    
+
     private val ranker = CompletionRanker()
 
     private val errorBuffer = mutableListOf<String>()
 
-    private fun featureTransformer(order: Map<String, Int>): FeatureTransformer {
-        val binaryFactors = binaryFactors()
-        val doubleFactors = doubleFactors()
-        val categoricalFactors = categoricalFactors()
-        val ignoredFactors = ignoredFactors()
-        val factors = completionFactors()
-
-        return FeatureTransformer(
-                binaryFactors,
-                doubleFactors,
-                categoricalFactors,
-                order,
-                factors,
-                IgnoredFactorsMatcher(ignoredFactors)
-        )
-    }
-
     @Before
     fun setUp() {
-        factorsOrder = featuresOrder()
-        transformer = featureTransformer(factorsOrder)
+        featureManager = FeatureManagerFactory().createFeatureManager(FeatureReader, FeatureInterpreterImpl())
+        transformer = featureManager.createTransformer()
 
         completionLog = completionLog("features_transformation/00c0af2c789d.json")
 
@@ -171,11 +149,12 @@ class FeatureTransformationTest {
         //todo how to tack query length
         val query_length = cleanRow["query_length"].toDouble().toInt()
 
-        val state = LookupElementInfo(position, query_length, result_length)
+        val relevanceObjects = item.relevance.toMutableMap()
+        relevanceObjects.put("position", position)
+        relevanceObjects.put("query_length", query_length)
+        relevanceObjects.put("result_length", result_length)
 
-        val relevanceObjects = item.relevance
-
-        val features = transformer.featureArray(state, relevanceObjects.toMutableMap())!!
+        val features = transformer.featureArray(relevanceObjects, emptyMap())!!
 
 
         assertArrayEquals(cleanRow, features)
@@ -193,7 +172,7 @@ class FeatureTransformationTest {
         val expectedRank = eventRows.first().rank
 
         val realRank = ranker.rank(features)
-        
+
         val distance = Math.abs(expectedRank - realRank)
 
         if (distance > 0.0000001) {
@@ -206,7 +185,7 @@ class FeatureTransformationTest {
         var ok = 0
         var error = 0
 
-        factorsOrder.entries.forEach { (factorName, arrayIndex) ->
+        featureManager.featureOrder.entries.forEach { (factorName, arrayIndex) ->
             val cleanValue = row[factorName].toDouble()
             val oursValue = features[arrayIndex]
             val abs = Math.abs(oursValue - cleanValue)
