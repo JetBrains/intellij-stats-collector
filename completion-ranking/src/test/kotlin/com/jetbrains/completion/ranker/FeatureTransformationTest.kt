@@ -181,7 +181,7 @@ class FeatureTransformationTest {
     }
 
 
-    fun assertArrayEquals(row: EventRow, features: DoubleArray) {
+    private fun assertArrayEquals(row: EventRow, features: DoubleArray) {
         var ok = 0
         var error = 0
 
