@@ -136,35 +136,35 @@ class FeatureTransformationTest {
         val position = cleanRow["position"].toDouble().toInt()
         assertThat(position).isEqualTo(item.position)
 
-        val result_length = cleanRow["result_length"].toDouble().toInt()
+        val resultLength = cleanRow["result_length"].toDouble().toInt()
 
         //assertThat(result_length).isEqualTo(item.length)
-        if (result_length != item.length) {
-            println("Length mistmatch: $result_length : ${item.length}")
+        if (resultLength != item.length) {
+            println("Length mistmatch: $resultLength : ${item.length}")
             println("event_id " + cleanRow["event_id"])
             println("session_id " + cleanRow["session_id"])
         }
 
 
         //todo how to tack query length
-        val query_length = cleanRow["query_length"].toDouble().toInt()
+        val queryLength = cleanRow["query_length"].toDouble().toInt()
 
         val relevanceObjects = item.relevance.toMutableMap()
         relevanceObjects.put("position", position)
-        relevanceObjects.put("query_length", query_length)
-        relevanceObjects.put("result_length", result_length)
+        relevanceObjects.put("query_length", queryLength)
+        relevanceObjects.put("result_length", resultLength)
 
         val features = transformer.featureArray(relevanceObjects, emptyMap())!!
 
 
         assertArrayEquals(cleanRow, features)
 
-        val user_id = cleanRow.user_id
-        val event_id = cleanRow.event_id
-        val session_id = cleanRow.session_id
+        val userId = cleanRow.user_id
+        val eventId = cleanRow.event_id
+        val sessionId = cleanRow.session_id
 
         val eventRows = scores.rows().filter {
-            it.event_id == event_id && it.user_id == user_id && it.session_id == session_id && it.position == position
+            it.event_id == eventId && it.user_id == userId && it.session_id == sessionId && it.position == position
         }
 
         assert(eventRows.size == 1)
