@@ -72,14 +72,14 @@ class CompletionLogEvent(event: MutableMap<String, Any>) {
 }
 
 
-
-class PositionedItem(val position: Int, val item: LookupItemRelevance) {
+class PositionedItem(val position: Int, private val item: LookupItemRelevance) {
     val relevance: Map<String, Any>
         get() = item.relevance
 
     val length: Int
         get() = item.length.toInt()
 
+    @Suppress("unused")
     val id: Int
         get() = item.id.toInt()
 }
