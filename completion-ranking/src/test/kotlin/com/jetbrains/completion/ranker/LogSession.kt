@@ -30,15 +30,14 @@ class CompletionLog(events: List<CompletionLogEvent>) {
 class CompletionSession(val events: List<CompletionLogEvent>) {
 
     val lookupItems: Map<Int, LookupItemRelevance> by lazy {
-        events.mapNotNull { it.newCompletionListItems }
-                .concat()
+        events.flatMap { it.newCompletionListItems }
                 .map { LookupItemRelevance(it) }
                 .associate { it.id.toInt() to it }
     }
 
 
     val lookupPages: List<LookupPage> by lazy {
-        events.mapNotNull { it.intCompletionListIds }
+        events.map { it.intCompletionListIds }
                 .filter { it.isNotEmpty() }
                 .map { ids ->
                     val items = ids.mapIndexed { index, id -> PositionedItem(index, lookupItems[id]!!) }
@@ -73,14 +72,14 @@ class CompletionLogEvent(event: MutableMap<String, Any>) {
 }
 
 
-
-class PositionedItem(val position: Int, val item: LookupItemRelevance) {
+class PositionedItem(val position: Int, private val item: LookupItemRelevance) {
     val relevance: Map<String, Any>
         get() = item.relevance
 
     val length: Int
         get() = item.length.toInt()
 
+    @Suppress("unused")
     val id: Int
         get() = item.id.toInt()
 }

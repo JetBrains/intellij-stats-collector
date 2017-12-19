@@ -101,7 +101,7 @@ class FeatureTransformationTest {
 
     @Test
     fun `test check all sessions valid`() {
-        val sessions = table.rows().asSequence().map { it.session_id }.toCollection(hashSetOf())
+        val sessions = table.rows().asSequence().map { it.sessionId }.toCollection(hashSetOf())
 
         val start = System.currentTimeMillis()
         sessions.forEach { session_id ->
@@ -123,7 +123,7 @@ class FeatureTransformationTest {
 
         assert(sessionRows.size == lookupPages.sumBy { it.size })
 
-        val mergedSessionsElements: List<PositionedItem> = lookupPages.map { it.lookupItems }.concat()
+        val mergedSessionsElements: List<PositionedItem> = lookupPages.map { it.lookupItems }.flatMap { it }
         sessionRows
                 .zip(mergedSessionsElements)
                 .forEach {
@@ -136,35 +136,35 @@ class FeatureTransformationTest {
         val position = cleanRow["position"].toDouble().toInt()
         assertThat(position).isEqualTo(item.position)
 
-        val result_length = cleanRow["result_length"].toDouble().toInt()
+        val resultLength = cleanRow["result_length"].toDouble().toInt()
 
         //assertThat(result_length).isEqualTo(item.length)
-        if (result_length != item.length) {
-            println("Length mistmatch: $result_length : ${item.length}")
+        if (resultLength != item.length) {
+            println("Length mistmatch: $resultLength : ${item.length}")
             println("event_id " + cleanRow["event_id"])
             println("session_id " + cleanRow["session_id"])
         }
 
 
         //todo how to tack query length
-        val query_length = cleanRow["query_length"].toDouble().toInt()
+        val queryLength = cleanRow["query_length"].toDouble().toInt()
 
         val relevanceObjects = item.relevance.toMutableMap()
         relevanceObjects.put("position", position)
-        relevanceObjects.put("query_length", query_length)
-        relevanceObjects.put("result_length", result_length)
+        relevanceObjects.put("query_length", queryLength)
+        relevanceObjects.put("result_length", resultLength)
 
         val features = transformer.featureArray(relevanceObjects, emptyMap())!!
 
 
         assertArrayEquals(cleanRow, features)
 
-        val user_id = cleanRow.user_id
-        val event_id = cleanRow.event_id
-        val session_id = cleanRow.session_id
+        val userId = cleanRow.userId
+        val eventId = cleanRow.eventId
+        val sessionId = cleanRow.sessionId
 
         val eventRows = scores.rows().filter {
-            it.event_id == event_id && it.user_id == user_id && it.session_id == session_id && it.position == position
+            it.eventId == eventId && it.userId == userId && it.sessionId == sessionId && it.position == position
         }
 
         assert(eventRows.size == 1)
@@ -181,7 +181,7 @@ class FeatureTransformationTest {
     }
 
 
-    fun assertArrayEquals(row: EventRow, features: DoubleArray) {
+    private fun assertArrayEquals(row: EventRow, features: DoubleArray) {
         var ok = 0
         var error = 0
 
@@ -212,9 +212,4 @@ fun file(fileName: String): File {
             .file
 
     return File(file)
-}
-
-
-fun <T> Iterable<Iterable<T>>.concat(): List<T> {
-    return fold(mutableListOf<T>(), { acc, iterable -> acc.apply { addAll(iterable) } })
 }

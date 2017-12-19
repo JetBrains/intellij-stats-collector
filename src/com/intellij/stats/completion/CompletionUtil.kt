@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.ex
+@file:Suppress("DEPRECATION")
 
-class FeatureDefaultValueNotFound(name: String)
-    : IllegalArgumentException("Feature default value not found. Feature name: $name")
+package com.intellij.stats.completion
+
+import com.intellij.codeInsight.completion.CompletionParameters
+import com.intellij.codeInsight.completion.CompletionProgressIndicator
+import com.intellij.codeInsight.completion.CompletionService
+
+/**
+ * @author Vitaliy.Bibaev
+ */
+object CompletionUtil {
+    fun getCurrentCompletionParameters(): CompletionParameters? = getCurrentCompletion()?.parameters
+
+    private fun getCurrentCompletion(): CompletionProgressIndicator? =
+            CompletionService.getCompletionService().currentCompletion as? CompletionProgressIndicator
+}

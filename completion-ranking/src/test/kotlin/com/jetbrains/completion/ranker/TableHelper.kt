@@ -48,13 +48,13 @@ open class EventRow(val index: Int,
                     private val values: List<String>,
                     private val columnNameIndex: Map<String, Int>): Row {
 
-    val session_id: String
+    val sessionId: String
         get() = get("session_id")
 
-    val user_id: String
+    val userId: String
         get() = get("user_id")
 
-    val event_id: String
+    val eventId: String
         get() = get("event_id")
 
     override fun get(columnName: String): String {

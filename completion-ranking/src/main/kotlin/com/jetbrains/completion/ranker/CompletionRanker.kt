@@ -26,6 +26,7 @@ class CompletionRanker {
     }
     
     companion object {
+        @Suppress("unused")
         val rankerVersion = "gbt_19_25_04"
     }
 }

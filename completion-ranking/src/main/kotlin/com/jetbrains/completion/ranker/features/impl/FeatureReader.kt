@@ -40,8 +40,8 @@ object FeatureUtils {
 
     val DEFAULT = "default"
 
-    fun getOtherCategoryFeatureName(name: String) = "$name=${OTHER}"
-    fun getUndefinedFeatureName(name: String) = "$name=${UNDEFINED}"
+    fun getOtherCategoryFeatureName(name: String) = "$name=$OTHER"
+    fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
 }
 
 
