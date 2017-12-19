@@ -101,7 +101,7 @@ class FeatureTransformationTest {
 
     @Test
     fun `test check all sessions valid`() {
-        val sessions = table.rows().asSequence().map { it.session_id }.toCollection(hashSetOf())
+        val sessions = table.rows().asSequence().map { it.sessionId }.toCollection(hashSetOf())
 
         val start = System.currentTimeMillis()
         sessions.forEach { session_id ->
@@ -159,12 +159,12 @@ class FeatureTransformationTest {
 
         assertArrayEquals(cleanRow, features)
 
-        val userId = cleanRow.user_id
-        val eventId = cleanRow.event_id
-        val sessionId = cleanRow.session_id
+        val userId = cleanRow.userId
+        val eventId = cleanRow.eventId
+        val sessionId = cleanRow.sessionId
 
         val eventRows = scores.rows().filter {
-            it.event_id == eventId && it.user_id == userId && it.session_id == sessionId && it.position == position
+            it.eventId == eventId && it.userId == userId && it.sessionId == sessionId && it.position == position
         }
 
         assert(eventRows.size == 1)
