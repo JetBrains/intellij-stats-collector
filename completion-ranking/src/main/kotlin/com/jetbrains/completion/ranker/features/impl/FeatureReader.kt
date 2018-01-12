@@ -43,14 +43,24 @@ object FeatureUtils {
     fun getOtherCategoryFeatureName(name: String) = "$name=$OTHER"
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
 
-    fun preparedMap(relevance: Map<String, Any?>): Map<String, Any> {
-        val result = mutableMapOf<String, Any>()
-        relevance.forEach { name, value -> if (name != "proximity" && value != null) result.put(name, value) }
-        val proximityMap = relevance["proximity"]?.toString()?.toProximityMap() ?: emptyMap()
+    fun prepareRevelanceMap(relevance: List<Pair<String, Any?>>, position: Int, prefixLength: Int, elementLength: Int)
+            : Map<String, Any> {
+        val relevanceMap = mutableMapOf<String, Any>()
+        for ((name, value) in relevance) {
+            if(value == null) continue
+            if (name == "proximity") {
+                val proximityMap = value.toString().toProximityMap()
+                relevanceMap.putAll(proximityMap)
+            } else {
+                relevanceMap.put(name, value)
+            }
+        }
 
-        result.putAll(proximityMap)
+        relevanceMap.put("position", position)
+        relevanceMap.put("query_length", prefixLength)
+        relevanceMap.put("result_length", elementLength)
 
-        return result
+        return relevanceMap
     }
 
     /**

@@ -16,7 +16,6 @@
 
 package com.jetbrains.completion.ranker.features.impl
 
-import com.jetbrains.completion.ranker.features.CompletionFactors
 import com.jetbrains.completion.ranker.features.Feature
 import com.jetbrains.completion.ranker.features.Transformer
 
@@ -26,19 +25,12 @@ import com.jetbrains.completion.ranker.features.Transformer
  */
 class FeatureTransformer(val features: Map<String, Feature>,
                          private val ignoredFeatures: Set<String>,
-                         private val completionFactors: CompletionFactors,
                          arraySize: Int)
     : Transformer {
     private val array = DoubleArray(arraySize)
-    override fun featureArray(relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any?>): DoubleArray? {
-        val preparedMap = FeatureUtils.preparedMap(relevanceObjects)
-        val unknownFactors = completionFactors.unknownFactors(preparedMap.keys)
-        if (unknownFactors.isNotEmpty()) { // do not allow rank if unknown factors were found
-            return null
-        }
-
+    override fun featureArray(relevanceMap: Map<String, Any>, userFactors: Map<String, Any?>): DoubleArray {
         for ((name, feature) in features) {
-            val value = preparedMap[name]
+            val value = relevanceMap[name]
             if (value == null || isFeatureIgnored(name)) {
                 feature.setDefaults(array)
             } else {

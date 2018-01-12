@@ -154,8 +154,7 @@ class FeatureTransformationTest {
         relevanceObjects.put("query_length", queryLength)
         relevanceObjects.put("result_length", resultLength)
 
-        val features = transformer.featureArray(relevanceObjects, emptyMap())!!
-
+        val features = transformer.featureArray(relevanceObjects, emptyMap())
 
         assertArrayEquals(cleanRow, features)
 
