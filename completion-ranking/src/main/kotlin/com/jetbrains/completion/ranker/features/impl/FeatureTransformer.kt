@@ -31,7 +31,7 @@ class FeatureTransformer(val features: Map<String, Feature>,
     : Transformer {
     private val array = DoubleArray(arraySize)
     override fun featureArray(relevanceObjects: Map<String, Any?>, userFactors: Map<String, Any?>): DoubleArray? {
-        val preparedMap = preparedMap(relevanceObjects)
+        val preparedMap = FeatureUtils.preparedMap(relevanceObjects)
         val unknownFactors = completionFactors.unknownFactors(preparedMap.keys)
         if (unknownFactors.isNotEmpty()) { // do not allow rank if unknown factors were found
             return null
@@ -52,27 +52,5 @@ class FeatureTransformer(val features: Map<String, Feature>,
     private fun isFeatureIgnored(name: String): Boolean {
         val normalized = name.substringBefore('@')
         return normalized in ignoredFeatures
-    }
-
-    /**
-     * Proximity features now came like [samePsiFile=true, openedInEditor=false], need to convert to proper map
-     */
-    private fun String.toProximityMap(): Map<String, Any> {
-        val items = replace("[", "").replace("]", "").split(",")
-
-        return items.map {
-            val (key, value) = it.trim().split("=")
-            "prox_$key" to value
-        }.toMap()
-    }
-
-    private fun preparedMap(relevance: Map<String, Any?>): Map<String, Any> {
-        val result = mutableMapOf<String, Any>()
-        relevance.forEach { name, value -> if (name != "proximity" && value != null) result.put(name, value) }
-        val proximityMap = relevance["proximity"]?.toString()?.toProximityMap() ?: emptyMap()
-
-        result.putAll(proximityMap)
-
-        return result
     }
 }
