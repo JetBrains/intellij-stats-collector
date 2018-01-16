@@ -42,6 +42,38 @@ object FeatureUtils {
 
     fun getOtherCategoryFeatureName(name: String) = "$name=$OTHER"
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
+
+    fun prepareRevelanceMap(relevance: List<Pair<String, Any?>>, position: Int, prefixLength: Int, elementLength: Int)
+            : Map<String, Any> {
+        val relevanceMap = mutableMapOf<String, Any>()
+        for ((name, value) in relevance) {
+            if(value == null) continue
+            if (name == "proximity") {
+                val proximityMap = value.toString().toProximityMap()
+                relevanceMap.putAll(proximityMap)
+            } else {
+                relevanceMap.put(name, value)
+            }
+        }
+
+        relevanceMap.put("position", position)
+        relevanceMap.put("query_length", prefixLength)
+        relevanceMap.put("result_length", elementLength)
+
+        return relevanceMap
+    }
+
+    /**
+     * Proximity features now came like [samePsiFile=true, openedInEditor=false], need to convert to proper map
+     */
+    private fun String.toProximityMap(): Map<String, Any> {
+        val items = replace("[", "").replace("]", "").split(",")
+
+        return items.map {
+            val (key, value) = it.trim().split("=")
+            "prox_$key" to value
+        }.toMap()
+    }
 }
 
 
