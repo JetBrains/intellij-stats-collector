@@ -47,9 +47,6 @@ liftShorter
 liftShorter=UNDEFINED
 liftShorterClasses
 liftShorterClasses=UNDEFINED
-methodsChains=00_0_2147483647
-methodsChains=UNDEFINED
-methodsChains=OTHER
 middleMatching
 middleMatching=UNDEFINED
 nameEnd
