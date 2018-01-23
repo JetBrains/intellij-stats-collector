@@ -27,12 +27,15 @@
     "proximity",
     "liftShorterClasses",
     "recursion",
+    "com.intellij.psi.css.impl.util.completion.CssValuesCompletionWeigher",
     "scalaContainingClassWeigher",
     "scalaSbtDefinitionWeigher",
     "com.intellij.scala.play.language.routing.completion.Play2ControllerMethodsCompletionWeigher",
     "statics",
     "nonGeneric",
-    "com.jetbrains.python.codeInsight.completion.PythonCompletionWeigher"
+    "com.jetbrains.python.codeInsight.completion.PythonCompletionWeigher",
+    "mostUsed",
+    "invokationCount"
   ],
   "javaProximity": [
     "samePsiMember",
