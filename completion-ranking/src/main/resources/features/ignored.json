@@ -1,6 +1,7 @@
 [
   "cerp_length",
   "frozen",
+  "methodsChains",
   "prox_phpNamespace",
   "prox_phpSameFile",
   "prox_phpScope",
