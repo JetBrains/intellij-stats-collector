@@ -1,20 +1,5 @@
 {
-  "middleMatching": {
-    "default": 0,
-    "false": 0,
-    "true": 1
-  },
-  "templates": {
-    "default": 0,
-    "false": 0,
-    "true": 1
-  },
-  "prox_openedInEditor": {
-    "default": 0,
-    "false": 0,
-    "true": 1
-  },
-  "prox_sameLogicalRoot": {
+  "liftShorter": {
     "default": 0,
     "false": 0,
     "true": 1
@@ -24,7 +9,32 @@
     "false": 0,
     "true": 1
   },
-  "liftShorter": {
+  "middleMatching": {
+    "default": 0,
+    "false": 0,
+    "true": 1
+  },
+  "nonGeneric": {
+    "0": 0,
+    "1": 1,
+    "default": 0
+  },
+  "prox_inResolveScope": {
+    "default": 1,
+    "false": 0,
+    "true": 1
+  },
+  "prox_openedInEditor": {
+    "default": 0,
+    "false": 0,
+    "true": 1
+  },
+  "prox_sameDirectory": {
+    "default": 0,
+    "false": 0,
+    "true": 1
+  },
+  "prox_sameLogicalRoot": {
     "default": 0,
     "false": 0,
     "true": 1
@@ -34,17 +44,7 @@
     "false": 0,
     "true": 1
   },
-  "prox_inResolveScope": {
-    "default": 1,
-    "false": 0,
-    "true": 1
-  },
-  "nonGeneric": {
-    "1": 1,
-    "0": 0,
-    "default": 0
-  },
-  "prox_sameDirectory": {
+  "templates": {
     "default": 0,
     "false": 0,
     "true": 1
