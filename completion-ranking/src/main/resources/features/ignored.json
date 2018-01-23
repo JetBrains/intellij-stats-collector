@@ -1,4 +1,5 @@
 [
+  "cerp_length",
   "frozen",
   "prox_phpNamespace",
   "prox_phpSameFile",
@@ -12,6 +13,7 @@
   "prox_groovyReferenceListWeigher",
   "prox_rubyOwnCode",
 
+  "before_rerank_order",
   "ml_rank",
-  "before_rerank_order"
+  "invokationCount"
 ]
