@@ -55,6 +55,7 @@
     "phpScope",
     "phpSameFile",
     "phpNamespace",
+    "goPackageProximity",
     "rubyOwnCode"
   ]
 }
