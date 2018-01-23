@@ -24,9 +24,4 @@ class CompletionRanker {
     fun rank(features: DoubleArray): Double {
         return box.makePredict(*features)
     }
-    
-    companion object {
-        @Suppress("unused")
-        val rankerVersion = "gbt_19_25_04"
-    }
 }
