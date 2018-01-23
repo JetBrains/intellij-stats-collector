@@ -1,6 +1,8 @@
 apply plugin: "java"
 apply plugin: "idea"
 
+def model = "v2_gbr_10_16_01_18_bn_wp"
+
 sourceSets {
     main {
         java {
@@ -16,7 +18,7 @@ idea {
 }
 
 task unzip(type: Copy) {
-    from(zipTree("${projectDir}/models/v1_gbt_19_25_04.zip"))
+    from(zipTree("${projectDir}/models/${model}.zip"))
     into "${buildDir}/generated/src/java/com/completion/ranker/model"
 }
 
