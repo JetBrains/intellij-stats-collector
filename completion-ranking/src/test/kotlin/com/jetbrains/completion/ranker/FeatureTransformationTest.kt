@@ -16,16 +16,27 @@
 
 package com.jetbrains.completion.ranker
 
-import com.jetbrains.completion.ranker.features.*
+import com.jetbrains.completion.ranker.features.FeatureManager
+import com.jetbrains.completion.ranker.features.Transformer
 import com.jetbrains.completion.ranker.features.impl.FeatureInterpreterImpl
 import com.jetbrains.completion.ranker.features.impl.FeatureManagerFactory
 import com.jetbrains.completion.ranker.features.impl.FeatureReader
 import com.jetbrains.completion.ranker.features.impl.FeatureReader.jsonMap
+import com.jetbrains.completion.ranker.features.impl.FeatureUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileReader
 
+private const val USER_ID = "fe27dd2076a2"
+private const val LOGS = "features_transformation/$USER_ID.json"
+private const val RAW_DATA = "features_transformation/${USER_ID}_raw.tsv"
+private const val CLEAN_DATA = "features_transformation/${USER_ID}_clean.tsv"
+private const val SCORE = "features_transformation/${USER_ID}_score.tsv"
+private const val CLEAN_HEADER = "features_transformation/clean_header.txt"
+private const val RAW_HEADER = "features_transformation/raw_header.txt"
 
 class ScoreRow(index: Int,
                values: List<String>,
@@ -52,11 +63,18 @@ fun scoresTable(): DataTable<ScoreRow>  {
             "rank" to 6,
             "old_position" to 7
     )
-    return table("features_transformation/00c0af2c789d_score.tsv", ScoresRowFactory(header))
+    return table(SCORE, ScoresRowFactory(header))
 }
 
 fun completionLog(path: String): CompletionLog {
-    val events = jsonMap(path).map { CompletionLogEvent(it) }
+    val events = jsonMap(path).asSequence()
+            .map { it["logEvent"] as? Map<*, *> }
+            .requireNoNulls()
+            .map {
+                it.asSequence().associate { it.key!!.toString() to it.value!! }
+            }
+            .map { CompletionLogEvent(it.toMutableMap()) }
+            .toList()
     return CompletionLog(events)
 }
 
@@ -79,11 +97,11 @@ class FeatureTransformationTest {
         featureManager = FeatureManagerFactory().createFeatureManager(FeatureReader, FeatureInterpreterImpl())
         transformer = featureManager.createTransformer()
 
-        completionLog = completionLog("features_transformation/00c0af2c789d.json")
+        completionLog = completionLog(LOGS)
 
-        val content = readTableHeader("features_transformation/clean_header.txt")
+        val content = readTableHeader(CLEAN_HEADER)
 
-        table = table("features_transformation/00c0af2c789d_clean.tsv", CleanDataRowFactory(content))
+        table = table(CLEAN_DATA, CleanDataRowFactory(content))
 
         scores = scoresTable()
 
@@ -91,8 +109,7 @@ class FeatureTransformationTest {
     }
 
     private fun readTableHeader(path: String): Map<String, Int> {
-        return file(path).readText()
-                .split("\n")
+        return BufferedReader(FileReader(file(path))).lineSequence()
                 .map(String::trim)
                 .filter { it.isNotEmpty() }
                 .mapIndexed { index, columnName -> columnName to index }
@@ -103,7 +120,7 @@ class FeatureTransformationTest {
     fun `test check all sessions valid`() {
         val sessions = table.rows().asSequence().map { it.sessionId }.toCollection(hashSetOf())
 
-        val start = System.currentTimeMillis()
+        val start = System.currentTimeMillis() + 1
         sessions.forEach { session_id ->
             val sessionRows: List<EventRow> = table.rows("session_id", session_id)
             val logSession: CompletionSession = completionLog.session(session_id)
@@ -149,10 +166,8 @@ class FeatureTransformationTest {
         //todo how to tack query length
         val queryLength = cleanRow["query_length"].toDouble().toInt()
 
-        val relevanceObjects = item.relevance.toMutableMap()
-        relevanceObjects.put("position", position)
-        relevanceObjects.put("query_length", queryLength)
-        relevanceObjects.put("result_length", resultLength)
+        val relevanceObjects = FeatureUtils.prepareRevelanceMap(item.relevance.toList(),
+                position, queryLength, resultLength)
 
         val features = transformer.featureArray(relevanceObjects, emptyMap())
 

@@ -1,3 +1,14 @@
+sourceSets.test.resources.srcDirs = []
+
+task extractTestResources(type: Copy) {
+    from(zipTree("${projectDir}/src/test/resources/testData.zip"))
+    into "${sourceSets.test.output.resourcesDir}/features_transformation"
+}
+
+tasks.withType(Test) {
+    dependsOn extractTestResources
+}
+
 dependencies {
     compile project(":ml-whitebox")
 

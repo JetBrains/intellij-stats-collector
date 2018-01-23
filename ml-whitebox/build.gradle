@@ -1,0 +1,27 @@
+apply plugin: "java"
+apply plugin: "idea"
+
+def model = "v2_gbr_10_16_01_18_bn_wp"
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["${buildDir}/generated/src/java"]
+        }
+    }
+}
+
+idea {
+    module {
+        generatedSourceDirs += file("${buildDir}/generated/src")
+    }
+}
+
+task unzip(type: Copy) {
+    from(zipTree("${projectDir}/models/${model}.zip"))
+    into "${buildDir}/generated/src/java/com/completion/ranker/model"
+}
+
+tasks.withType(JavaCompile) {
+    dependsOn unzip
+}
