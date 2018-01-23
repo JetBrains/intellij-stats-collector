@@ -5,6 +5,14 @@
     "DEPRECATED",
     "INACCESSIBLE"
   ],
+  "expectedType": [
+    "normal",
+    "expected",
+    "UNDEFINED",
+    "ofDefaultType",
+    "maybeExpected",
+    "unexpected"
+  ],
   "kind": [
     "UNDEFINED",
     "annoMethod",
@@ -24,13 +32,15 @@
     "suitableClass",
     "superMethodParameters"
   ],
-  "expectedType": [
-    "normal",
-    "expected",
-    "UNDEFINED",
-    "ofDefaultType",
-    "maybeExpected",
-    "unexpected"
+  "methodsChains": [
+    "00_0_2147483647",
+    "UNDEFINED"
+  ],
+  "prox_javaInheritance": [
+    "true",
+    "null",
+    "false",
+    "UNDEFINED"
   ],
   "prox_referenceList": [
     "unknown",
@@ -43,15 +53,5 @@
     "recursive",
     "UNDEFINED",
     "normal"
-  ],
-  "methodsChains": [
-    "00_0_2147483647",
-    "UNDEFINED"
-  ],
-  "prox_javaInheritance": [
-    "true",
-    "null",
-    "false",
-    "UNDEFINED"
   ]
 }
