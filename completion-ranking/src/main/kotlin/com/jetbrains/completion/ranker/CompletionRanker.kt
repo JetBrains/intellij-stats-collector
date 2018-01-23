@@ -16,7 +16,7 @@
 
 package com.jetbrains.completion.ranker
 
-import com.completion.ranker.models.gbt_19_25_04.MLWhiteBox
+import com.completion.ranker.model.MLWhiteBox
 
 class CompletionRanker {
     private val box = MLWhiteBox()
