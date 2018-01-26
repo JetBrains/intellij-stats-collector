@@ -220,7 +220,7 @@ class FeatureTransformationTest {
     }
 
     // A workaround for strange bug in python -> java ml model conversion
-    fun ignoreError(real: Double, expected: Double): Boolean {
+    private fun ignoreError(real: Double, expected: Double): Boolean {
         return Math.abs(real - 0.3809264224) < 1e-7 && Math.abs(expected - 0.378375226) < 1e-7
     }
 }
