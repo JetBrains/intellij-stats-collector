@@ -1,7 +1,6 @@
 [
   "cerp_length",
   "frozen",
-  "methodsChains",
   "prox_phpNamespace",
   "prox_phpSameFile",
   "prox_phpScope",
@@ -11,10 +10,10 @@
   "com.intellij.scala.play.language.routing.completion.Play2ControllerMethodsCompletionWeigher",
   "scalaSbtDefinitionWeigher",
   "scalaContainingClassWeigher",
-  "prox_groovyReferenceListWeigher",
   "prox_rubyOwnCode",
+  "com.intellij.psi.css.impl.util.completion.CssValuesCompletionWeigher",
+  "prox_goPackageProximity",
 
-  "before_rerank_order",
   "ml_rank",
   "invokationCount"
 ]
