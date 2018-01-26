@@ -29,6 +29,7 @@ import org.junit.Test
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
+import java.util.*
 
 private const val USER_ID = "fe27dd2076a2"
 private const val LOGS = "features_transformation/$USER_ID.json"
@@ -190,7 +191,8 @@ class FeatureTransformationTest {
         val distance = Math.abs(expectedRank - realRank)
 
         if (distance > 0.0000001) {
-            errorBuffer.add("ERROR ::: Raw: ${cleanRow.index} Delta: $distance Expected: $expectedRank Real: $realRank")
+            errorBuffer.add("ERROR ::: Raw: ${cleanRow.index} Delta: $distance " +
+                    "Expected: $expectedRank Real: $realRank Array: ${Arrays.toString(features)}")
         }
     }
 
