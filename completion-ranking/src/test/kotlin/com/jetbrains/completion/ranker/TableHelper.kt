@@ -58,7 +58,7 @@ open class EventRow(val index: Int,
         get() = get("event_id")
 
     override fun get(columnName: String): String {
-        val index = columnNameIndex[columnName]!!
+        val index = columnNameIndex[columnName]?: throw AssertionError("Column $columnName not found")
         return get(index)
     }
 
