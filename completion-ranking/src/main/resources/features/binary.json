@@ -1,18 +1,23 @@
 {
-  "liftShorter": {
-    "default": 0,
-    "false": 0,
-    "true": 1
-  },
   "liftShorterClasses": {
-    "default": 0,
+    "true": 1,
     "false": 0,
-    "true": 1
+    "default": 0
+  },
+  "liftShorter": {
+    "true": 1,
+    "false": 0,
+    "default": 0
   },
   "middleMatching": {
-    "default": 0,
+    "true": 1,
     "false": 0,
-    "true": 1
+    "default": 0
+  },
+  "templates": {
+    "true": 1,
+    "false": 0,
+    "default": 0
   },
   "nonGeneric": {
     "0": 0,
@@ -20,33 +25,28 @@
     "default": 0
   },
   "prox_inResolveScope": {
-    "default": 1,
+    "true": 1,
     "false": 0,
-    "true": 1
+    "default": 1
   },
   "prox_openedInEditor": {
-    "default": 0,
+    "true": 1,
     "false": 0,
-    "true": 1
+    "default": 0
   },
   "prox_sameDirectory": {
-    "default": 0,
+    "true": 1,
     "false": 0,
-    "true": 1
+    "default": 0
   },
   "prox_sameLogicalRoot": {
-    "default": 0,
+    "true": 1,
     "false": 0,
-    "true": 1
+    "default": 0
   },
   "prox_sdkOrLibrary": {
-    "default": 0,
+    "true": 1,
     "false": 0,
-    "true": 1
-  },
-  "templates": {
-    "default": 0,
-    "false": 0,
-    "true": 1
+    "default": 0
   }
 }

@@ -14,23 +14,28 @@
     "unexpected"
   ],
   "kind": [
-    "UNDEFINED",
-    "annoMethod",
-    "classLiteral",
     "classNameOrGlobalStatic",
-    "collectionFactory",
-    "expectedTypeArgument",
-    "expectedTypeConstant",
-    "expectedTypeMethod",
-    "improbableKeyword",
-    "localOrParameter",
-    "nonInitialized",
     "normal",
+    "suitableClass",
+    "UNDEFINED",
+    "variable",
+    "expectedTypeVariable",
+    "expectedTypeMethod",
+    "expectedTypeConstant",
     "probableKeyword",
+    "collectionFactory",
+    "funExpr",
+    "improbableKeyword",
+    "annoMethod",
     "qualifiedWithField",
     "qualifiedWithGetter",
-    "suitableClass",
-    "superMethodParameters"
+    "unlikelyClass",
+    "superMethodParameters",
+    "expectedTypeArgument"
+  ],
+  "prox_groovyReferenceListWeigher": [
+    "unknown",
+    "UNDEFINED"
   ],
   "prox_javaInheritance": [
     "true",

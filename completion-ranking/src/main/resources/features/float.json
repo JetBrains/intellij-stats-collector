@@ -1,6 +1,7 @@
 {
   "explicitProximity": 0,
   "grouping": 0,
+  "mostUsed": -1,
   "nameEnd": 0,
   "position": 0,
   "prefix": 0,
@@ -10,7 +11,7 @@
   "prox_sameModule": 0,
   "prox_samePsiMember": 0,
   "query_length": 0,
-  "result_length": 4,
+  "result_length": 8,
   "sameWords": 0,
   "shorter": 0,
   "simple": 0,
