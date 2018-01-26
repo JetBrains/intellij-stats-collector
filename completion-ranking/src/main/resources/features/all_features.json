@@ -1,6 +1,12 @@
 {
   "javaRelevance": [
+    "before_rerank_order",
     "ml_rank",
+
+    "position",
+    "query_length",
+    "result_length",
+
     "sorter",
     "frozen",
     "prefix",
