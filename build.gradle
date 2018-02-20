@@ -3,7 +3,7 @@ buildscript {
 
     repositories {
         mavenCentral()
-        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+        maven { url = 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
     }
 
     dependencies {
@@ -21,6 +21,10 @@ allprojects {
     
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = javaVersion
+    }
 }
 
 sourceSets {
@@ -35,10 +39,10 @@ sourceSets {
 }
 
 intellij {
-    intellij.version "2017.2.1"
-    pluginName "Completion Stats Collector"
-    sameSinceUntilBuild Boolean.FALSE
-    updateSinceUntilBuild Boolean.FALSE
+    intellij.version "2017.3"
+    pluginName = "Completion Stats Collector"
+    sameSinceUntilBuild = false
+    updateSinceUntilBuild = false
 }
 
 allprojects {
