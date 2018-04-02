@@ -16,10 +16,13 @@
 
 package com.intellij.completion.enhancer
 
-import com.intellij.codeInsight.completion.*
+import com.intellij.codeInsight.completion.CompletionContributor
+import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionResult.wrap
-import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
-import com.intellij.codeInsight.lookup.*
+import com.intellij.codeInsight.completion.CompletionResultSet
+import com.intellij.codeInsight.completion.CompletionService
+import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.codeInsight.lookup.LookupManager
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.sorting.language
@@ -44,14 +47,14 @@ class InvocationCountEnhancingContributor : CompletionContributor() {
         val lookup = LookupManager.getActiveLookup(parameters.editor) as LookupImpl? ?: return
 
         val addedElements = HashSet<LookupElement>()
-        val newSorter = sorter(parameters, result.prefixMatcher)
-                .weighBefore("templates", CompletionNumberWeigher())
+        val completionNumberWeigher = CompletionNumberWeigher()
 
         val start = System.currentTimeMillis()
         result.runRemainingContributors(parameters, {
             InvokationCountOrigin.setInvocationTime(it.lookupElement, parameters.invocationCount)
             addedElements.add(it.lookupElement)
-            wrap(it.lookupElement, it.prefixMatcher, newSorter)?.let { result.passResult(it) }
+            wrap(it.lookupElement, it.prefixMatcher, it.sorter.weighBefore("templates", completionNumberWeigher))
+                    ?.let { result.passResult(it) }
         })
         val end = System.currentTimeMillis()
 
@@ -59,29 +62,26 @@ class InvocationCountEnhancingContributor : CompletionContributor() {
 
         val typedChars = lookup.prefixLength()
         if (parameters.invocationCount < MAX_INVOCATION_COUNT && typedChars > RUN_COMPLETION_AFTER_CHARS) {
-            startMaxInvocationCountCompletion(parameters, result, newSorter, addedElements)
+            startMaxInvocationCountCompletion(parameters, result, addedElements)
         }
-    }
-
-    private fun sorter(parameters: CompletionParameters, matcher: PrefixMatcher): CompletionSorterImpl {
-        return CompletionService.getCompletionService().defaultSorter(parameters, matcher) as CompletionSorterImpl
     }
 
     private fun startMaxInvocationCountCompletion(parameters: CompletionParameters,
                                                   result: CompletionResultSet,
-                                                  sorter: CompletionSorter,
                                                   alreadyAddedElements: Set<LookupElement>) {
         val updatedParams = parameters
                 .withInvocationCount(MAX_INVOCATION_COUNT)
                 .withType(parameters.completionType)
 
         val start = System.currentTimeMillis()
+        val completionNumberWeigher = CompletionNumberWeigher()
         CompletionService.getCompletionService().getVariantsFromContributors(updatedParams, this, {
             if (it.lookupElement in alreadyAddedElements) return@getVariantsFromContributors
 
             val element = UnmatchableLookupElement(it.lookupElement)
             InvokationCountOrigin.setInvocationTime(element, MAX_INVOCATION_COUNT)
-            wrap(element, it.prefixMatcher, sorter)?.let { result.passResult(it) }
+            wrap(element, it.prefixMatcher, it.sorter.weighBefore("templates", completionNumberWeigher))
+                    ?.let { result.passResult(it) }
         })
         val end = System.currentTimeMillis()
 
