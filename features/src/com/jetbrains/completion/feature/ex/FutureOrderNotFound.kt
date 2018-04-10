@@ -14,17 +14,7 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.feature.ex
 
-/**
- * @author Vitaliy.Bibaev
- */
-interface BinaryFeature : Feature {
-    val defaultValue: Double
-
-    val availableValues: Pair<String, String>
-
-    val index: Int
-
-    data class BinaryValueDescriptor(val key: String, val mapped: Double)
-}
+class FutureOrderNotFound(name: String)
+    : IllegalArgumentException("Information about feature order not found. Feature name = $name")

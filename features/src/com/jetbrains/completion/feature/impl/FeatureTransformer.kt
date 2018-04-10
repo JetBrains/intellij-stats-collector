@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.impl
+package com.jetbrains.completion.feature.impl
 
-import com.jetbrains.completion.ranker.features.Feature
-import com.jetbrains.completion.ranker.features.Transformer
+import com.jetbrains.completion.feature.Feature
+import com.jetbrains.completion.feature.Transformer
 
 
 /**

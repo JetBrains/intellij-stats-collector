@@ -14,7 +14,12 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.ex
+package com.jetbrains.completion.feature
 
-class FutureOrderNotFound(name: String)
-    : IllegalArgumentException("Information about feature order not found. Feature name = $name")
+/**
+ * @author Vitaliy.Bibaev
+ */
+interface Transformer {
+    fun featureArray(relevanceMap: Map<String, Any>,
+                     userFactors: Map<String, Any?>): DoubleArray
+}

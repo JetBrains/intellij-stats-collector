@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.impl
+package com.jetbrains.completion.feature.impl
 
-import com.jetbrains.completion.ranker.features.BinaryFeature
-import com.jetbrains.completion.ranker.features.ex.UnexpectedBinaryValueException
+import com.jetbrains.completion.feature.BinaryFeature
+import com.jetbrains.completion.feature.ex.UnexpectedBinaryValueException
 
 /**
  * @author Vitaliy.Bibaev

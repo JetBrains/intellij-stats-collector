@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.ex
+package com.jetbrains.completion.feature
 
-/**
- * @author Vitaliy.Bibaev
- */
-class UnexpectedBinaryValueException(featureName: String, value: String, availableValues: Set<String>)
-    : IllegalArgumentException("Feature $featureName allows $availableValues but not $value")
+import com.jetbrains.completion.feature.BinaryFeature
+import com.jetbrains.completion.feature.CatergorialFeature
+import com.jetbrains.completion.feature.DoubleFeature
+
+interface FeatureInterpreter {
+    fun binary(name: String, description: Map<String, Double>, order: Map<String, Int>): BinaryFeature
+    fun double(name: String, defaultValue: Double, order: Map<String, Int>): DoubleFeature
+    fun categorial(name: String, categories: Set<String>, order: Map<String, Int>): CatergorialFeature
+}

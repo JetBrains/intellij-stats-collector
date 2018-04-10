@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.feature
 
 /**
  * @author Vitaliy.Bibaev
  */
-interface CatergorialFeature : Feature {
-    val categories: Set<String>
+interface Feature {
+    val name: String
 
-    val otherCatergoryIndex: Int
+    val undefinedIndex: Int
 
-    fun indexByCategory(category: String): Int
+    fun process(value: Any, featureArray: DoubleArray)
+
+    fun setDefaults(featureArray: DoubleArray)
 }

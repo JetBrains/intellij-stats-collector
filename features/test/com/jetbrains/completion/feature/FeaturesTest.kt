@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2018 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker
+package com.jetbrains.completion.feature
 
-import com.jetbrains.completion.ranker.features.BinaryFeature
-import com.jetbrains.completion.ranker.features.impl.BinaryFeatureImpl
-import com.jetbrains.completion.ranker.features.impl.CatergorialFeatureImpl
-import com.jetbrains.completion.ranker.features.impl.DoubleFeatureImpl
+import com.jetbrains.completion.feature.impl.BinaryFeatureImpl
+import com.jetbrains.completion.feature.impl.CatergorialFeatureImpl
+import com.jetbrains.completion.feature.impl.DoubleFeatureImpl
 import org.junit.Assert
 import org.junit.Test
 

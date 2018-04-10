@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2018 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.impl
+package com.jetbrains.completion.feature.impl
 
-import com.jetbrains.completion.ranker.features.*
+import com.jetbrains.completion.feature.*
 
 class FeatureManagerFactory: FeatureManager.Factory {
     override fun createFeatureManager(reader: FeatureReader, interpreter: FeatureInterpreter): FeatureManager {

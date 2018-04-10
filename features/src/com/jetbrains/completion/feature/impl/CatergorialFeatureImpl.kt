@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.impl
+package com.jetbrains.completion.feature.impl
 
-import com.jetbrains.completion.ranker.features.CatergorialFeature
+import com.jetbrains.completion.feature.CatergorialFeature
 
 class CatergorialFeatureImpl(override val name: String,
                              override val undefinedIndex: Int,

@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.feature
+
+import com.jetbrains.completion.feature.Feature
 
 /**
  * @author Vitaliy.Bibaev
  */
-interface Transformer {
-    fun featureArray(relevanceMap: Map<String, Any>,
-                     userFactors: Map<String, Any?>): DoubleArray
+interface CatergorialFeature : Feature {
+    val categories: Set<String>
+
+    val otherCatergoryIndex: Int
+
+    fun indexByCategory(category: String): Int
 }

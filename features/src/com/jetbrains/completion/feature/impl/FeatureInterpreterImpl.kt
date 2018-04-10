@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2018 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.impl
+package com.jetbrains.completion.feature.impl
 
-import com.jetbrains.completion.ranker.features.*
-import com.jetbrains.completion.ranker.features.BinaryFeature.BinaryValueDescriptor
-import com.jetbrains.completion.ranker.features.ex.FeatureDefaultValueNotFound
-import com.jetbrains.completion.ranker.features.ex.FutureOrderNotFound
+import com.jetbrains.completion.feature.BinaryFeature
+import com.jetbrains.completion.feature.BinaryFeature.BinaryValueDescriptor
+import com.jetbrains.completion.feature.CatergorialFeature
+import com.jetbrains.completion.feature.DoubleFeature
+import com.jetbrains.completion.feature.FeatureInterpreter
+import com.jetbrains.completion.feature.ex.FeatureDefaultValueNotFound
+import com.jetbrains.completion.feature.ex.FutureOrderNotFound
 
 class FeatureInterpreterImpl : FeatureInterpreter {
     override fun binary(name: String, description: Map<String, Double>, order: Map<String, Int>): BinaryFeature {

@@ -14,17 +14,7 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.feature.ex
 
-/**
- * @author Vitaliy.Bibaev
- */
-interface Feature {
-    val name: String
-
-    val undefinedIndex: Int
-
-    fun process(value: Any, featureArray: DoubleArray)
-
-    fun setDefaults(featureArray: DoubleArray)
-}
+class FeatureDefaultValueNotFound(name: String)
+    : IllegalArgumentException("Feature default value not found. Feature name: $name")

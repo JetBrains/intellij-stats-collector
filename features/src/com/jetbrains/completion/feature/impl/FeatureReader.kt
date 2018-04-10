@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2018 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.impl
+package com.jetbrains.completion.feature.impl
 
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.jetbrains.completion.ranker.features.CompletionFactors
 
 
 typealias DoubleFeatureInfo = Map<String, Double>
@@ -29,16 +28,16 @@ typealias IgnoredFeatureInfo = Set<String>
 
 
 object FeatureUtils {
-    val UNDEFINED = "UNDEFINED"
-    val INVALID_CACHE = "INVALID_CACHE"
+    const val UNDEFINED = "UNDEFINED"
+    const val INVALID_CACHE = "INVALID_CACHE"
 
-    val OTHER = "OTHER"
-    val NONE = "NONE"
+    const val OTHER = "OTHER"
+    const val NONE = "NONE"
 
-    val ML_RANK = "ml_rank"
-    val BEFORE_ORDER = "before_rerank_order"
+    const val ML_RANK = "ml_rank"
+    const val BEFORE_ORDER = "before_rerank_order"
 
-    val DEFAULT = "default"
+    const val DEFAULT = "default"
 
     fun getOtherCategoryFeatureName(name: String) = "$name=$OTHER"
     fun getUndefinedFeatureName(name: String) = "$name=$UNDEFINED"
@@ -52,13 +51,13 @@ object FeatureUtils {
                 val proximityMap = value.toString().toProximityMap()
                 relevanceMap.putAll(proximityMap)
             } else {
-                relevanceMap.put(name, value)
+                relevanceMap[name] = value
             }
         }
 
-        relevanceMap.put("position", position)
-        relevanceMap.put("query_length", prefixLength)
-        relevanceMap.put("result_length", elementLength)
+        relevanceMap["position"] = position
+        relevanceMap["query_length"] = prefixLength
+        relevanceMap["result_length"] = elementLength
 
         return relevanceMap
     }

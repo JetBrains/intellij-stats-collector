@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.feature.impl
 
 
 class CompletionFactors(proximity: Set<String>, relevance: Set<String>) {

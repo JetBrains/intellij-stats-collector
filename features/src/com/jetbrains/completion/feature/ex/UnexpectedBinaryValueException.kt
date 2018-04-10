@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features
+package com.jetbrains.completion.feature.ex
 
 /**
  * @author Vitaliy.Bibaev
  */
-interface DoubleFeature : Feature {
-    val defaultValue: Double
-
-    val index: Int
-}
+class UnexpectedBinaryValueException(featureName: String, value: String, availableValues: Set<String>)
+    : IllegalArgumentException("Feature $featureName allows $availableValues but not $value")

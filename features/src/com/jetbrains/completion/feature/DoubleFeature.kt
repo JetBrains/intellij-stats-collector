@@ -14,7 +14,15 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.ranker.features.ex
+package com.jetbrains.completion.feature
 
-class FeatureDefaultValueNotFound(name: String)
-    : IllegalArgumentException("Feature default value not found. Feature name: $name")
+import com.jetbrains.completion.feature.Feature
+
+/**
+ * @author Vitaliy.Bibaev
+ */
+interface DoubleFeature : Feature {
+    val defaultValue: Double
+
+    val index: Int
+}
