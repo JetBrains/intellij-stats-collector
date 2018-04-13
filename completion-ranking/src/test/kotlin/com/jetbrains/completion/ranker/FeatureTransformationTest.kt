@@ -16,13 +16,13 @@
 
 package com.jetbrains.completion.ranker
 
-import com.jetbrains.completion.ranker.features.FeatureManager
-import com.jetbrains.completion.ranker.features.Transformer
-import com.jetbrains.completion.ranker.features.impl.FeatureInterpreterImpl
-import com.jetbrains.completion.ranker.features.impl.FeatureManagerFactory
-import com.jetbrains.completion.ranker.features.impl.FeatureReader
-import com.jetbrains.completion.ranker.features.impl.FeatureReader.jsonMap
-import com.jetbrains.completion.ranker.features.impl.FeatureUtils
+import com.jetbrains.completion.feature.FeatureManager
+import com.jetbrains.completion.feature.Transformer
+import com.jetbrains.completion.feature.impl.FeatureInterpreterImpl
+import com.jetbrains.completion.feature.impl.FeatureManagerFactory
+import com.jetbrains.completion.feature.impl.FeatureReader
+import com.jetbrains.completion.feature.impl.FeatureReader.jsonMap
+import com.jetbrains.completion.feature.impl.FeatureUtils
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
