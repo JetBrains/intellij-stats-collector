@@ -6,6 +6,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.util.containers.ContainerUtil
 import com.intellij.util.io.PagedFileStorage
+import com.intellij.util.io.PersistentEnumeratorBase
 import com.intellij.util.io.PersistentStringEnumerator
 import java.io.File
 
@@ -20,7 +21,14 @@ class NGramEnumeratingService : Disposable {
 
     init {
         FileUtilRt.createIfNotExists(stringFile)
-        stringEnumerator = PersistentStringEnumerator(stringFile, storageLockContext)
+        stringEnumerator = try {
+            PersistentStringEnumerator(stringFile, storageLockContext)
+        } catch (e: PersistentEnumeratorBase.CorruptedException) {
+            FileUtilRt.delete(stringFile)
+            FileUtilRt.createIfNotExists(stringFile)
+            PersistentStringEnumerator(stringFile, storageLockContext)
+        }
+
     }
 
     fun enumerateString(s: String): Int {
