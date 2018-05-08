@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.intellij.stats.completion</id>
   <name>Completion Stats Collector</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <vendor email="vitaliy.bibaev@jetbrains.com" url="http://www.jetbrains.com">JetBrains</vendor>
 
   <description><![CDATA[
@@ -17,6 +17,13 @@
     ]]></description>
 
   <change-notes><![CDATA[
+        0.1.2 <br>
+        <ul>
+            <li> Fix EA-119518 when java is not available </li>
+            <li> Fix EA-119755 storage corrupted exception </li>
+            <li> Add an ability to allow n-grams indexing by default for new projects </li>
+        </ul>
+
         0.1.1 <br>
         <ul>
             <li> Fix a deadlock (IDEA-190432) </li>
