@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2018 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.jetbrains.completion.feature
+package com.intellij.sorting
+
+import com.intellij.openapi.util.Key
 
 /**
  * @author Vitaliy.Bibaev
  */
-interface BinaryFeature : Feature {
-    val defaultValue: Double
-
-    val availableValues: Pair<String, String>
-
-    val index: Int
-
-    data class BinaryValueDescriptor(val key: String, val mapped: Double)
+data class SortingStatistics(val itemsCount: Int, val timeMs: Long) {
+    companion object {
+        val KEY = Key.create<SortingStatistics>("com.intellij.sorting.completion.ml")
+    }
 }

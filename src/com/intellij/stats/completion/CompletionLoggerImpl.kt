@@ -20,6 +20,7 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.completion.tracker.LookupElementPositionTracker
 import com.intellij.ide.plugins.PluginManager
+import com.intellij.sorting.SortingStatistics
 import com.intellij.stats.completion.events.*
 import com.intellij.stats.personalization.UserFactorsManager
 
@@ -90,6 +91,11 @@ class CompletionFileLogger(private val installationUID: String,
         event.fillCompletionParameters()
 
         eventLogger.log(event)
+        val sortingStats = lookup.getUserData(SortingStatistics.KEY)
+        if (sortingStats != null) {
+            val message = "time stats for ML sorting: ${sortingStats.timeMs} ms for ${sortingStats.itemsCount} items"
+            eventLogger.log(CustomMessageEvent(installationUID, completionUID, message))
+        }
     }
 
     override fun customMessage(message: String) {

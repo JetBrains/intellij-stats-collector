@@ -28,7 +28,7 @@ internal fun LookupImpl.checkMlRanking(ranker: Ranker, prefix_length: Int) {
     val lookupElements = getRelevanceObjects(items, false)
 
     lookupElements.forEach { element, relevance ->
-        val oldOrder = relevance.firstOrNull() { it.first == FeatureUtils.BEFORE_ORDER }?.second?.toString()?.toInt()
+        val oldOrder = relevance.firstOrNull { it.first == FeatureUtils.BEFORE_ORDER }?.second?.toString()?.toInt()
                 ?: throw UnsupportedOperationException("Ranking failed")
         val weights: Map<String, Any> = FeatureUtils.prepareRevelanceMap(relevance.map { it.first to it.second },
                 oldOrder, prefix_length, element.lookupString.length)
@@ -57,7 +57,7 @@ internal fun LookupImpl.assertEachItemHasMlValue(value: String) {
 
 internal object Samples {
 
-    val callCompletionOnClass = """
+    const val callCompletionOnClass = """
     public class Test {
         public void test(int a, int b) {}
         public void runq(int c) {}
@@ -66,7 +66,7 @@ internal object Samples {
     }
     """
 
-    val methodCompletion = """
+    const val methodCompletion = """
     class X {
         public void t() {
             Test test = new Test();
@@ -75,7 +75,7 @@ internal object Samples {
     }
     """
 
-    val classNameCompletion = """
+    const val classNameCompletion = """
     class Test {
       public void run() {
         F<caret>

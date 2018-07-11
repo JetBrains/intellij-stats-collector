@@ -23,7 +23,6 @@ import com.intellij.openapi.application.PreloadingActivity
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.stats.ngram.NGramContributor
 
 class FirstContributorPreloader : PreloadingActivity() {
     private companion object {
@@ -44,14 +43,14 @@ class FirstContributorPreloader : PreloadingActivity() {
     }
 
     private fun addInvocationCountContributor(descriptor: IdeaPluginDescriptor) {
-        addContrubitor(descriptor, InvocationCountEnhancingContributor::class.java.name)
+        addContributor(descriptor, InvocationCountEnhancingContributor::class.java.name)
     }
 
     private fun addCustomWeigherContributor(descriptor: IdeaPluginDescriptor) {
-        addContrubitor(descriptor, NGramContributor::class.java.name)
+//        addContributor(descriptor, NGramContributor::class.java.name)
     }
 
-    private fun addContrubitor(descriptor: IdeaPluginDescriptor, implClass: String) {
+    private fun addContributor(descriptor: IdeaPluginDescriptor, implClass: String) {
         CompletionContributorEP().apply {
             implementationClass = implClass
             language = "any"

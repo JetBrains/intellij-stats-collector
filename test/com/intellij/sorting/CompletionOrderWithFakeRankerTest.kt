@@ -27,8 +27,8 @@ import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.extensions.LoadingOrder
 import com.intellij.psi.WeigherExtensionPoint
-import com.intellij.stats.experiment.WebServiceStatusProvider
 import com.intellij.stats.experiment.WebServiceStatus
+import com.intellij.stats.experiment.WebServiceStatusProvider
 import com.intellij.stats.network.service.RequestService
 import com.intellij.stats.network.service.ResponseData
 import com.jetbrains.completion.feature.impl.FeatureUtils

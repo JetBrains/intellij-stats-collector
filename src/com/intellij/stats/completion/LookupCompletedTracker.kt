@@ -72,8 +72,8 @@ class LookupCompletedTracker : LookupAdapter() {
             }
         }
 
-        featureManager.categorialFactors.filter { !featureManager.isUserFeature(it.name) }.forEach { feature ->
-            UserFactorStorage.applyOnBoth(project, UserFactorDescriptions.categoriealFeatureDescriptor(feature))
+        featureManager.categoricalFactors.filter { !featureManager.isUserFeature(it.name) }.forEach { feature ->
+            UserFactorStorage.applyOnBoth(project, UserFactorDescriptions.categoricalFeatureDescriptor(feature))
             { updater ->
                 updater.update(featuresValues[feature.name])
             }

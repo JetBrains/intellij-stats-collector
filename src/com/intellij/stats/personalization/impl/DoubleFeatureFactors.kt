@@ -41,7 +41,7 @@ class DoubleFeatureReader(factor: DailyAggregatedDoubleFactor)
 
 class DoubleFeatureUpdater(factor: MutableDoubleFactor) : UserFactorUpdaterBase(factor) {
     fun update(value: Any?) {
-        if (value == null) {
+        if (value == null || "null" == value) {
             factor.incrementOnToday(FeatureUtils.UNDEFINED)
         } else {
             val doubleValue = value.asDouble()
@@ -60,7 +60,7 @@ class DoubleFeatureUpdater(factor: MutableDoubleFactor) : UserFactorUpdaterBase(
 }
 
 abstract class DoubleFeatureUserFactorBase(prefix: String, feature: DoubleFeature) :
-        UserFactorBase<DoubleFeatureReader>("${prefix}DoubleFeature:${feature.name}$",
+        UserFactorBase<DoubleFeatureReader>("${prefix}Double:${feature.name}$",
                 UserFactorDescriptions.doubleFeatureDescriptor(feature))
 
 class AverageDoubleFeatureValue(feature: DoubleFeature) : DoubleFeatureUserFactorBase("avg", feature) {

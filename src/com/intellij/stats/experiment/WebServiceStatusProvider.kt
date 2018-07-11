@@ -17,10 +17,11 @@
 package com.intellij.stats.experiment
 
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.LinkedTreeMap
 import com.intellij.ide.util.PropertiesComponent
-import com.intellij.stats.network.service.RequestService
 import com.intellij.stats.network.assertNotEDT
+import com.intellij.stats.network.service.RequestService
 
 
 class WebServiceStatusProvider(
@@ -29,7 +30,7 @@ class WebServiceStatusProvider(
 ): WebServiceStatus {
 
     companion object {
-        val STATUS_URL = "https://www.jetbrains.com/config/features-service-status.json"
+        val STATUS_URL: String = "https://www.jetbrains.com/config/features-service-status.json"
 
         private val GSON = Gson()
 
@@ -43,29 +44,29 @@ class WebServiceStatusProvider(
     @Volatile private var dataServerUrl = ""
 
     override fun experimentVersion(): Int = info.experimentVersion
-    
+
     override fun dataServerUrl(): String = dataServerUrl
 
-    override fun isExperimentGoingOnNow() = info.performExperiment
+    override fun isExperimentGoingOnNow(): Boolean = info.performExperiment
 
     override fun isServerOk(): Boolean = serverStatus.equals("ok", ignoreCase = true)
-    
+
     override fun isExperimentOnCurrentIDE(): Boolean {
         if (!info.performExperiment) {
             return false
         }
         return experimentDecision.isPerformExperiment(info.salt)
     }
-    
+
     override fun updateStatus() {
         serverStatus = ""
         dataServerUrl = ""
-        
+
         assertNotEDT()
         val response = requestSender.get(STATUS_URL)
         if (response != null && response.isOK()) {
-            val map = GSON.fromJson(response.text, LinkedTreeMap::class.java)
-            
+            val map = parseServerResponse(response.text)
+
             val salt = map["salt"]?.toString()
             val experimentVersion = map["experimentVersion"]?.toString()
             val performExperiment = map["performExperiment"]?.toString() ?: "false"
@@ -76,9 +77,17 @@ class WebServiceStatusProvider(
                 info = ExperimentInfo(floatVersion.toInt(), salt, performExperiment.toBoolean())
                 saveInfo(info)
             }
-            
+
             serverStatus = map["status"]?.toString() ?: ""
             dataServerUrl = map["urlForZipBase64Content"]?.toString() ?: ""
+        }
+    }
+
+    private fun parseServerResponse(responseText: String): LinkedTreeMap<*, *> {
+        try {
+            return GSON.fromJson(responseText, LinkedTreeMap::class.java)
+        } catch (e: JsonSyntaxException) {
+            throw JsonSyntaxException("Expected valid JSON object, but received: $responseText", e)
         }
     }
 

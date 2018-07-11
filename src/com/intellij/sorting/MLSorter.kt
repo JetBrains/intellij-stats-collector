@@ -91,6 +91,7 @@ class MLSorter : CompletionFinalSorter() {
 
         val elementsSorted = items.count()
         SortingTimeStatistics.registerSortTiming(elementsSorted, timeSpent)
+        lookup.putUserData(SortingStatistics.KEY, SortingStatistics(elementsSorted, timeSpent))
 
         return sorted
     }

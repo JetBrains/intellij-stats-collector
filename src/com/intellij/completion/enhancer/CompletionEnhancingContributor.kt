@@ -19,7 +19,8 @@ package com.intellij.completion.enhancer
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.completion.CompletionResult.wrap
 import com.intellij.codeInsight.completion.impl.CompletionSorterImpl
-import com.intellij.codeInsight.lookup.*
+import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.codeInsight.lookup.LookupManager
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.sorting.language
@@ -32,7 +33,7 @@ import com.intellij.stats.completion.prefixLength
  */
 class InvocationCountEnhancingContributor : CompletionContributor() {
     companion object {
-        private val MAX_INVOCATION_COUNT = 5
+        private const val MAX_INVOCATION_COUNT = 5
 
         var RUN_COMPLETION_AFTER_CHARS = 2
         var isEnabledInTests = false
@@ -48,11 +49,11 @@ class InvocationCountEnhancingContributor : CompletionContributor() {
                 .weighBefore("templates", CompletionNumberWeigher())
 
         val start = System.currentTimeMillis()
-        result.runRemainingContributors(parameters, {
+        result.runRemainingContributors(parameters) {
             InvokationCountOrigin.setInvocationTime(it.lookupElement, parameters.invocationCount)
             addedElements.add(it.lookupElement)
             wrap(it.lookupElement, it.prefixMatcher, newSorter)?.let { result.passResult(it) }
-        })
+        }
         val end = System.currentTimeMillis()
 
         parameters.language()?.registerCompletionContributorsTime(end - start)
@@ -76,13 +77,13 @@ class InvocationCountEnhancingContributor : CompletionContributor() {
                 .withType(parameters.completionType)
 
         val start = System.currentTimeMillis()
-        CompletionService.getCompletionService().getVariantsFromContributors(updatedParams, this, {
+        CompletionService.getCompletionService().getVariantsFromContributors(updatedParams, this) {
             if (it.lookupElement in alreadyAddedElements) return@getVariantsFromContributors
 
             val element = UnmatchableLookupElement(it.lookupElement)
             InvokationCountOrigin.setInvocationTime(element, MAX_INVOCATION_COUNT)
             wrap(element, it.prefixMatcher, sorter)?.let { result.passResult(it) }
-        })
+        }
         val end = System.currentTimeMillis()
 
         parameters.language()?.registerSecondCompletionContributorsTime(end - start)

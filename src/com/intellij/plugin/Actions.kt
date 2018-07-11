@@ -27,7 +27,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.ToggleAction
 import com.intellij.openapi.project.Project
-import com.intellij.stats.ngram.NGramFileBasedIndex
 
 class ToggleManualMlSorting : AnAction() {
 
@@ -66,22 +65,6 @@ class ToggleManualMlSorting : AnAction() {
         }
     }
     
-}
-
-class ToggleNGramIndexing : ToggleAction("Enable NGram indexing for completion") {
-    override fun isSelected(event: AnActionEvent?): Boolean {
-        val project = event?.project ?: return false
-        return NGramIndexingProperty.isEnabled(project)
-    }
-
-    override fun setSelected(event: AnActionEvent?, value: Boolean) {
-        val project = event?.project ?: return
-        if (NGramIndexingProperty.isEnabled(project) == value) return
-        if (value) {
-            NGramFileBasedIndex.requestRebuild()
-        }
-        NGramIndexingProperty.setEnabled(project, value)
-    }
 }
 
 internal fun ApplicationProperty.switch() {
