@@ -8,12 +8,6 @@
       This plugin collects data about your usage of code completion, anonymises and sends it to us.
       Note, the plugin doesn't send any of your personal data or code. All we send is just numbers
       calculated based on your completion usage patterns.
-      <p>
-      Ever since 0.1.0, the plugin builds an index with frequencies of all 2-3-4-5 grams over the AST of the project
-      source code files. This can increase the indexing time of the source code and is disabled by default. The plugin
-      will ask for permission for each opened project. If you change your mind and want to forbid the indexing, please
-      switch off the "Enable NGram indexing for completion" option (Help - Find Action...). As usual, no source code
-      or personal data will be collected.
     ]]></description>
 
   <change-notes><![CDATA[
@@ -21,6 +15,7 @@
         <ul>
             <li> EA-123577 Fix bug when the plugin could not save completion logs </li>
             <li> Fix issues with large disk space consumption for log storage </li>
+            <li> Remove ngrams indexing (the experiment is over) </li>
             <li> Minor bug fixes and improvements </li>
         </ul>
 
@@ -52,14 +47,7 @@
 
   <idea-version since-build="173.0"/>
 
-  <extensionPoints>
-  <extensionPoint qualifiedName="com.intellij.stats.ngram.ngramElementProvider"
-                  interface="com.intellij.stats.ngram.NGramElementProvider"/>
-  </extensionPoints>
-
   <extensions defaultExtensionNs="com.intellij">
-
-    <stats.ngram.ngramElementProvider implementation="com.intellij.stats.ngram.lang.JavaElementProvider"/>
 
     <applicationService serviceInterface="com.intellij.stats.completion.CompletionLoggerProvider"
                         serviceImplementation="com.intellij.stats.completion.CompletionFileLoggerProvider">
@@ -109,17 +97,12 @@
     <applicationService serviceImplementation="com.intellij.sorting.SortingTimeStatistics"/>
     <applicationService serviceImplementation="com.intellij.completion.enhancer.ContributorsTimeStatistics"/>
 
-    <applicationService serviceImplementation="com.intellij.stats.ngram.NGramEnumeratingService"/>
-
     <postStartupActivity implementation="com.intellij.plugin.NotificationManager"/>
-    <postStartupActivity implementation="com.intellij.plugin.NGramIndexingPermissionActivity"/>
 
     <applicationService serviceInterface="com.intellij.completion.tracker.LookupElementPositionTracker"
                         serviceImplementation="com.intellij.completion.tracker.UserDataLookupElementPositionTracker"/>
 
     <applicationConfigurable provider="com.intellij.plugin.PluginSettingsConfigurableProvider"/>
-
-    <fileBasedIndex implementation="com.intellij.stats.ngram.NGramFileBasedIndex"/>
 
     <!--<preloadingActivity implementation="com.intellij.completion.enhancer.FirstContributorPreloader" order="last"/>-->
 
@@ -127,7 +110,6 @@
   </extensions>
 
   <actions>
-    <action class="com.intellij.plugin.ToggleNGramIndexing" id="ToggleNGramIndexing"/>
     <action class="com.intellij.plugin.ToggleManualMlSorting" id="ToggleManualMlSorting" internal="true"/>
   </actions>
 
