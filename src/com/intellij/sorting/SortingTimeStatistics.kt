@@ -22,7 +22,7 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
 
-@State(name = "SortingTimeStatistics", storages=arrayOf(Storage("ml.sorting.time.stats.xml")))
+@State(name = "SortingTimeStatistics", storages= [(Storage("ml.sorting.time.stats.xml"))])
 class SortingTimeStatistics: PersistentStateComponent<TimingStatState> {
 
     private var statsState: TimingStatState = TimingStatState()
@@ -49,7 +49,7 @@ class SortingTimeStatistics: PersistentStateComponent<TimingStatState> {
 
 class TimingStatState {
     companion object {
-        private val size = 10
+        private const val size = 10
     }
     
     
@@ -73,12 +73,12 @@ class TimingStatState {
     
     
     fun getTimeDistribution(): List<String> {
-        return totalSortsByTime.mapIndexedNotNull({ index, total ->
-            if (total == 0) return@mapIndexedNotNull null 
+        return totalSortsByTime.mapIndexedNotNull { index, total ->
+            if (total == 0) return@mapIndexedNotNull null
             val start = index * 100
             val end = (start + 100).toString() + if (index == size - 1) "+" else ""
             "[$start, $end) ms sorting happened $total times"
-        })
+        }
     }
 
     
