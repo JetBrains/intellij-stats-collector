@@ -18,6 +18,7 @@ package com.intellij.stats.network.service
 
 import com.google.common.net.HttpHeaders
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.util.io.HttpRequests
 import org.apache.commons.codec.binary.Base64OutputStream
 import org.apache.http.HttpResponse
 import org.apache.http.client.fluent.Form
@@ -28,6 +29,7 @@ import org.apache.http.util.EntityUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
+import java.net.HttpURLConnection
 import java.util.zip.GZIPOutputStream
 
 class SimpleRequestService: RequestService() {
@@ -83,16 +85,26 @@ class SimpleRequestService: RequestService() {
 
     override fun get(url: String): ResponseData? {
         return try {
-            var data: ResponseData? = null
-            Request.Get(url).execute().handleResponse {
-                val text = EntityUtils.toString(it.entity)
-                data = ResponseData(it.statusLine.statusCode, text)
+            val requestBuilder = HttpRequests.request(url)
+            return requestBuilder.connect { request ->
+                val responseCode = request.getResponseCode()
+                val responseText = request.readString(null)
+                ResponseData(responseCode, responseText)
             }
-            data
         } catch (e: IOException) {
             LOG.debug(e)
             null
         }
+    }
+
+    private fun HttpRequests.Request.getResponseCode(): Int {
+        val connection = this.connection
+        if (connection is HttpURLConnection) {
+            return connection.responseCode
+        }
+
+        LOG.error("Could not get code from http response")
+        return -1
     }
 }
 
