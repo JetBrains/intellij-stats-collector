@@ -33,7 +33,8 @@ abstract class CompletionLoggerProvider {
 
 abstract class CompletionLogger {
 
-    abstract fun completionStarted(lookup: LookupImpl, isExperimentPerformed: Boolean, experimentVersion: Int, timestamp: Long)
+    abstract fun completionStarted(lookup: LookupImpl, isExperimentPerformed: Boolean, experimentVersion: Int,
+                                   timestamp: Long, mlTimeContribution: Long)
 
     abstract fun afterCharTyped(c: Char, lookup: LookupImpl, timestamp: Long)
 

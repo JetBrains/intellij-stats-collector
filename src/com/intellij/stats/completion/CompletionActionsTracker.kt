@@ -70,11 +70,13 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
         }
 
         val timestamp = System.currentTimeMillis()
+        val mlTimeContribution = CompletionUtil.getMLTimeContribution(lookup)
         completionStarted = true
         deferredLog.defer {
             val isPerformExperiment = experimentHelper.isExperimentOnCurrentIDE()
             val experimentVersion = experimentHelper.experimentVersion()
-            logger.completionStarted(lookup, isPerformExperiment, experimentVersion, timestamp) }
+            logger.completionStarted(lookup, isPerformExperiment, experimentVersion, timestamp, mlTimeContribution)
+        }
     }
 
     override fun itemSelected(event: LookupEvent) {

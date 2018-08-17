@@ -82,7 +82,7 @@ class FileLoggerTest : PlatformTestCase() {
         val watchService = FileSystems.getDefault().newWatchService()
         val key = dir.toPath().register(watchService, StandardWatchEventKinds.ENTRY_CREATE)
 
-        logger.completionStarted(lookup, true, 2, System.currentTimeMillis())
+        logger.completionStarted(lookup, true, 2, System.currentTimeMillis(), 0)
 
         logger.completionCancelled(System.currentTimeMillis())
         loggerProvider.disposeComponent()

@@ -58,7 +58,8 @@ class CompletionFileLogger(private val installationUID: String,
         }
     }
 
-    override fun completionStarted(lookup: LookupImpl, isExperimentPerformed: Boolean, experimentVersion: Int, timestamp: Long) {
+    override fun completionStarted(lookup: LookupImpl, isExperimentPerformed: Boolean, experimentVersion: Int,
+                                   timestamp: Long, mlTimeContribution: Long) {
         val lookupItems = lookup.items
 
         lookupItems.forEach { registerElement(it) }
@@ -91,6 +92,7 @@ class CompletionFileLogger(private val installationUID: String,
             event.lookupShownTime = shownTimestamp
         }
 
+        event.mlTimeContribution = mlTimeContribution
         event.isOneLineMode = lookup.editor.isOneLineMode
         event.fillCompletionParameters()
 

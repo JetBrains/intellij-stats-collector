@@ -29,6 +29,7 @@ import com.intellij.openapi.util.Pair
 import com.intellij.plugin.ManualExperimentControl
 import com.intellij.plugin.ManualMlSorting
 import com.intellij.psi.util.PsiUtilCore
+import com.intellij.stats.completion.CompletionUtil
 import com.intellij.stats.completion.prefixLength
 import com.intellij.stats.experiment.WebServiceStatus
 import com.intellij.stats.personalization.UserFactorsManager
@@ -91,7 +92,11 @@ class MLSorter : CompletionFinalSorter() {
 
         val elementsSorted = items.count()
         SortingTimeStatistics.registerSortTiming(elementsSorted, timeSpent)
-        lookup.putUserData(SortingStatistics.KEY, SortingStatistics(elementsSorted, timeSpent))
+
+        if (ApplicationManager.getApplication().isDispatchThread) {
+            val totalTime = timeSpent + (lookup.getUserData(CompletionUtil.ML_SORTING_CONTRIBUTION_KEY) ?: 0)
+            lookup.putUserData(CompletionUtil.ML_SORTING_CONTRIBUTION_KEY, totalTime)
+        }
 
         return sorted
     }

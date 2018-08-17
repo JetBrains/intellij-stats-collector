@@ -30,6 +30,7 @@ import com.intellij.util.ReflectionUtil
  */
 object CompletionUtil {
     val COMPLETION_STARTING_TIME_KEY = Key.create<Long>("com.intellij.stats.completion.starting.time")
+    val ML_SORTING_CONTRIBUTION_KEY = Key.create<Long>("com.intellij.stats.completion.ml.contribution")
 
     fun getCurrentCompletionParameters(): CompletionParameters? = getCurrentCompletion()?.parameters
 
@@ -41,6 +42,9 @@ object CompletionUtil {
         return null
     }
 
+    fun getMLTimeContribution(lookup: LookupImpl): Long {
+        return lookup.getUserData(ML_SORTING_CONTRIBUTION_KEY) ?: 0
+    }
 
     private fun getCurrentCompletion(): CompletionProgressIndicator? =
             CompletionService.getCompletionService().currentCompletion as? CompletionProgressIndicator
