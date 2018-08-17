@@ -40,12 +40,12 @@ class CompletionTrackerInitializer(experimentHelper: WebServiceStatus) : Applica
 
     private val actionListener = LookupActionsListener()
 
-    private val lookupTrackerInitializer = PropertyChangeListener {
-        val lookup = it.newValue
+    private val lookupTrackerInitializer = PropertyChangeListener { e ->
+        val lookup = e.newValue
         if (lookup == null) {
             actionListener.listener = CompletionPopupListener.Adapter()
         } else if (lookup is LookupImpl) {
-            lookup.putUserData(CompletionUtil.COMPLETION_STARTING_TIME_KEY, System.currentTimeMillis());
+            lookup.putUserData(CompletionUtil.COMPLETION_STARTING_TIME_KEY, System.currentTimeMillis())
             if (isUnitTestMode() && !isEnabledInTests) return@PropertyChangeListener
             val globalStorage = UserFactorStorage.getInstance()
             val projectStorage = UserFactorStorage.getInstance(lookup.project)
