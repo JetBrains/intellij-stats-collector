@@ -86,6 +86,11 @@ class CompletionFileLogger(private val installationUID: String,
                 lookupEntryInfos, userFactors, selectedPosition = 0,
                 timestamp = lookup.getUserData(CompletionUtil.COMPLETION_STARTING_TIME_KEY) ?: timestamp)
 
+        val shownTimestamp = CompletionUtil.getShownTimestamp(lookup)
+        if (shownTimestamp != null) {
+            event.lookupShownTime = shownTimestamp
+        }
+
         event.isOneLineMode = lookup.editor.isOneLineMode
         event.fillCompletionParameters()
 

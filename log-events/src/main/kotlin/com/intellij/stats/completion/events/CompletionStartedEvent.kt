@@ -49,6 +49,8 @@ class CompletionStartedEvent(
     @JvmField var completionListLength: Int = completionList.size
     @JvmField var isOneLineMode: Boolean = false
 
+    @JvmField var lookupShownTime: Long = -1
+
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)
     }
