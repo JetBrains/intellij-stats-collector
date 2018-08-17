@@ -26,7 +26,10 @@ class BackspaceEvent(
         sessionId: String,
         completionListIds: List<Int>,
         newCompletionListItems: List<LookupEntryInfo>,
-        selectedPosition: Int) : LookupStateLogData(userId, sessionId, Action.BACKSPACE, completionListIds, newCompletionListItems, selectedPosition) {
+        selectedPosition: Int,
+        timestamp: Long)
+    : LookupStateLogData(userId, sessionId, Action.BACKSPACE, completionListIds,
+        newCompletionListItems, selectedPosition, timestamp) {
 
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)
@@ -39,7 +42,10 @@ class TypeEvent(
         sessionId: String,
         completionListIds: List<Int>,
         newCompletionListItems: List<LookupEntryInfo>,
-        selectedPosition: Int) : LookupStateLogData(userId, sessionId, Action.TYPE, completionListIds, newCompletionListItems, selectedPosition) {
+        selectedPosition: Int,
+        timestamp: Long)
+    : LookupStateLogData(userId, sessionId, Action.TYPE, completionListIds,
+        newCompletionListItems, selectedPosition, timestamp) {
 
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)

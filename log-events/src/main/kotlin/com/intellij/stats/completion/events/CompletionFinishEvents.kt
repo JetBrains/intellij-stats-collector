@@ -22,7 +22,8 @@ import com.intellij.stats.completion.LogEventVisitor
 import com.intellij.stats.completion.LookupEntryInfo
 
 
-class CompletionCancelledEvent(userId: String, sessionId: String) : LogEvent(userId, sessionId, Action.COMPLETION_CANCELED) {
+class CompletionCancelledEvent(userId: String, sessionId: String, timestamp: Long)
+    : LogEvent(userId, sessionId, Action.COMPLETION_CANCELED, timestamp) {
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)
     }
@@ -36,15 +37,16 @@ class ExplicitSelectEvent(
         selectedPosition: Int,
         @JvmField var selectedId: Int,
         @JvmField var completionList: List<LookupEntryInfo>,
-        @JvmField var history: Map<Int, ElementPositionHistory>
-)
-    : LookupStateLogData(
+        @JvmField var history: Map<Int, ElementPositionHistory>,
+        timestamp: Long
+) : LookupStateLogData(
         userId,
         sessionId,
         Action.EXPLICIT_SELECT,
         completionList.map { it.id },
         newCompletionListItems,
-        selectedPosition
+        selectedPosition,
+        timestamp
 ) {
 
     override fun accept(visitor: LogEventVisitor) {
@@ -63,10 +65,10 @@ class TypedSelectEvent(
         newCompletionListItems: List<LookupEntryInfo>,
         @JvmField var selectedId: Int,
         @JvmField var completionList: List<LookupEntryInfo>,
-        @JvmField var history: Map<Int, ElementPositionHistory>
-)
-
-    : LookupStateLogData(userId, sessionId, Action.TYPED_SELECT, newCompletionListItems.map { it.id }, newCompletionListItems, 0) {
+        @JvmField var history: Map<Int, ElementPositionHistory>,
+        timestamp: Long
+) : LookupStateLogData(userId, sessionId, Action.TYPED_SELECT, newCompletionListItems.map { it.id },
+        newCompletionListItems, 0, timestamp) {
 
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)

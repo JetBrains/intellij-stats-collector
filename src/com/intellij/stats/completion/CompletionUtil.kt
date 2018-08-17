@@ -21,11 +21,14 @@ package com.intellij.stats.completion
 import com.intellij.codeInsight.completion.CompletionParameters
 import com.intellij.codeInsight.completion.CompletionProgressIndicator
 import com.intellij.codeInsight.completion.CompletionService
+import com.intellij.openapi.util.Key
 
 /**
  * @author Vitaliy.Bibaev
  */
 object CompletionUtil {
+    val COMPLETION_STARTING_TIME_KEY = Key.create<Long>("com.intellij.stats.completion.starting.time")
+
     fun getCurrentCompletionParameters(): CompletionParameters? = getCurrentCompletion()?.parameters
 
     private fun getCurrentCompletion(): CompletionProgressIndicator? =

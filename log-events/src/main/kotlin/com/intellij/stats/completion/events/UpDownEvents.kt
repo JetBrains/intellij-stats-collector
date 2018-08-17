@@ -26,7 +26,10 @@ class UpPressedEvent(
         sessionId: String,
         completionListIds: List<Int>,
         newCompletionListItems: List<LookupEntryInfo>,
-        selectedPosition: Int) : LookupStateLogData(userId, sessionId, Action.UP, completionListIds, newCompletionListItems, selectedPosition) {
+        selectedPosition: Int,
+        timestamp: Long)
+    : LookupStateLogData(userId, sessionId, Action.UP, completionListIds,
+        newCompletionListItems, selectedPosition, timestamp) {
 
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)
@@ -39,7 +42,10 @@ class DownPressedEvent(
         sessionId: String,
         completionListIds: List<Int>,
         newCompletionListItems: List<LookupEntryInfo>,
-        selectedPosition: Int) : LookupStateLogData(userId, sessionId, Action.DOWN, completionListIds, newCompletionListItems, selectedPosition) {
+        selectedPosition: Int,
+        timestamp: Long)
+    : LookupStateLogData(userId, sessionId, Action.DOWN, completionListIds,
+        newCompletionListItems, selectedPosition, timestamp) {
 
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)
