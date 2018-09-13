@@ -42,8 +42,8 @@ object CompletionUtil {
         return null
     }
 
-    fun getMLTimeContribution(lookup: LookupImpl): Long {
-        return lookup.getUserData(ML_SORTING_CONTRIBUTION_KEY) ?: 0
+    fun getMLTimeContribution(lookup: LookupImpl): Long? {
+        return lookup.getUserData(ML_SORTING_CONTRIBUTION_KEY)
     }
 
     private fun getCurrentCompletion(): CompletionProgressIndicator? =
