@@ -105,6 +105,10 @@ class CompletionFileLogger(private val installationUID: String,
         eventLogger.log(event)
     }
 
+    override fun performanceMessage(description: String, value: Long, timestamp: Long) {
+        eventLogger.log(PerformanceEvent(installationUID, completionUID, description, value, timestamp))
+    }
+
     override fun afterCharTyped(c: Char, lookup: LookupImpl, timestamp: Long) {
         val lookupItems = lookup.items
         val newItems = getRecentlyAddedLookupItems(lookupItems).toLookupInfos(lookup)

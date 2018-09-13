@@ -48,4 +48,5 @@ abstract class CompletionLogger {
     abstract fun itemSelectedByTyping(lookup: LookupImpl, timestamp: Long)
 
     abstract fun customMessage(message: String, timestamp: Long)
+    abstract fun performanceMessage(description: String, value: Long, timestamp: Long)
 }

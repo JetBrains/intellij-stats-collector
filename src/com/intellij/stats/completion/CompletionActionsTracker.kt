@@ -29,6 +29,11 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
     : CompletionPopupListener,
         PrefixChangeListener,
         LookupAdapter() {
+    private companion object {
+        const val INITIAL_CONTRIBUTION_KEY = "ml.contribution.initial"
+        const val CURRENT_CONTRIBUTION_KEY = "ml.contribution.current"
+        const val TOTAL_CONTRIBUTION_KEY = "ml.contribution.total"
+    }
 
     private var completionStarted = false
     private var selectedByDotTyping = false
@@ -44,10 +49,12 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
         if (!completionStarted) return
 
         val timestamp = System.currentTimeMillis()
+        val mlTimeContribution = CompletionUtil.getMLTimeContribution(lookup)
         val items = lookup.items
         val currentItem = lookup.currentItem
         if (currentItem == null) {
             deferredLog.clear()
+            logger.performanceMessage(TOTAL_CONTRIBUTION_KEY, mlTimeContribution, timestamp - 1)
             logger.completionCancelled(timestamp)
             return
         }
@@ -56,9 +63,11 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
         val wasTyped = items.firstOrNull()?.lookupString?.equals(prefix) ?: false
         if (wasTyped || selectedByDotTyping) {
             deferredLog.log()
+            logger.performanceMessage(TOTAL_CONTRIBUTION_KEY, mlTimeContribution, timestamp - 1)
             logger.itemSelectedByTyping(lookup, timestamp)
         } else {
             deferredLog.clear()
+            logger.performanceMessage(TOTAL_CONTRIBUTION_KEY, mlTimeContribution, timestamp - 1)
             logger.completionCancelled(timestamp)
         }
     }
@@ -76,6 +85,7 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
             val isPerformExperiment = experimentHelper.isExperimentOnCurrentIDE()
             val experimentVersion = experimentHelper.experimentVersion()
             logger.completionStarted(lookup, isPerformExperiment, experimentVersion, timestamp, mlTimeContribution)
+            logger.performanceMessage(INITIAL_CONTRIBUTION_KEY, mlTimeContribution, timestamp + 1)
         }
     }
 
@@ -84,6 +94,7 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
 
         val timestamp = System.currentTimeMillis()
         deferredLog.log()
+        logger.performanceMessage(TOTAL_CONTRIBUTION_KEY, CompletionUtil.getMLTimeContribution(lookup), timestamp - 1)
         logger.itemSelectedCompletionFinished(lookup, timestamp)
     }
 
@@ -154,9 +165,11 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
         if (!isCompletionActive()) return
 
         val timestamp = System.currentTimeMillis()
+        val mlTimeContribution = CompletionUtil.getMLTimeContribution(lookup)
         deferredLog.log()
         deferredLog.defer {
             logger.afterCharTyped(c, lookup, timestamp)
+            logger.performanceMessage(CURRENT_CONTRIBUTION_KEY, mlTimeContribution, timestamp)
         }
     }
 }
