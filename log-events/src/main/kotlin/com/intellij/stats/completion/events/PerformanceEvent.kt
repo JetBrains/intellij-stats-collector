@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
-package com.intellij.sorting
+package com.intellij.stats.completion.events
 
-import com.intellij.openapi.util.Key
+import com.intellij.stats.completion.Action
+import com.intellij.stats.completion.LogEventVisitor
 
 /**
  * @author Vitaliy.Bibaev
  */
-data class SortingStatistics(val itemsCount: Int, val timeMs: Long) {
-    companion object {
-        val KEY = Key.create<SortingStatistics>("com.intellij.sorting.completion.ml")
+class PerformanceEvent(userUid: String,
+                       sessionUid: String,
+                       @JvmField var description: String,
+                       @JvmField var value: Long,
+                       timestamp: Long) : LogEvent(userUid, sessionUid, Action.PERFORMANCE, timestamp) {
+    override fun accept(visitor: LogEventVisitor) {
+        visitor.visit(this)
     }
 }
