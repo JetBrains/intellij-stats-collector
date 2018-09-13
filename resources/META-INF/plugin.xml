@@ -52,7 +52,7 @@
   <depends>com.intellij.modules.lang</depends>
   <depends>com.intellij.modules.platform</depends>
 
-  <idea-version since-build="181.0"/>
+  <idea-version since-build="181.0" until-build="183.*"/>
 
   <extensions defaultExtensionNs="com.intellij">
 
