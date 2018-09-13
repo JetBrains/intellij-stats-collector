@@ -74,7 +74,6 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
 
     override fun currentItemChanged(event: LookupEvent) {
         if (completionStarted) {
-            println(event.item?.lookupString)
             return
         }
 
