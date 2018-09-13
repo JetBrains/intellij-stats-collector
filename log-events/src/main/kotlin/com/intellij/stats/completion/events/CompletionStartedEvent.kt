@@ -32,6 +32,7 @@ class CompletionStartedEvent(
         @JvmField var experimentVersion: Int,
         completionList: List<LookupEntryInfo>,
         @JvmField var userFactors: Map<String, String?>,
+        @JvmField var queryLength: Int,
         selectedPosition: Int,
         timestamp: Long)
 

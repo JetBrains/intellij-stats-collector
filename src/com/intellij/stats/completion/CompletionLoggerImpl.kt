@@ -85,6 +85,7 @@ class CompletionFileLogger(private val installationUID: String,
                 language?.displayName,
                 isExperimentPerformed, experimentVersion,
                 lookupEntryInfos, userFactors, selectedPosition = 0,
+                queryLength = lookup.prefixLength(),
                 timestamp = lookup.getUserData(CompletionUtil.COMPLETION_STARTING_TIME_KEY) ?: timestamp)
 
         val shownTimestamp = CompletionUtil.getShownTimestamp(lookup)
@@ -116,7 +117,8 @@ class CompletionFileLogger(private val installationUID: String,
         val ids = lookupItems.map { getElementId(it)!! }
         val currentPosition = lookupItems.indexOf(lookup.currentItem)
 
-        val event = TypeEvent(installationUID, completionUID, ids, newItems, currentPosition, timestamp)
+        val event = TypeEvent(installationUID, completionUID, ids, newItems,
+                currentPosition, lookup.prefixLength(), timestamp)
         event.fillCompletionParameters()
 
         eventLogger.log(event)
@@ -204,7 +206,8 @@ class CompletionFileLogger(private val installationUID: String,
         val ids = lookupItems.map { getElementId(it)!! }
         val currentPosition = lookupItems.indexOf(lookup.currentItem)
 
-        val event = BackspaceEvent(installationUID, completionUID, ids, newInfos, currentPosition, timestamp)
+        val event = BackspaceEvent(installationUID, completionUID, ids, newInfos,
+                currentPosition, lookup.prefixLength(), timestamp)
         event.fillCompletionParameters()
 
         eventLogger.log(event)

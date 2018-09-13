@@ -27,6 +27,7 @@ class BackspaceEvent(
         completionListIds: List<Int>,
         newCompletionListItems: List<LookupEntryInfo>,
         selectedPosition: Int,
+        @JvmField var queryLength: Int,
         timestamp: Long)
     : LookupStateLogData(userId, sessionId, Action.BACKSPACE, completionListIds,
         newCompletionListItems, selectedPosition, timestamp) {
@@ -43,6 +44,7 @@ class TypeEvent(
         completionListIds: List<Int>,
         newCompletionListItems: List<LookupEntryInfo>,
         selectedPosition: Int,
+        @JvmField var queryLength: Int,
         timestamp: Long)
     : LookupStateLogData(userId, sessionId, Action.TYPE, completionListIds,
         newCompletionListItems, selectedPosition, timestamp) {

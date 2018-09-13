@@ -57,7 +57,7 @@ class EventSerializeDeserializeTest {
     fun `completion started event`() {
         val event = CompletionStartedEvent("", "", "", Fixtures.userId,
                 "xx", "Java", true, 1, Fixtures.lookupList,
-                Fixtures.userFactors, 0, System.currentTimeMillis())
+                Fixtures.userFactors, 0, 0, System.currentTimeMillis())
         serializeDeserializeAndCheck(event)
     }
 
@@ -110,7 +110,7 @@ class EventSerializeDeserializeTest {
     @Test
     fun `backspace event`() {
         val event: LogEvent = BackspaceEvent(Fixtures.userId, "xx", listOf(1, 2, 3),
-                Fixtures.lookupList, 3, System.currentTimeMillis())
+                Fixtures.lookupList, 3, 1, System.currentTimeMillis())
         serializeDeserializeAndCheck(event)
     }
     
@@ -118,7 +118,7 @@ class EventSerializeDeserializeTest {
     @Test
     fun `type event`() {
         val event = TypeEvent(Fixtures.userId, "xx", listOf(1, 2, 3),
-                Fixtures.lookupList, 1, System.currentTimeMillis())
+                Fixtures.lookupList, 1, 1, System.currentTimeMillis())
         serializeDeserializeAndCheck(event)
     }
 
