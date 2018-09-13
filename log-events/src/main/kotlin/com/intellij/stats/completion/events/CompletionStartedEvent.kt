@@ -51,6 +51,7 @@ class CompletionStartedEvent(
 
     @JvmField var lookupShownTime: Long = -1
     @JvmField var mlTimeContribution: Long = -1
+    @JvmField var isAutoPopup: Boolean? = null
 
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)

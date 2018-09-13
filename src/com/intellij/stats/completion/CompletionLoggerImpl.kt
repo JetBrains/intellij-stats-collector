@@ -94,6 +94,7 @@ class CompletionFileLogger(private val installationUID: String,
 
         event.mlTimeContribution = mlTimeContribution
         event.isOneLineMode = lookup.editor.isOneLineMode
+        event.isAutoPopup = CompletionUtil.getCurrentCompletionParameters()?.isAutoPopup
         event.fillCompletionParameters()
 
         eventLogger.log(event)
