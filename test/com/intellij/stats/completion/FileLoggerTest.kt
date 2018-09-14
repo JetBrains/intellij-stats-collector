@@ -16,6 +16,7 @@
 package com.intellij.stats.completion
 
 import com.intellij.codeInsight.lookup.impl.LookupImpl
+import com.intellij.openapi.editor.CaretModel
 import com.intellij.openapi.editor.Editor
 import com.intellij.stats.storage.FilePathProvider
 import com.intellij.testFramework.PlatformTestCase
@@ -71,12 +72,16 @@ class FileLoggerTest : PlatformTestCase() {
         loggerProvider.initComponent()
 
         val logger = loggerProvider.newCompletionLogger()
-        
+
+        val editorMock = mock(Editor::class.java).apply {
+            `when`(caretModel).thenReturn(mock(CaretModel::class.java))
+        }
+
         val lookup = mock(LookupImpl::class.java).apply {
             `when`(getRelevanceObjects(ArgumentMatchers.any(), ArgumentMatchers.anyBoolean())).thenReturn(emptyMap())
             `when`(items).thenReturn(emptyList())
             `when`(psiFile).thenReturn(null)
-            `when`(editor).thenReturn(mock(Editor::class.java))
+            `when`(editor).thenReturn(editorMock)
         }
 
         val watchService = FileSystems.getDefault().newWatchService()
