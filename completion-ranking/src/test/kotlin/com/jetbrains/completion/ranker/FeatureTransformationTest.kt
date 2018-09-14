@@ -24,6 +24,7 @@ import com.jetbrains.completion.feature.impl.FeatureReader
 import com.jetbrains.completion.feature.impl.FeatureReader.jsonMap
 import com.jetbrains.completion.feature.impl.FeatureUtils
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.io.BufferedReader
@@ -106,7 +107,7 @@ class FeatureTransformationTest {
 
         scores = scoresTable()
 
-        assert(table.rowsCount() == scores.rowsCount())
+        Assert.assertEquals(table.rowsCount(), scores.rowsCount())
     }
 
     private fun readTableHeader(path: String): Map<String, Int> {
@@ -139,7 +140,7 @@ class FeatureTransformationTest {
     private fun checkSession(sessionRows: List<EventRow>, session: CompletionSession) {
         val lookupPages: List<LookupPage> = session.lookupPages
 
-        assert(sessionRows.size == lookupPages.sumBy { it.size })
+        Assert.assertEquals(sessionRows.size, lookupPages.sumBy { it.size })
 
         val mergedSessionsElements: List<PositionedItem> = lookupPages.map { it.lookupItems }.flatMap { it }
         sessionRows
@@ -182,7 +183,7 @@ class FeatureTransformationTest {
             it.eventId == eventId && it.userId == userId && it.sessionId == sessionId && it.position == position
         }
 
-        assert(eventRows.size == 1)
+        Assert.assertEquals(1, eventRows.size)
 
         val expectedRank = eventRows.first().rank
 

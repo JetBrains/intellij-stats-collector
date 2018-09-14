@@ -24,30 +24,29 @@ import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
-import com.intellij.stats.sender.isSendAllowed
-import com.intellij.stats.sender.isUnitTestMode
 import com.intellij.stats.experiment.WebServiceStatus
 import com.intellij.stats.personalization.UserFactorDescriptions
 import com.intellij.stats.personalization.UserFactorStorage
 import com.intellij.stats.personalization.UserFactorsManager
+import com.intellij.stats.sender.isSendAllowed
+import com.intellij.stats.sender.isUnitTestMode
 import java.beans.PropertyChangeListener
 
 
-class CompletionTrackerInitializer(experimentHelper: WebServiceStatus): ApplicationComponent {
+class CompletionTrackerInitializer(experimentHelper: WebServiceStatus) : ApplicationComponent {
     companion object {
         var isEnabledInTests = false
     }
 
     private val actionListener = LookupActionsListener()
 
-    private val lookupTrackerInitializer = PropertyChangeListener {
-        val lookup = it.newValue
+    private val lookupTrackerInitializer = PropertyChangeListener { e ->
+        val lookup = e.newValue
         if (lookup == null) {
             actionListener.listener = CompletionPopupListener.Adapter()
-        }
-        else if (lookup is LookupImpl) {
+        } else if (lookup is LookupImpl) {
+            lookup.putUserData(CompletionUtil.COMPLETION_STARTING_TIME_KEY, System.currentTimeMillis())
             if (isUnitTestMode() && !isEnabledInTests) return@PropertyChangeListener
-
             val globalStorage = UserFactorStorage.getInstance()
             val projectStorage = UserFactorStorage.getInstance(lookup.project)
 

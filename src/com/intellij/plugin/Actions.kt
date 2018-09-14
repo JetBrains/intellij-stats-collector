@@ -25,8 +25,6 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.actionSystem.ToggleAction
-import com.intellij.openapi.project.Project
 
 class ToggleManualMlSorting : AnAction() {
 
@@ -76,29 +74,10 @@ abstract class PersistentBooleanProperty {
     internal abstract val default: Boolean
 }
 
-abstract class ProjectProperty : PersistentBooleanProperty() {
-    fun isEnabled(project: Project): Boolean {
-        return PropertiesComponent.getInstance(project).getBoolean(key, default)
-    }
-
-    fun setEnabled(project: Project, value: Boolean) {
-        return PropertiesComponent.getInstance(project).setValue(key, value, default)
-    }
-
-    fun reset(project: Project) {
-        PropertiesComponent.getInstance(project).setValue(key, default)
-    }
-}
-
 abstract class ApplicationProperty : PersistentBooleanProperty() {
     var isOn: Boolean
         get() = PropertiesComponent.getInstance().getBoolean(key, default)
         set(value) = PropertiesComponent.getInstance().setValue(key, value, default)
-}
-
-object NGramIndexingProperty : ProjectProperty() {
-    override val key: String = "com.intellij.completion.plugin.ngram.indexing"
-    override val default: Boolean = false
 }
 
 object ManualExperimentControl : ApplicationProperty() {

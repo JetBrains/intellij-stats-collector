@@ -32,7 +32,9 @@ class CompletionStartedEvent(
         @JvmField var experimentVersion: Int,
         completionList: List<LookupEntryInfo>,
         @JvmField var userFactors: Map<String, String?>,
-        selectedPosition: Int)
+        @JvmField var queryLength: Int,
+        selectedPosition: Int,
+        timestamp: Long)
 
     : LookupStateLogData(
         userId,
@@ -40,12 +42,17 @@ class CompletionStartedEvent(
         Action.COMPLETION_STARTED,
         completionList.map { it.id },
         completionList,
-        selectedPosition)
+        selectedPosition,
+        timestamp)
 {
 
     //seems it's not needed, remove when possible
     @JvmField var completionListLength: Int = completionList.size
     @JvmField var isOneLineMode: Boolean = false
+
+    @JvmField var lookupShownTime: Long = -1
+    @JvmField var mlTimeContribution: Long = -1
+    @JvmField var isAutoPopup: Boolean? = null
 
     override fun accept(visitor: LogEventVisitor) {
         visitor.visit(this)
