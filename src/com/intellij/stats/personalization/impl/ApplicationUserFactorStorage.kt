@@ -17,11 +17,12 @@
 package com.intellij.stats.personalization.impl
 
 import com.intellij.openapi.components.ApplicationComponent
+import com.intellij.openapi.components.RoamingType
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 
 /**
  * @author Vitaliy.Bibaev
  */
-@State(name = "ApplicationUserFactors", storages = [(Storage("completion.factors.user.xml"))])
+@State(name = "ApplicationUserFactors", storages = [(Storage("completion.factors.user.xml", roamingType = RoamingType.DISABLED))])
 class ApplicationUserFactorStorage : ApplicationComponent, UserFactorStorageBase()
