@@ -20,7 +20,7 @@ idea {
 //noinspection GroovyAssignabilityCheck
 task unzip(type: Copy) {
     from(zipTree("${projectDir}/models/${model}.zip"))
-    into "${buildDir}/generated/src/java/com/completion/ranker/model"
+    into "${buildDir}/generated/src/java/com/completion/ranker/model/old"
 }
 
 tasks.withType(JavaCompile) {
