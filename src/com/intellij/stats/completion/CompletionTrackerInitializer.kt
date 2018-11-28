@@ -20,7 +20,7 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.completion.tracker.PositionTrackingListener
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ApplicationComponent
+import com.intellij.openapi.components.BaseComponent
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.project.ProjectManagerListener
@@ -33,7 +33,7 @@ import com.intellij.stats.sender.isUnitTestMode
 import java.beans.PropertyChangeListener
 
 
-class CompletionTrackerInitializer(experimentHelper: WebServiceStatus) : ApplicationComponent {
+class CompletionTrackerInitializer(experimentHelper: WebServiceStatus) : BaseComponent {
     companion object {
         var isEnabledInTests = false
     }

@@ -46,7 +46,7 @@ class FirstContributorPreloader : PreloadingActivity() {
         addContributor(descriptor, InvocationCountEnhancingContributor::class.java.name)
     }
 
-    private fun addCustomWeigherContributor(descriptor: IdeaPluginDescriptor) {
+    private fun addCustomWeigherContributor(@Suppress("UNUSED_PARAMETER") descriptor: IdeaPluginDescriptor) {
 //        addContributor(descriptor, NGramContributor::class.java.name)
     }
 

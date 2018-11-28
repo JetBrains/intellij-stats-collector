@@ -15,7 +15,7 @@
  */
 package com.intellij.stats.completion
 
-import com.intellij.openapi.components.ApplicationComponent
+import com.intellij.openapi.components.BaseComponent
 import com.intellij.stats.logger.EventLoggerWithValidation
 import com.intellij.stats.logger.LogFileManager
 import com.intellij.stats.logger.ClientSessionValidator
@@ -25,7 +25,7 @@ import java.util.*
 class CompletionFileLoggerProvider(
         filePathProvider: FilePathProvider,
         private val installationIdProvider: InstallationIdProvider
-) : ApplicationComponent, CompletionLoggerProvider() {
+) : BaseComponent, CompletionLoggerProvider() {
 
   private val logFileManager = LogFileManager(filePathProvider)
   private val eventLogger = EventLoggerWithValidation(logFileManager, ClientSessionValidator())

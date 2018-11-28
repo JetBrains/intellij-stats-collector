@@ -16,8 +16,8 @@
 
 package com.intellij.stats.completion
 
-import com.intellij.codeInsight.lookup.LookupAdapter
 import com.intellij.codeInsight.lookup.LookupEvent
+import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.codeInsight.lookup.impl.PrefixChangeListener
 import com.intellij.openapi.application.ApplicationManager
@@ -28,7 +28,7 @@ class CompletionActionsTracker(private val lookup: LookupImpl,
                                private val experimentHelper: WebServiceStatus)
     : CompletionPopupListener,
         PrefixChangeListener,
-        LookupAdapter() {
+        LookupListener {
     private companion object {
         const val INITIAL_CONTRIBUTION_KEY = "ml.contribution.initial"
         const val CURRENT_CONTRIBUTION_KEY = "ml.contribution.current"

@@ -15,8 +15,8 @@
  */
 package com.intellij.sorting
 
+import com.intellij.openapi.components.BaseComponent
 import com.jetbrains.completion.feature.FeatureManager
-import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.components.ServiceManager
 import com.jetbrains.completion.ranker.CompletionRanker
 import com.jetbrains.completion.feature.Transformer
@@ -35,7 +35,7 @@ interface Ranker {
     }
 }
 
-class FeatureTransformerProvider(featureManager: FeatureManager) : ApplicationComponent {
+class FeatureTransformerProvider(featureManager: FeatureManager) : BaseComponent {
     val featureTransformer: Transformer = featureManager.createTransformer()
 }
 
