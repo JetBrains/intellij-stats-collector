@@ -21,7 +21,7 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener
 import com.intellij.openapi.diagnostic.ControlFlowException
 import com.intellij.openapi.diagnostic.Logger
 
-class LookupActionsListener : AnActionListener.Adapter() {
+class LookupActionsListener : AnActionListener {
     private companion object {
         val LOG = Logger.getInstance(LookupActionsListener::class.java)
     }
@@ -58,7 +58,7 @@ class LookupActionsListener : AnActionListener.Adapter() {
         }
     }
 
-    override fun beforeActionPerformed(action: AnAction?, dataContext: DataContext?, event: AnActionEvent?) {
+    override fun beforeActionPerformed(action: AnAction, dataContext: DataContext, event: AnActionEvent?) {
         logThrowables {
             when (action) {
                 down -> listener.beforeDownPressed()

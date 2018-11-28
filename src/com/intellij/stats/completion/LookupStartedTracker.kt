@@ -17,17 +17,17 @@
 package com.intellij.stats.completion
 
 import com.intellij.codeInsight.lookup.Lookup
-import com.intellij.codeInsight.lookup.LookupAdapter
 import com.intellij.codeInsight.lookup.LookupEvent
+import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.stats.personalization.UserFactorDescriptions
 import com.intellij.stats.personalization.UserFactorStorage
 
 /**
  * @author Vitaliy.Bibaev
  */
-class LookupStartedTracker : LookupAdapter() {
-    override fun currentItemChanged(event: LookupEvent?) {
-        val lookup = event?.lookup ?: return
+class LookupStartedTracker : LookupListener {
+    override fun currentItemChanged(event: LookupEvent) {
+        val lookup = event.lookup ?: return
         if (processLookupStarted(lookup)) lookup.removeLookupListener(this)
     }
 

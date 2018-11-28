@@ -16,9 +16,9 @@
 
 package com.intellij.stats.completion
 
-import com.intellij.codeInsight.lookup.LookupAdapter
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupEvent
+import com.intellij.codeInsight.lookup.LookupListener
 import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.completion.FeatureManagerImpl
 import com.intellij.stats.personalization.UserFactorDescriptions
@@ -28,9 +28,9 @@ import com.jetbrains.completion.feature.impl.FeatureUtils
 /**
  * @author Vitaliy.Bibaev
  */
-class LookupCompletedTracker : LookupAdapter() {
-    override fun lookupCanceled(event: LookupEvent?) {
-        val lookup = event?.lookup as? LookupImpl ?: return
+class LookupCompletedTracker : LookupListener {
+    override fun lookupCanceled(event: LookupEvent) {
+        val lookup = event.lookup as? LookupImpl ?: return
         val element = lookup.currentItem
         if (element != null && isSelectedByTyping(lookup, element)) {
             processTypedSelect(lookup, element)
@@ -41,8 +41,8 @@ class LookupCompletedTracker : LookupAdapter() {
         }
     }
 
-    override fun itemSelected(event: LookupEvent?) {
-        val lookup = event?.lookup as? LookupImpl ?: return
+    override fun itemSelected(event: LookupEvent) {
+        val lookup = event.lookup as? LookupImpl ?: return
         val element = event.item ?: return
         processExplicitSelect(lookup, element)
     }

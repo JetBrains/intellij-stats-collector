@@ -31,7 +31,7 @@ class UnmatchableLookupElement(
         return original.`object`
     }
 
-    override fun handleInsert(context: InsertionContext?) {
+    override fun handleInsert(context: InsertionContext) {
         original.handleInsert(context)
     }
 
