@@ -22,4 +22,4 @@ import com.intellij.openapi.components.*
  * @author Vitaliy.Bibaev
  */
 @State(name = "ApplicationUserFactors", storages = [(Storage("completion.factors.user.xml", roamingType = RoamingType.DISABLED))])
-class ApplicationUserFactorStorage : BaseComponent, UserFactorStorageBase()
+class ApplicationUserFactorStorage : ApplicationComponent, UserFactorStorageBase()

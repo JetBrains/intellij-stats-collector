@@ -17,7 +17,7 @@
 package com.intellij.stats.sender
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.BaseComponent
+import com.intellij.openapi.components.ApplicationComponent
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.Disposer
 import com.intellij.stats.experiment.WebServiceStatus
@@ -27,7 +27,7 @@ import com.intellij.util.Time
 class SenderComponent(
         private val sender: StatisticSender,
         private val statusHelper: WebServiceStatus
-) : BaseComponent {
+) : ApplicationComponent {
     private companion object {
         val LOG = logger<SenderComponent>()
     }

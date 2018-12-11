@@ -17,7 +17,7 @@
 package com.intellij.completion
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.BaseComponent
+import com.intellij.openapi.components.ApplicationComponent
 import com.jetbrains.completion.feature.*
 import com.jetbrains.completion.feature.impl.CompletionFactors
 import com.jetbrains.completion.feature.impl.FeatureInterpreterImpl
@@ -27,7 +27,7 @@ import com.jetbrains.completion.feature.impl.FeatureReader
 /**
  * @author Vitaliy.Bibaev
  */
-class FeatureManagerImpl : FeatureManager, BaseComponent {
+class FeatureManagerImpl : FeatureManager, ApplicationComponent{
     companion object {
         fun getInstance(): FeatureManager = ApplicationManager.getApplication().getComponent(FeatureManager::class.java)
     }
