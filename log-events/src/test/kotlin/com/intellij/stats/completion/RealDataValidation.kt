@@ -26,7 +26,7 @@ import java.io.File
 
 class RealDataValidation {
 
-    lateinit var separator: InputSessionValidator
+    private lateinit var separator: InputSessionValidator
     val sessionStatuses = hashMapOf<String, Boolean>()
 
     @Before

@@ -22,9 +22,9 @@ import com.intellij.stats.completion.events.*
 import org.jetbrains.annotations.TestOnly
 
 class CompletionValidationState(event: CompletionStartedEvent) : LogEventVisitor() {
-    var currentPosition    = event.currentPosition
-    var completionList     = event.completionListIds
-    var currentId          = getSafeCurrentId(completionList, currentPosition)
+    private var currentPosition = event.currentPosition
+    private var completionList = event.completionListIds
+    private var currentId = getSafeCurrentId(completionList, currentPosition)
 
     private var idToFactorNames = event.newCompletionListItems
             .associate { it.id to (it.relevance?.keys?.toMutableSet() ?: mutableSetOf()) }.toMutableMap()
@@ -33,7 +33,7 @@ class CompletionValidationState(event: CompletionStartedEvent) : LogEventVisitor
     private var isFinished = false
     private var errorMessage = ""
 
-    var events = mutableListOf<LogEvent>(event)
+    private var events = mutableListOf<LogEvent>(event)
 
     private fun updateState(nextEvent: LookupStateLogData) {
         currentPosition = nextEvent.currentPosition
