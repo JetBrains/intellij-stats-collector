@@ -50,10 +50,7 @@ class CompletionValidationState(event: CompletionStartedEvent) : LogEventVisitor
             completionList[position]
         }
         else {
-            if (errorMessage.isEmpty()) {
-                errorMessage = "completion list size: ${completionList.size}, requested position: $position"
-            }
-            isValid = false
+            invalidate("completion list size: ${completionList.size}, requested position: $position")
             -2
         }
     }
@@ -62,8 +59,7 @@ class CompletionValidationState(event: CompletionStartedEvent) : LogEventVisitor
         events.add(nextEvent)
 
         if (isFinished) {
-            errorMessage = "activity after completion finish session"
-            isValid = false
+            invalidate("activity after completion finish session")
         }
         else if (isValid) {
             nextEvent.accept(this)
@@ -80,6 +76,8 @@ class CompletionValidationState(event: CompletionStartedEvent) : LogEventVisitor
                         "elements in list ${completionList.size}"
         )
     }
+
+    private fun invalidate(error: String) = updateValid(false, error)
 
     private fun updateValid(value: Boolean, error: String) {
         val wasValidBefore = isValid
