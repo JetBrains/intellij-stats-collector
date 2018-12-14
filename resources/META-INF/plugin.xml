@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.intellij.stats.completion</id>
   <name>Completion Stats Collector</name>
-  <version>0.1.6</version>
+  <version>0.1.7</version>
   <vendor email="vitaliy.bibaev@jetbrains.com" url="http://www.jetbrains.com">JetBrains</vendor>
 
   <description><![CDATA[
@@ -11,6 +11,11 @@
     ]]></description>
 
   <change-notes><![CDATA[
+        0.1.7 <br>
+        <ul>
+            <li> Send diff for ranking factors between two consequent lookups in one session </li>
+        </ul>
+
         0.1.6 <br>
         <ul>
             <li> Make compatible with 2018.3 </li>
