@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2018 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,17 @@
  * limitations under the License.
  */
 
-package com.intellij.stats.personalization.impl
+package com.intellij.stats.completion
 
-import com.intellij.openapi.components.*
+data class LookupState(val ids: List<Int>,
+                       val newItems: List<LookupEntryInfo>,
+                       val itemsDiff: List<LookupEntryDiff>,
+                       val selectedPosition: Int)
 
-/**
- * @author Vitaliy.Bibaev
- */
-@State(name = "ApplicationUserFactors", storages = [(Storage("completion.factors.user.xml", roamingType = RoamingType.DISABLED))])
-class ApplicationUserFactorStorage : ApplicationComponent, UserFactorStorageBase()
+fun LookupState.withSelected(position: Int): LookupState {
+    return LookupState(ids, newItems, itemsDiff, position)
+}
+
+fun LookupState.withoutNewItems(): LookupState {
+    return LookupState(ids, emptyList(), itemsDiff, selectedPosition)
+}

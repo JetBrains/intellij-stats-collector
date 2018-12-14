@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2017 JetBrains s.r.o.
+ * Copyright 2000-2018 JetBrains s.r.o.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.intellij.stats.completion
 
-package com.intellij.stats.personalization.impl
-
-import com.intellij.openapi.components.*
-
-/**
- * @author Vitaliy.Bibaev
- */
-@State(name = "ApplicationUserFactors", storages = [(Storage("completion.factors.user.xml", roamingType = RoamingType.DISABLED))])
-class ApplicationUserFactorStorage : ApplicationComponent, UserFactorStorageBase()
+data class LookupEntryDiff(val id: Int, val added: Map<String, String?>, val changed: Map<String, String?>, val removed: List<String>)
