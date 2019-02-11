@@ -11,6 +11,12 @@
     ]]></description>
 
   <change-notes><![CDATA[
+        0.1.8 <br>
+        <ul>
+            <li> Do not use deprecated API </li>
+            <li> Fix EA-134511 AIOOBE </li>
+        </ul>
+
         0.1.7 <br>
         <ul>
             <li> Send diff for ranking factors between two consequent lookups in one session </li>
