@@ -105,8 +105,7 @@ class CompletionFileLogger(private val installationUID: String,
 
         val history = lookup.itemsHistory()
 
-        val selectedId = state.ids[state.selectedPosition]
-        val event = TypedSelectEvent(installationUID, completionUID, state, selectedId, history, timestamp)
+        val event = TypedSelectEvent(installationUID, completionUID, state, state.selectedId, history, timestamp)
         event.fillCompletionParameters()
 
         eventLogger.log(event)
@@ -116,8 +115,7 @@ class CompletionFileLogger(private val installationUID: String,
         val state = stateManager.update(lookup)
         val history = lookup.itemsHistory()
 
-        val selectedId = state.ids[state.selectedPosition]
-        val event = ExplicitSelectEvent(installationUID, completionUID, state, selectedId, history, timestamp)
+        val event = ExplicitSelectEvent(installationUID, completionUID, state, state.selectedId, history, timestamp)
         event.fillCompletionParameters()
 
         eventLogger.log(event)
@@ -147,6 +145,9 @@ private fun calcPluginVersion(): String? {
     return plugin?.version
 }
 
+
+private val LookupState.selectedId: Int
+    get() = if (selectedPosition == -1) -1 else ids[selectedPosition]
 
 private fun LookupStateLogData.fillCompletionParameters() {
     val params = CompletionUtil.getCurrentCompletionParameters()
