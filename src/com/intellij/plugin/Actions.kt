@@ -54,7 +54,7 @@ class ToggleManualMlSorting : AnAction() {
 
         val lookup = LookupManager.getActiveLookup(editor)
         if (lookup != null) {
-            CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project!!, editor!!, 10, false, false)
+            CodeCompletionHandlerBase(CompletionType.BASIC).invokeCompletion(project!!, editor!!, 10)
         } else {
             val content = if (before) "Manual ML Sorting Disabled" else "Manual ML Sorting Enabled"
             val collector = "Completion Stats Collector"
