@@ -36,7 +36,8 @@
     "scalaSbtDefinitionWeigher",
     "com.intellij.scala.play.language.routing.completion.Play2ControllerMethodsCompletionWeigher",
     "mostUsed",
-    "invokationCount"
+    "invokationCount",
+    "technicalOverloads"
   ],
   "javaProximity": [
     "explicitlyImported",
