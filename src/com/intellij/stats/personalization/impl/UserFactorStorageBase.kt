@@ -72,7 +72,7 @@ abstract class UserFactorStorageBase
         fun writeState(element: Element) {
             for ((id, factor) in aggregateFactors.asSequence().sortedBy { it.key }) {
                 val factorElement = Element("factor")
-                factorElement.attribute("id", id)
+                factorElement.setAttribute("id", id)
                 factor.writeState(factorElement)
                 element.addContent(factorElement)
             }
@@ -109,7 +109,7 @@ abstract class UserFactorStorageBase
         fun writeState(element: Element) {
             for ((day, data) in aggregates) {
                 val dailyDataElement = Element("dailyData")
-                dailyDataElement.attribute("date", day.toString())
+                dailyDataElement.setAttribute("date", day.toString())
                 data.writeState(dailyDataElement)
                 element.addContent(dailyDataElement)
             }
@@ -173,8 +173,8 @@ abstract class UserFactorStorageBase
         fun writeState(element: Element) {
             for ((key, value) in data.asSequence().sortedBy { it.key }) {
                 val observation = Element("observation")
-                observation.attribute("name", key)
-                observation.attribute("value", DOUBLE_VALUE_FORMATTER.format(value))
+                observation.setAttribute("name", key)
+                observation.setAttribute("value", DOUBLE_VALUE_FORMATTER.format(value))
                 element.addContent(observation)
             }
         }

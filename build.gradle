@@ -39,7 +39,7 @@ sourceSets {
 }
 
 intellij {
-    intellij.version "2018.3"
+    intellij.version "IC-2019.1"
     pluginName = "Completion Stats Collector"
     sameSinceUntilBuild = false
     updateSinceUntilBuild = false
