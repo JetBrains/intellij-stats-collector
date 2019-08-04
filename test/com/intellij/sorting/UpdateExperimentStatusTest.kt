@@ -21,8 +21,8 @@ import com.intellij.codeInsight.lookup.impl.LookupImpl
 import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.mocks.TestRequestService
 import com.intellij.stats.experiment.WebServiceStatus
+import com.intellij.testFramework.UsefulTestCase
 import com.jetbrains.completion.feature.impl.FeatureUtils
-import org.assertj.core.api.Assertions.assertThat
 
 
 class UpdateExperimentStatusTest: LightFixtureCompletionTestCase() {
@@ -35,7 +35,7 @@ class UpdateExperimentStatusTest: LightFixtureCompletionTestCase() {
         doComplete()
 
         val lookup = myFixture.lookup as LookupImpl
-        assertThat(lookup.items).isNotEmpty()
+        UsefulTestCase.assertNotEmpty(lookup.items)
 
         lookup.checkMlRanking(Ranker.getInstance(), 1)
     }
@@ -47,7 +47,7 @@ class UpdateExperimentStatusTest: LightFixtureCompletionTestCase() {
         doComplete()
 
         val lookup = myFixture.lookup as LookupImpl
-        assertThat(lookup.items).isNotEmpty()
+        UsefulTestCase.assertNotEmpty(lookup.items)
 
         lookup.assertEachItemHasMlValue(FeatureUtils.NONE)
     }
