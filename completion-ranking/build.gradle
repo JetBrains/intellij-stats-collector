@@ -12,6 +12,4 @@ tasks.withType(Test) {
 dependencies {
     compile project(":ml-whitebox")
     compile project(":features")
-
-    testCompile 'org.assertj:assertj-core:3.5.2'
 }
